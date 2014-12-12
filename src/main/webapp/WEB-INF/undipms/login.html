@@ -1,0 +1,153 @@
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="description" content="undipms login enter page" />
+<meta name="author" content="zwr" />
+<link rel="shortcut icon" href="${res}/images/favicon.ico" type="image/x-icon" />
+<title>Undifition PMS 采购管理系统</title>
+<link rel="stylesheet" href="${res}/css/undi.css" />
+<script src="${res}/js/jquery-1.11.1.js"></script>
+<script src="${res}/js/undi-login.js"></script>
+<script src="${res}/plugin/bootstrapvalidator-0.5.2/js/bootstrapValidator.js"></script>
+
+<script>
+	$(function() {
+		$.zAutoSize({
+			bg_src : "${res}/images/bg-summer.jpg" //可选择背景图片
+		});
+		$("#loginForm").bootstrapValidator({
+			excluded : [
+					':disabled', ':hidden', ':not(:visible)'
+			],
+			feedbackIcons : {
+				valid : 'fa fa-check',
+				invalid : 'fa fa-times',
+				validating : 'fa fa-circle-o-notch fa-spin'
+			},
+			live : 'enabled',
+			submitButtons : 'button[type="submit"]',
+			trigger : null,
+			fields : {
+				username : {
+					container : '#username-helpblock',
+					validators : {
+						notEmpty : {
+							message : '<@s.m 'form.vaild.username.null' />'
+						},
+						stringLength : {
+							min : 6,
+							max : 32,
+							message : '<@s.m 'form.vaild.username.size' />'
+						},
+						regexp : {
+							regexp : /^[a-zA-Z0-9_]+$/,
+							message : '<@s.m 'form.vaild.username.pattern' />'
+						}
+					}
+				},
+				password : {
+					container : '#password-helpblock',
+					validators : {
+						notEmpty : {
+							message : '<@s.m 'form.vaild.password.null' />'
+						},
+						stringLength : {
+							min : 6,
+							message : '<@s.m 'form.vaild.password.size' />'
+						}
+					}
+				}
+			}
+		}).on('success.form.bv', function(e) {
+			// 			Prevent form submission
+			e.preventDefault();
+
+			// 			Get the form instance
+			var $form = $(e.target);
+
+			// 			Get the BootstrapValidator instance
+			var bv = $form.data('bootstrapValidator');
+
+			// 			Use Ajax to submit form data
+			$.ajax({
+				type : 'POST',
+				url : $form.attr('action'),
+				data : $form.serialize(),
+				success : function(data, textStatus, jqXHR) {
+					// 					$form.off('submit.bv').submit()
+					location.href = "index.html";
+				},
+				// 				statusCode : {
+				// 					400 : function(XMLHttpRequest, textStatus, errorThrown) {
+				// 						alert(XMLHttpRequest);
+				// 						alert(textStatus);
+				// 						alert(errorThrown);
+				// 					}
+				// 				},
+				error : function(XMLHttpRequest) {
+					if(XMLHttpRequest.status == '406') {
+						var obj = jQuery.parseJSON(XMLHttpRequest.responseText);
+						$.each(obj, function(key, value) {
+							$("[for='" + key + "']").append(value);
+						});
+					} else {
+						$("#global-message").css("display", "block");
+						$("#global-message").find("span").empty();
+						$("#global-message").find("span").append(XMLHttpRequest.responseText);
+					}
+				}
+			});
+		});
+	});
+</script>
+</head>
+<body>
+	<div class="loginFrame" id="loginFrame">
+		<div class="status-panel">
+			<div class="col-sm-4">
+				<h4>用户登录:</h4>
+			</div>
+			<div id="global-message" class="col-sm-8 alert alert-sm alert-danger" style="display: none" role="alert">
+				<i class="fa fa-warning"></i><span> </span>
+			</div>
+		</div>
+		<div class="info">
+			<div class="logo"></div>
+		</div>
+		<div class="seperator"></div>
+		<div class="loginform">
+			<form id="loginForm" action="login" method="POST" class="form-horizontal">
+				<div class="form-group <#if hasBindingErrors!false>has-error</#if>">
+					<label for="inputUsername" class="sr-only">用户名</label>
+					<div class="col-sm-6">
+						<div class="input-group">
+							<span class="input-group-addon"><i class="fa fa-user"></i> </span> <input name="username" id="username" type="text" class="form-control"
+								placeholder="用户名" />
+						</div>
+					</div>
+					<div id="username-helpblock" for="username" class="col-sm-6"></div>
+				</div>
+				<div class="form-group">
+					<label for="inputPass" class="sr-only">密码</label>
+					<div class="col-sm-6">
+						<div class="input-group">
+							<span class="input-group-addon"><i class="fa fa-lock"></i> </span> <input name="password" id="password" type="password" class="form-control"
+								placeholder="密码">
+						</div>
+					</div>
+					<div id="password-helpblock" for="password" class="col-sm-6"></div>
+				</div>
+				<div class="col-sm-3 zero-left-padding">
+					<button id="submitLoginForm" type="submit" class="btn btn-sm btn-block btn-primary">登录</button>
+				</div>
+				<a class="linkcontrol">忘记密码？</a>
+
+			</form>
+		</div>
+	</div>
+	<footer class="footer"> Copyright &copy; 2014 By UNDIFITION Crop. All rights reserved. </footer>
+
+</body>
+</html>

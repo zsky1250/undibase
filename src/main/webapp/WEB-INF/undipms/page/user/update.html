@@ -1,0 +1,232 @@
+<script type="text/javascript" src="${res}/plugin/bootstrapvalidator-0.5.2/js/bootstrapValidator.js"></script>
+<script>
+	$(function() {
+		$.ajaxSetup({
+			cache : false, //close AJAX cache
+			type : "POST",
+		});
+
+		$.ajax({
+			type : 'GET',
+			url : "department/list",
+			success : function(data, textStatus) {
+				$.each(data, function(key, value) {
+					$("#departmentId").append("<option value='" + value.id + "'>" + value.name + "</option>");
+				});
+			},
+			error : function(XMLHttpRequest) {
+				if(XMLHttpRequest.status == '406') {
+					var obj = jQuery.parseJSON(XMLHttpRequest.responseText);
+					$.each(obj, function(key, value) {
+						$("[for='" + key + "']").append(value);
+					});
+				} else {
+					$("#global-message").addClass("alert-danger");
+					$("#global-message").find("i").addClass("fa-warning");
+					$("#global-message").css("display", "block");
+					$("#global-message").find("span").empty();
+					$("#global-message").find("span").append(XMLHttpRequest.responseText);
+				}
+			}
+		});
+
+		$.ajax({
+			type : 'GET',
+			url : "role/list",
+			success : function(data, textStatus) {
+				$.each(data, function(key, value) {
+					$("#check").append("<input class='role' id='roleIds' name='roleIds' value='" + value.id + "' type='checkbox'>" + value.name + "</input>");
+				});
+			},
+			error : function(XMLHttpRequest) {
+				if(XMLHttpRequest.status == '406') {
+					var obj = jQuery.parseJSON(XMLHttpRequest.responseText);
+					$.each(obj, function(key, value) {
+						$("[for='" + key + "']").append(value);
+					});
+				} else {
+					$("#global-message").addClass("alert-danger");
+					$("#global-message").find("i").addClass("fa-warning");
+					$("#global-message").css("display", "block");
+					$("#global-message").find("span").empty();
+					$("#global-message").find("span").append(XMLHttpRequest.responseText);
+				}
+			}
+		});
+
+		$("#updatepassword").bootstrapValidator({
+			excluded : [
+					':disabled', ':hidden', ':not(:visible)'
+			],
+			feedbackIcons : {
+				valid : 'fa fa-check',
+				invalid : 'fa fa-times',
+				validating : 'fa fa-circle-o-notch fa-spin'
+			},
+			live : 'enabled',
+			message : 'This value is not valid',
+			submitButtons : 'button[type="submit"]',
+			trigger : null,
+			fields : {
+				name : {
+					message : '',
+					container : '#name-helpblock',
+					validators : {
+						notEmpty : {
+							message : '<@s.m 'form.vaild.name.null' />'
+						}
+					}
+				},
+				phone : {
+					message : 'The username is not valid',
+					container : '#phone-helpblock',
+					validators : {
+						notEmpty : {
+							message : '<@s.m 'form.vaild.phone.null' />'
+						}
+					}
+				},
+				department :　{},
+				disable : {},
+				roleIds : {}
+			}
+		}).on('success.form.bv', function(e) {
+			// Prevent form submission
+			e.preventDefault();
+
+			// Get the form instance
+			var $form = $(e.target);
+
+			// Get the BootstrapValidator instance
+			var bv = $form.data('bootstrapValidator');
+
+			// Use Ajax to submit form data
+				$.ajax({
+					type : 'POST',
+					url : "user/" + $("#id").val() + "/update",
+					data : $form.serialize(),
+					beforeSend : function(XMLHttpRequest) {
+						alert($form.serialize());
+					},
+					success : function(data, textStatus) {
+						$("#global-message").css("display", "block");
+						$("#global-message").removeClass("alert-danger");
+						$("#global-message").addClass("alert-success");
+						$("#global-message").find("span").empty();
+						$("#global-message").find("span").append(data);
+						$("#global-message").find("i").addClass("fa-success");
+						$("#global-message").find("span").empty();
+						$("#global-message").find("span").append("信息修改成功");
+					},
+					error : function(XMLHttpRequest) {
+						if(XMLHttpRequest.status == '406') {
+							var obj = jQuery.parseJSON(XMLHttpRequest.responseText);
+							$.each(obj, function(key, value) {
+								$("[for='" + key + "']").append(value);
+							});
+						} else {
+							$("#global-message").addClass("alert-danger");
+							$("#global-message").find("i").addClass("fa-warning");
+							$("#global-message").css("display", "block");
+							$("#global-message").find("span").empty();
+							$("#global-message").find("span").append(XMLHttpRequest.responseText);
+						}
+					}
+// 				})
+			});
+		});
+
+	});
+</script>
+<div id="global-message" class="col-sm-12 alert alert-sm" style="display: none" role="alert">
+	<i class="fa"></i><span> </span>
+</div>
+<div id="form" class="col-sm-12">
+	<form id="updatepassword" class="form-horizontal" method="post">
+		<fieldset>
+
+			<!-- Form Name -->
+			<legend>修改用户信息:</legend>
+
+			<input name="id" class="form-control input-md" id="id" type="hidden">
+
+			<div class="form-group">
+				<label class="col-md-4 control-label">用户名:</label>
+				<div class="col-md-4">
+					<input name="username" class="form-control input-md" id="username" type="text" disabled>
+				</div>
+			</div>
+			<!-- Password input-->
+			<div class="form-group">
+				<label class="col-md-4 control-label">姓名:</label>
+				<div class="col-md-4">
+					<input name="name" class="form-control input-md" id="name" type="text" placeholder="姓名">
+				</div>
+				<div id="name-helpblock" class="col-sm-4" for="name"></div>
+			</div>
+
+			<!-- Password input-->
+			<div class="form-group">
+				<label class="col-md-4 control-label">电话:</label>
+				<div class="col-md-4">
+					<input name="phone" class="form-control input-md" id="phone" type="text" placeholder="手机号码">
+				</div>
+				<div id="phone-helpblock" class="col-sm-4" for="phone"></div>
+			</div>
+
+			<!-- Password input-->
+			<div class="form-group">
+				<label class="col-md-4 control-label">禁用:</label>
+				<div class="col-md-4">
+					<input name="disable" class="form-control input-md" id="disable" type="checkbox" >
+				</div>
+				<div id="disable-helpblock" class="col-sm-4" for="disable"></div>
+			</div>
+
+			<!-- Password input-->
+			<div class="form-group">
+				<label class="col-md-4 control-label">部门:</label>
+				<div class="col-md-4" id = "department">
+<!-- 					<input name="department" id="department" type="select" value=> -->
+					<select id="departmentId" name="departmentId">
+<!-- 						<option name='department' selected='false' value='1'>aaa</option> -->
+					</select>
+				</div>
+				<div id="department-helpblock" class="col-sm-4" for="department"></div>
+				<!-- 				<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown"> -->
+				<!-- 					请选择 <span class="caret"></span> -->
+				<!-- 				</button> -->
+				<!-- 				<ul class="dropdown-menu"  role="menu" aria-labelledby="dropdownMenu1"> -->
+				<!-- 					<li role="presentation"><a role="menuitem" tabindex="-1">Action</a> -->
+				<!-- 					</li> -->
+				<!-- 					<li role="presentation"><a role="menuitem" tabindex="-1" >Another action</a> -->
+				<!-- 					</li> -->
+				<!-- 					<li role="presentation"><a role="menuitem" tabindex="-1">Something else here</a> -->
+				<!-- 					</li> -->
+				<!-- 					<li role="presentation"><a role="menuitem" tabindex="-1">Separated link</a> -->
+				<!-- 					</li> -->
+				<!-- 				</ul> -->
+
+			</div>
+
+			<!-- Password input-->
+			<div class="form-group">
+				<label class="col-md-4 control-label">角色:</label>
+				<div id="check" class="col-md-4">
+					<!-- 					<input name="phone" class="form-control input-md" id="phone" type="text" placeholder="手机号码"> -->
+				</div>
+				<div id="newpassword-helpblock" class="col-sm-4" for="phone"></div>
+			</div>
+
+			<!-- Button (Double) -->
+			<div class="form-group">
+				<label class="col-md-4 control-label" for="confirm"></label>
+				<div class="col-md-8">
+					<button name="confirm" class="btn btn-default" id="confirm" type="submit">修改</button>
+					<button name="reset" class="btn btn-default" id="reset" type="reset">重置</button>
+				</div>
+			</div>
+
+		</fieldset>
+	</form>
+</div>

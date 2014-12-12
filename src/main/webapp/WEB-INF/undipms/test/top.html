@@ -1,0 +1,8 @@
+<#if TopMenu??>
+	<#list TopMenu as menu>
+		<li class="vdivider"></li>
+		<li>
+			<a href="${menu.href}"><i class="fa fa-lg ${menu.iconclass}"></i>${menu.name}</a>
+		</li>
+	</#list>
+</#if>

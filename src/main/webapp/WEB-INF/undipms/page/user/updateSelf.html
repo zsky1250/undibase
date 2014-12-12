@@ -1,0 +1,142 @@
+<script type="text/javascript" src="${res}/plugin/bootstrapvalidator-0.5.2/js/bootstrapValidator.js"></script>
+<script>
+	$(function() {
+		$.ajaxSetup({
+			cache : false, //close AJAX cache
+			type : "POST",
+		});
+		
+		$.ajax({
+			type : 'GET',
+			url : 'user',
+			success : function(data, textStatus) {
+				$.each(data, function(key, value) {
+					$("[id='" + key + "']").val(value);
+				});
+			},
+			error : function(d) {
+				$("#global-message").addClass("alert-danger");
+				$("#global-message").find("i").addClass("fa-warning");
+				$("#global-message").css("display", "block");
+				$("#global-message").find("span").empty();
+				$("#global-message").find("span").append(d.responseText);
+			}
+		});
+		
+		$("#updatepassword").bootstrapValidator({
+			excluded : [
+					':disabled', ':hidden', ':not(:visible)'
+			],
+			feedbackIcons : {
+				valid : 'fa fa-check',
+				invalid : 'fa fa-times',
+				validating : 'fa fa-circle-o-notch fa-spin'
+			},
+			live : 'enabled',
+			message : 'This value is not valid',
+			submitButtons : 'button[type="submit"]',
+			trigger : null,
+			fields : {
+				name : {
+					message : '',
+					container : '#oldpassword-helpblock',
+					validators : {
+						notEmpty : {
+							message : '<@s.m 'form.vaild.name.null' />'
+						}
+					}
+				},
+				phone : {
+					message : 'The username is not valid',
+					container : '#newpassword-helpblock',
+					validators : {
+						notEmpty : {
+							message : '<@s.m 'form.vaild.phone.null' />'
+						}
+					}
+				}
+
+			}
+		}).on('success.form.bv', function(e) {
+			// Prevent form submission
+			e.preventDefault();
+
+			// Get the form instance
+			var $form = $(e.target);
+
+			// Get the BootstrapValidator instance
+			var bv = $form.data('bootstrapValidator');
+
+			// Use Ajax to submit form data
+			$.ajax({
+				type : 'POST',
+				url : $form.attr('action'),
+				data : $form.serialize(),
+				success : function(data, textStatus) {
+					$("#global-message").css("display", "block");
+					$("#global-message").removeClass("alert-danger");
+					$("#global-message").addClass("alert-success");
+					$("#global-message").find("span").empty();
+					$("#global-message").find("span").append(data);
+					$("#global-message").find("i").addClass("fa-success");
+					$("#global-message").find("span").empty();
+					$("#global-message").find("span").append("信息修改成功");
+				},
+				error : function(XMLHttpRequest) {
+					if(XMLHttpRequest.status == '406') {
+						var obj = jQuery.parseJSON(XMLHttpRequest.responseText);
+						$.each(obj, function(key, value) {
+							$("[for='" + key + "']").append(value);
+						});
+					} else {
+						$("#global-message").addClass("alert-danger");
+						$("#global-message").find("i").addClass("fa-warning");
+						$("#global-message").css("display", "block");
+						$("#global-message").find("span").empty();
+						$("#global-message").find("span").append(XMLHttpRequest.responseText);
+					}
+				}
+			});
+		});
+	});
+</script>
+<div id="global-message" class="col-sm-12 alert alert-sm" style="display: none" role="alert">
+	<i class="fa"></i><span> </span>
+</div>
+<div id="form" class="col-sm-12">
+	<form id="updatepassword" class="form-horizontal" action="user/update" method="post">
+		<fieldset>
+
+			<!-- Form Name -->
+			<legend>修改用户信息:</legend>
+
+			<!-- Password input-->
+			<div class="form-group">
+				<label class="col-md-4 control-label">姓名:</label>
+				<div class="col-md-4">
+					<input name="name" class="form-control input-md" id="name" type="text" placeholder="姓名">
+				</div>
+				<div id="oldpassword-helpblock" class="col-sm-4" for="name"></div>
+			</div>
+
+			<!-- Password input-->
+			<div class="form-group">
+				<label class="col-md-4 control-label">电话:</label>
+				<div class="col-md-4">
+					<input name="phone" class="form-control input-md" id="phone" type="text" placeholder="手机号码">
+				</div>
+				<div id="newpassword-helpblock" class="col-sm-4" for="phone"></div>
+			</div>
+
+			<!-- Button (Double) -->
+			<div class="form-group">
+				<label class="col-md-4 control-label" for="confirm"></label>
+				<div class="col-md-8">
+					<button name="confirm" class="btn btn-default" id="confirm" type="submit">修改</button>
+					<button name="return" class="btn btn-default" id="reset" type="reset">重置</button>
+				</div>
+			</div>
+
+		</fieldset>
+	</form>
+</div>

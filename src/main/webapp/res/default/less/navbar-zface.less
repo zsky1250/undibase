@@ -1,0 +1,197 @@
+// Customized navbars 
+// By zwr 2014.07.02
+// --------------------------------------------------
+
+
+
+@navbar-zface-bg:#4b4b4b; 
+@navbar-zface-border:#2b2b2b;
+@navbar-zface-front-base:#ffffff;
+@navbar-zface-brand-color:fade(@navbar-zface-front-base,80%); 
+@navbar-zface-brand-hover-color:@navbar-zface-front-base;
+@navbar-zface-brand-hover-bg:lighten(@navbar-zface-bg,20%);
+@navbar-zface-color:fade(@navbar-zface-front-base,80%);
+@navbar-zface-link-color:fade(@navbar-zface-front-base,80%);
+@navbar-zface-link-hover-color:@navbar-zface-front-base;
+@navbar-zface-link-hover-bg:@navbar-zface-bg;
+@navbar-zface-link-active-color:@navbar-zface-front-base;
+@navbar-zface-link-active-bg:lighten(@navbar-zface-bg,10%);
+@navbar-zface-link-disabled-color:#cccccc;
+@navbar-zface-link-disabled-bg:#000000;
+@navbar-zface-toggle-border-color:@navbar-zface-border;
+@navbar-zface-toggle-hover-bg:@navbar-zface-brand-hover-bg;
+@navbar-default-toggle-icon-bar-bg:fade(@navbar-zface-front-base,80%); 
+
+@splider-base-color:@navbar-zface-bg;
+@splider-left-color:lighten(@splider-base-color,12%);
+@splider-right-color:darken(@splider-base-color,12%); 
+
+.navbar{
+
+}
+  
+.navbar-zface {
+	
+  border-radius: 0px;
+  margin-bottom:0;	
+	
+  background-color: @navbar-zface-bg;
+  border-color: @navbar-zface-border;
+
+  .navbar-brand {
+    color: @navbar-zface-brand-color;
+    width:200px;
+    background:url(../images/adminlogo.png) 10px 3px no-repeat;
+    &:hover,
+    &:focus {
+      color: @navbar-zface-brand-hover-color;
+      background-color: @navbar-zface-brand-hover-bg;
+    }
+  }
+
+  .navbar-text {
+    color: @navbar-zface-color;
+  }
+
+  .navbar-nav {
+    > li > a {
+      color: @navbar-zface-link-color;
+      font-size:16px;
+      
+      i{
+      	margin-right:5px;
+      }
+
+      &:hover,
+      &:focus {
+        color: @navbar-zface-link-hover-color;
+        background-color: @navbar-zface-link-hover-bg;
+      }
+    }
+    > .active > a {
+      &,
+      &:hover,
+      &:focus {
+        color: @navbar-zface-link-active-color;
+        background-color: @navbar-zface-link-active-bg;
+        background:url(../images/menu_selected_bg2.jpg) no-repeat 50%;
+      }
+    }
+    > .disabled > a {
+      &,
+      &:hover,
+      &:focus {
+        color: @navbar-zface-link-disabled-color;
+        background-color: @navbar-zface-link-disabled-bg;
+      }
+    }
+    > .vdivider {
+		height:40px;
+		margin-top:5px;
+		border-left:1px solid @splider-left-color;
+		border-right:1px solid @splider-right-color; 	
+	}
+  }
+
+  .navbar-toggle {
+    border-color: @navbar-zface-toggle-border-color;
+    &:hover,
+    &:focus {
+      background-color: @navbar-zface-toggle-hover-bg;
+    }
+    .icon-bar {
+      background-color: @navbar-default-toggle-icon-bar-bg;
+    }
+  }
+
+  .navbar-collapse,
+  .navbar-form {
+    border-color: @navbar-zface-border;
+  }
+
+  // Dropdown menu items
+  .navbar-nav {
+    // Remove background color from open dropdown
+    > .open > a {
+      &,
+      &:hover,
+      &:focus {
+        background-color: @navbar-default-link-active-bg;
+        color: @navbar-default-link-active-color;
+      }
+    }
+
+    @media (max-width: @grid-float-breakpoint-max) {
+      // Dropdowns get custom display when collapsed
+      .open .dropdown-menu {
+        > li > a {
+          color: @navbar-default-link-color;
+          &:hover,
+          &:focus {
+            color: @navbar-default-link-hover-color;
+            background-color: @navbar-default-link-hover-bg;
+          }
+        }
+        > .active > a {
+          &,
+          &:hover,
+          &:focus {
+            color: @navbar-default-link-active-color;
+            background-color: @navbar-default-link-active-bg;
+          }
+        }
+        > .disabled > a {
+          &,
+          &:hover,
+          &:focus {
+            color: @navbar-default-link-disabled-color;
+            background-color: @navbar-default-link-disabled-bg;
+          }
+        }
+      }
+    }
+  }
+
+
+  // Links in navbars
+  //
+  // Add a class to ensure links outside the navbar nav are colored correctly.
+
+  .navbar-link {
+    color: @navbar-default-link-color;
+    &:hover {
+      color: @navbar-default-link-hover-color;
+    }
+  }
+
+  .btn-link {
+    color: @navbar-default-link-color;
+    &:hover,
+    &:focus {
+      color: @navbar-default-link-hover-color;
+    }
+    &[disabled],
+    fieldset[disabled] & {
+      &:hover,
+      &:focus {
+        color: @navbar-default-link-disabled-color;
+      }
+    }
+  }
+}
+
+.Znavi_slider{
+	border-bottom:4px solid #d74a38; 
+	z-index:999; 
+	position: absolute;
+}
+/*
+ * adjust fa font size and align;
+ */
+/* .fa-navbar{
+	font-size: 1.33333333em;
+	line-height: 0.75em;
+	vertical-align: -5%;
+}
+*/
+

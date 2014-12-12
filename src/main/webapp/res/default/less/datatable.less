@@ -1,0 +1,54 @@
+table.dataTable thead .sorting , table.dataTable thead .sorting_asc , table.dataTable thead .sorting_desc , table.dataTable thead .sorting_asc_disabled , table.dataTable thead .sorting_desc_disabled {
+	//#gradient > .vertical(lighten(@main-hover-color,20%);@main-hover-color);
+	background:0 0;
+}
+
+table.dataTable thead .sorting_asc:after {
+	content: "\f0de";
+	float: right;
+	font-family: fontawesome;
+}
+
+table.dataTable thead .sorting_desc:after {
+	content: "\f0dd";
+	float: right;
+	font-family: fontawesome;
+}
+
+table.dataTable thead .sorting:after {
+	content: "\f0dc";
+	float: right;
+	font-family: fontawesome;
+	color: rgba(50, 50, 50, .5);
+}
+
+div.dataTables_scrollBody thead .sorting_asc:after {
+	content: "";
+}
+
+div.dataTables_scrollBody thead .sorting_desc:after {
+	content: "";
+}
+
+div.dataTables_scrollBody thead .sorting:after {
+	content: "";
+}
+
+div.dataTables_scrollBody{
+	margin-bottom:5px;
+}
+
+.dt-checkrow{
+	text-align:center;
+	width:20px;
+}
+
+.compact{
+	thead > tr > th{
+		//#gradient > .vertical(lighten(@main-hover-color,20%);@main-hover-color);
+		//padding:6px 8px;
+	}
+	tbody > tr > td{
+		padding:6px 8px;
+	}
+}

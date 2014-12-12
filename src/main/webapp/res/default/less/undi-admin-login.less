@@ -1,0 +1,153 @@
+.fullBg {
+	position: fixed;
+	top: 0;
+	left: 0;
+	overflow: hidden;
+}
+
+.loginFrame{
+	width:850px;
+	height:380px;
+	.opacity(0.9);
+	.center-block;
+}
+
+.status-panel{
+	margin-left:330px;
+	margin-top:10px;
+	width:450px;
+	float:left;
+	
+	h4{
+		color:#444;
+		margin-bottom:5px;
+	}
+}
+
+
+.alert-sm{
+	padding:3px 5px 3px 10px;
+	margin-top:5px;
+	margin-bottom:5px;
+	
+	span{
+		padding-left:10px;
+	}
+}
+
+
+.info{
+	width:280px;
+	float:left;
+	margin-right:30px;
+}
+.logo{
+	width:280px;
+	height:150px;
+	background:url(../images/login_logo.png) no-repeat;
+}
+
+.i18n{
+	margin-top:-15px;
+	.make-md-column-offset(1.5);
+
+}
+
+.seperator{
+	width:15px;
+	height:180px;
+	background:url(../images/login_seperator.png) no-repeat 0 50%;
+	float:left;
+	
+}
+
+.loginform{
+	width:500px;
+	float:left;
+	padding-left:30px;
+	
+}
+
+.form-horizontal .has-feedback .form-control-feedback {
+    top: 10px;
+    right: 10px;
+}
+
+.form-horizontal .form-group-sm.has-feedback .form-control-feedback {
+    top: 8px;
+    right: 10px;
+}
+
+.captchimgcontrol{
+	.make-sm-column(2;15px);
+	height:30px;
+	.opacity(0.9);
+}
+
+.linkcontrol{
+  color: #2d2d2d;
+  text-decoration: none;
+  font-size:12px;
+  display:inline-block;
+  padding-top:10px;
+
+  &:hover,
+  &:focus {
+    color: @brand-primary;
+    text-decoration: none;
+    cursor:pointer;
+  }
+}
+
+.footer{  
+   position: absolute;  bottom: 0; /* 关键 */  
+   left:0; /* IE下一定要记得 */  
+   height: 60px;         /* footer的高度一定要是固定值*/  
+   width:100%;
+   background:#4b4b4b;
+   color:#f1f1f1;
+   text-align:center;
+   font:18px bold;
+   line-height:60px;
+   opacity:0.5;
+}
+
+
+
+
+/*自定义控件*/
+.selectbox_label{
+	color:#f5f3f3;
+	float:left;
+	line-height:25px;
+	font-weight:normal;
+}
+.selectbox_frame{
+	height:25px;
+	width:130px;
+	border:#cccccc;	
+	float:left;
+	left:0px;
+	background:#f1f1f1;
+	text-align:center;
+	line-height:25px;
+
+}
+
+.selectbox_span{
+	height:25px;
+	width:25px;
+	float:right;
+	background:#bbbbbb url(../images/login-icons.png) no-repeat 50% 50%;
+	border-left:1px solid #bbbbbb;
+	cursor: pointer;
+}
+
+.selectbox_ul{
+	background:#f1f1f1;
+	list-style:none;
+	margin-top:25px;
+	padding:0;
+	text-align:center;
+	margin:0px;
+}
