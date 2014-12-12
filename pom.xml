@@ -2,12 +2,12 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.udf</groupId>
-	<artifactId>base</artifactId>
+	<artifactId>undiase</artifactId>
 	<packaging>war</packaging>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>undibase</name>
 	<description>Undifition BaseCode.</description>
-	<url>https://github.com/zsky1250/ZBase.git</url>
+	<url>https://github.com/zsky1250/undibase.git</url>
 	<!-- 定义工程变量 -->
 	<properties>
 		<project.build-source-encoding>UTF-8</project.build-source-encoding>
