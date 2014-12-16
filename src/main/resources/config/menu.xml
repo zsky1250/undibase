@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Menu name="admin">
+	<Menus>
+		<MenuItem name="我的" uri="abc&">
+			<icon>34f</icon>
+			<SubMenus>
+				<MenuItem name="你好" uri="bgf">
+					<icon>hi</icon>
+				</MenuItem>
+			</SubMenus>
+		</MenuItem>
+		<MenuItem name="你ww好" uri="bgf">
+			<icon>hi</icon>
+		</MenuItem>
+	</Menus>
+</Menu>
+
