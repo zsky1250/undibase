@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="60 seconds" debug="false">
+
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<Pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{20} - %msg%n
+			</Pattern>
+		</encoder>
+	</appender>
+
+	<appender name="FILE"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!-- 按天回滚 daily -->
+			<!-- log.dir 在maven profile里配置 -->
+			<fileNamePattern>../log/undipms-all-%d{yyyy-MM-dd}.log
+			</fileNamePattern>
+			<!-- 日志最大的历史 60天 -->
+			<maxHistory>60</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n
+			</pattern>
+		</encoder>
+	</appender>
+
+	<appender name="FILE-OWN"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!-- 按天回滚 daily -->
+			<!-- log.dir 在maven profile里配置 -->
+			<fileNamePattern>../log/undipms-%d{yyyy-MM-dd}.log
+			</fileNamePattern>
+			<!-- 日志最大的历史 60天 -->
+			<maxHistory>60</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n
+			</pattern>
+		</encoder>
+	</appender>
+
+	<root level="error">
+		<appender-ref ref="STDOUT" />
+	</root>
+
+	<!-- <root level="trace"> -->
+	<!-- <appender-ref ref="FILE" /> -->
+	<!-- </root> -->
+
+	<logger name="org.springframework.web" level="trace" additivity="false">
+		<appender-ref ref="STDOUT" />
+		<!-- <appender-ref ref="FILE-OWN" /> -->
+	</logger>
+
+
+</configuration>

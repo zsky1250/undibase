@@ -77,7 +77,7 @@
 
 		<property name="persistenceUnitName" value="undipms-jpa-hiberante" />
 		<property name="persistenceProvider">
-			<bean class="org.hibernate.ejb.HibernatePersistence" />
+			<bean class="org.hibernate.jpa.HibernatePersistenceProvider" />
 		</property>
 		<property name="jpaVendorAdapter">
 			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
@@ -126,10 +126,9 @@
 		</property>
 	</bean>
 
-	<jpa:repositories base-package="com.udf.pms.dao"
+	<jpa:repositories base-package="com.udf.*.dao"
 		repository-impl-postfix="Impl" entity-manager-factory-ref="entityManagerFactory"
-		transaction-manager-ref="transactionManager"
-		factory-class="com.udf.pms.repository.SecurityRepositoryFactoryBean">
+		transaction-manager-ref="transactionManager">
 	</jpa:repositories>
 
 	<!--注解事务支持-->

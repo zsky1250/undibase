@@ -2,7 +2,7 @@
 
 <Menu name="admin">
 	<Menus>
-		<MenuItem name="我的" uri="abc&">
+		<MenuItem name="我的" uri="abc">
 			<icon>34f</icon>
 			<SubMenus>
 				<MenuItem name="你好" uri="bgf">
