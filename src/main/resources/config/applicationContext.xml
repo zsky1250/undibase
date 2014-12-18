@@ -72,8 +72,8 @@
 	<!-- jpa Entity Factory 配置 -->
 	<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
 		<property name="dataSource" ref="dataSource" />
-		<property name="packagesToScan" value="com.udf.pms.vo" />
-		<property name="persistenceUnitName" value="undipms-jpa-hiberante" />
+		<property name="packagesToScan" value="com.udf.**.entity" />
+		<property name="persistenceUnitName" value="undi.jpa.hibernate" />
 		<property name="persistenceProvider">
 			<bean class="org.hibernate.jpa.HibernatePersistenceProvider" />
 		</property>
@@ -124,7 +124,7 @@
 		</property>
 	</bean>
 
-	<jpa:repositories base-package="com.udf.*.dao"
+	<jpa:repositories base-package="com.udf.**.dao"
 		repository-impl-postfix="Impl" entity-manager-factory-ref="entityManagerFactory"
 		transaction-manager-ref="transactionManager">
 	</jpa:repositories>
@@ -194,9 +194,9 @@
 			<!--favorPathExtension, favorParameter是true时起作用.仅用JAF后，手动转换-->
 			<map>
 				<entry key="html" value="text/html" />
+				<entry key="ftl" value="text/ftl"/>
 				<entry key="json" value="application/json" />
 				<entry key="xml" value="application/xml" />
-				<entry key="ftl" value="text/ftl"/>
 			</map>
 		</property>
 	</bean>

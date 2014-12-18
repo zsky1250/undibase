@@ -17,7 +17,20 @@
     </facet>
     <facet type="Spring" name="Spring">
       <configuration>
-        <fileset id="fileset" name="Spring test Application Context" removed="false">
+        <fileset id="web application context" name="MVC application context" removed="true">
+          <file>file://$MODULE_DIR$/src/main/resources/config/applicationContext.xml</file>
+        </fileset>
+        <fileset id="web SpringMVC servlet context" name="MVC SpringMVC servlet context" removed="true">
+          <file>file://$MODULE_DIR$/src/main/resources/config/webApplicationContext.xml</file>
+        </fileset>
+        <fileset id="fileset" name="Spring Application Context" removed="false">
+          <file>file://$MODULE_DIR$/src/main/resources/config/applicationContext.xml</file>
+        </fileset>
+        <fileset id="fileset2" name="Spring MVC Application Context" removed="false">
+          <dependency>fileset</dependency>
+          <file>file://$MODULE_DIR$/src/main/resources/config/webApplicationContext.xml</file>
+        </fileset>
+        <fileset id="fileset3" name="Spring TEST Application Context" removed="false">
           <file>file://$MODULE_DIR$/src/test/resources/applicationContext-test.xml</file>
         </fileset>
       </configuration>
