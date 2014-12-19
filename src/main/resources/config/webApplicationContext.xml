@@ -55,8 +55,7 @@
         </mvc:message-converters>
         <!-- 参数绑定 -->
         <mvc:argument-resolvers>
-            <bean
-                    class="org.springframework.data.web.PageableHandlerMethodArgumentResolver"/>
+            <bean class="org.springframework.data.web.PageableHandlerMethodArgumentResolver"/>
         </mvc:argument-resolvers>
     </mvc:annotation-driven>
 
@@ -76,29 +75,27 @@
     </bean>
 
     <!-- jstl view-->
-    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-        <property name="order" value="2"/>
-        <property name="prefix" value="WEB-INF/views"/>
-        <property name="suffix" value=".jsp"/>
-    </bean>
+    <!--<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">-->
+        <!--<property name="order" value="2"/>-->
+        <!--<property name="prefix" value="WEB-INF/views"/>-->
+        <!--<property name="suffix" value=".jsp"/>-->
+    <!--</bean>-->
 
     <!-- freeMarker view -->
     <bean id="freeMarkerViewResolver" class="org.springframework.web.servlet.view.AbstractTemplateViewResolver">
         <!--这里不用FreeMarkerViewResolver是为了能有效的注入自己的UndiFreeMarkerView-->
         <property name="viewClass" value="com.udf.web.mvc.freeMarker.UndiFreeMarkerView"/>
-        <property name="contentType" value="text/ftl; charset=utf-8"/>
+        <property name="contentType" value="text/html; charset=utf-8"/>
         <property name="cache" value="true"/>
-        <property name="prefix" value="/"/>
-        <property name="suffix" value="html"/>
+        <property name="prefix" value="/page/"/>
+        <property name="suffix" value=".html"/>
         <property name="requestContextAttribute" value="request"/>
         <property name="exposeSpringMacroHelpers" value="true"/>
         <property name="exposeRequestAttributes" value="true"/>
         <property name="exposeSessionAttributes" value="true"/>
     </bean>
-
-    <bean
-            class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
-        <property name="templateLoaderPath" value="/WEB-INF"/>
+    <bean class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+        <property name="templateLoaderPath" value="/WEB-INF/"/>
         <!--<property name="freemarkerSettings">-->
         <!--<props>-->
         <!--<prop key="locale">zh_CN</prop>-->
@@ -110,7 +107,6 @@
         <!-- </map> -->
         <!-- </property> -->
     </bean>
-
     <!-- 设置freeMarker的配置文件路径 -->
     <bean id="freemarkerPropSettings"
           class="org.springframework.beans.factory.config.PropertiesFactoryBean">

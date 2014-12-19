@@ -25,7 +25,7 @@ public class UndiFreeMarkerView extends FreeMarkerView{
      */
     protected void exposeHelpers(Map<String, Object> model, HttpServletRequest request) throws Exception {
         String basePath = request.getContextPath();
-        String resPath = basePath + "/" + RES_PATH;
+        String resPath = basePath + "/" + RES_PATH + "/default";
         model.put(CONTEXT_PATH, basePath);
         model.put(RES_PATH, resPath);
     }

@@ -7,7 +7,7 @@
 <meta name="author" content="zwr" />
 <link rel="shortcut icon" href="${res}/images/favicon.ico" type="image/x-icon" />
 <title>Undifition PMS 采购管理系统</title>
-<link rel="stylesheet" href="${res}/css/undi.css" />
+<link rel="stylesheet" href="${res}/css/undi-admin.css" />
 <script src="${res}/js/jquery-1.11.1.js"></script>
 <script src="${res}/js/undi-login.js"></script>
 <script src="${res}/plugin/bootstrapvalidator-0.5.2/js/bootstrapValidator.js"></script>
@@ -34,16 +34,16 @@
 					container : '#username-helpblock',
 					validators : {
 						notEmpty : {
-							message : '<@s.m 'form.vaild.username.null' />'
+							message : '<@spring.m 'form.vaild.username.null' />'
 						},
 						stringLength : {
 							min : 6,
 							max : 32,
-							message : '<@s.m 'form.vaild.username.size' />'
+							message : '<@spring.m 'form.vaild.username.size' />'
 						},
 						regexp : {
 							regexp : /^[a-zA-Z0-9_]+$/,
-							message : '<@s.m 'form.vaild.username.pattern' />'
+							message : '<@spring.m 'form.vaild.username.pattern' />'
 						}
 					}
 				},
@@ -51,11 +51,11 @@
 					container : '#password-helpblock',
 					validators : {
 						notEmpty : {
-							message : '<@s.m 'form.vaild.password.null' />'
+							message : '<@spring.m 'form.vaild.password.null' />'
 						},
 						stringLength : {
 							min : 6,
-							message : '<@s.m 'form.vaild.password.size' />'
+							message : '<@spring.m 'form.vaild.password.size' />'
 						}
 					}
 				}

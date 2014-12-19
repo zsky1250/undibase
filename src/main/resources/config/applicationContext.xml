@@ -194,7 +194,6 @@
 			<!--favorPathExtension, favorParameter是true时起作用.仅用JAF后，手动转换-->
 			<map>
 				<entry key="html" value="text/html" />
-				<entry key="ftl" value="text/ftl"/>
 				<entry key="json" value="application/json" />
 				<entry key="xml" value="application/xml" />
 			</map>
