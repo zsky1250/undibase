@@ -1,11 +1,8 @@
 package com.udf.web.menu.service;
 
-import com.udf.web.menu.MenuConfigurer;
 import com.udf.web.menu.bean.Menu;
-import com.udf.web.menu.bean.MenuItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.slf4j.Marker;
 import org.springframework.oxm.Unmarshaller;
 import org.springframework.stereotype.Service;
 
@@ -15,8 +12,6 @@ import javax.xml.transform.stream.StreamSource;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 
 /**
@@ -41,7 +36,8 @@ public class MenuService {
         try {
             File f = configurer.getResource().getFile();
             menu = (Menu) unmarshaller.unmarshal(new StreamSource(f));
-        } catch (IOException e) {
+        } catch (Exception e) {
+            log.debug("读取menu.xml文件出错:{}",e.getMessage());
             e.printStackTrace();
         }
         log.debug("载入Menu配置文件[name={}]",menu.getName());

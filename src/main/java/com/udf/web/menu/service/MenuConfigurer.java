@@ -1,4 +1,4 @@
-package com.udf.web.menu;
+package com.udf.web.menu.service;
 
 import org.springframework.core.io.Resource;
 

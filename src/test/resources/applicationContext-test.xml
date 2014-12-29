@@ -33,7 +33,7 @@
 		</property>
 	</bean>
 
-	<bean id="MenuConfigurer" class="com.udf.web.menu.MenuConfigurer">
+	<bean id="MenuConfigurer" class="com.udf.web.menu.service.MenuConfigurer">
 		<constructor-arg>
 			<value>classpath:config/menu.xml</value>
 		</constructor-arg>
