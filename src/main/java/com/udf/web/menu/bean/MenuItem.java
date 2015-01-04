@@ -15,7 +15,7 @@ public class MenuItem {
     private String name;
     @XmlAttribute
     private String uri;
-    @XmlElement
+    @XmlAttribute
     private String icon;
     @XmlElementWrapper(name="SubMenus")
     @XmlElement(name = "MenuItem")

@@ -2,16 +2,36 @@
 
 <Menu name="admin">
 	<Menus>
-		<MenuItem name="我的" uri="abc">
-			<icon>34f</icon>
+		<MenuItem name="我的面板" uri="mine.html" icon="fa-dashborad">
 			<SubMenus>
 				<MenuItem name="你好" uri="bgf">
 					<icon>hi</icon>
 				</MenuItem>
 			</SubMenus>
 		</MenuItem>
-		<MenuItem name="你ww好" uri="bgf">
-			<icon>hi</icon>
+		<MenuItem name="内容管理" uri="content.html" icon="fa-newspaper-o">
+
+		</MenuItem>
+
+		<MenuItem name="栏目管理" uri="catalog.html" icon="fa-sitemap">
+			<SubMenus>
+			</SubMenus>
+		</MenuItem>
+
+		<MenuItem name="用户管理" uri="user.html" icon="fa-user">
+
+		</MenuItem>
+
+		<MenuItem name="界面管理" uri="frontui.html" icon="fa-delicious">
+
+		</MenuItem>
+
+		<MenuItem name="辅助管理" uri="support.html" icon="fa-briefcase">
+
+		</MenuItem>
+
+		<MenuItem name="设置" uri="settings.html" icon="fa-cog">
+
 		</MenuItem>
 	</Menus>
 </Menu>

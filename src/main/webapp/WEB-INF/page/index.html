@@ -4,8 +4,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>Undifition PMS 采购管理系统</title>
-    <link rel="stylesheet" type="text/css"
-          href="${res}/css/undi.css"/>
+    <link rel="stylesheet" type="text/css" href="${res}/css/undi-admin.css"/>
     <script src="${res}/js/jquery-1.11.1.js"></script>
     <script src="${res}/plugin/jqueryeasing-1.3/js/jquery.easing.js"></script>
     <!--这个是支持CSS3动画的增强版，如果老浏览器可以不引用-->
@@ -15,7 +14,7 @@
             src="${res}/plugin/easypiechart-2.1.4/js/jquery.easypiechart.min.js"></script>
     <script src="${res}/plugin/datatable-1.10.3/js/jquery.dataTables.js"></script>
     <script src="${res}/plugin/datatable-1.10.3/js/dataTables.bootstrap.js"></script>
-    <script src="${res}/js/undi-index_v2.js"></script>
+    <script src="${res}/js/undi-admin.js"></script>
 
     <!--
     <script src="${res}/plugin/bootstrap-3.2.0/js/transition.js"></script>
@@ -166,7 +165,6 @@
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="main-navbar">
             <ul class="nav navbar-nav" id="module">
-                <@p.topmenu />
                 <!-- 					<li class="vdivider"></li> -->
                 <!-- 					<li class="active"><a href="#"><i -->
                 <!-- 							class="fa fa-tachometer fa-lg"></i>我的面板</a></li> -->
@@ -209,7 +207,6 @@
     </div>
     <div id="left-panel-list" class="left-panel-list">
         <div class="list-group">
-            <@p.leftmenu />
             <!-- 				<div class="list-divider">用户信息</div> -->
             <!-- 				<a href="#" class="list-group-item"> <i -->
             <!-- 					class="fa-left-panel-icon fa-key"></i><span class="list-text">修改密码</span></a> -->
