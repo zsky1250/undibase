@@ -1,6 +1,9 @@
 package com.udf.web.menu.service;
 
 import com.udf.web.menu.bean.Menu;
+import com.udf.web.menu.bean.MenuItem;
+import org.apache.commons.collections4.ListUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.oxm.Unmarshaller;
@@ -12,6 +15,8 @@ import javax.xml.transform.stream.StreamSource;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -44,8 +49,11 @@ public class MenuService {
         return menu;
     }
 
-    public Menu getMenu(){
-        return menu;
+    public List<MenuItem> getMenu(){
+        if(menu!=null&&menu.getItems()!=null&&!menu.getItems().isEmpty()){
+            return menu.getItems();
+        }
+        return null;
     }
 
 }

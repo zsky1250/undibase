@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.util.ArrayList;
+
 /**
  * Created by zwr on 2014/12/16.
  */
@@ -21,9 +23,9 @@ public class MenuTest {
 
     @Test
     public void testLoadMenu(){
-        Menu menu = menuService.getMenu();
-        System.out.println(menu);
-        for (MenuItem menuItem : menu.getItems()) {
+        ArrayList<MenuItem> menus = (ArrayList<MenuItem>) menuService.getMenu();
+        System.out.println(menus);
+        for (MenuItem menuItem : menus) {
             System.out.println(menuItem);
         }
     }
