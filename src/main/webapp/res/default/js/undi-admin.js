@@ -51,6 +51,10 @@
 
         _init: function () {
             //define variables
+            this.menu = {
+                url:"admin/menu.json",
+                list:null
+            };
             this.top = {
                 '$panel': $(this.opts.topMenuSelc),
                 //假定panel中含有<a>的<li>为menu item
@@ -77,10 +81,38 @@
                 '$errorPanel' :$(this.opts.errorPanelSelc)
             }
             this.selected = {$topA: null, $leftA: null};
+
+            this.loadMenu.done($.proxy(function(data){
+                this.__buildNaviMenu(data);
+
+            }),this);
             this._initNaviBar();
             this._initLeftPanel();
             this._initLocationPanel();
             this._initDialog();
+        },
+
+        loadMenu:function(){
+            return $.ajax(this.menu.url, {
+                type: 'POST',
+                data: {'name': 'default'}
+            });
+        },
+
+        __buildNaviMenu : function(data){
+            this.menu.list = data;
+            var topMenuDivider = '<li class="vdivider"></li>';
+            //menu content str: '<li><a href="1.html"><i class="fa  fa-truck fa-lg"></i>采购管理</a></li>';
+            var contentStr = "";
+            $.each(data,function(index,elem){
+                if(index==data.length-1&&elem.uri=='settings.html'){
+                    //设置的样式。
+                }
+                contentStr += topMenuDivider;
+                contentStr += '<li>'+'<a ref="'+elem.name+'"><i class="fa fa-lg '+elem.icon+'"></i>'+elem.name+'</a></li>'
+            });
+           contentStr+=topMenuDivider;
+            this.top.$panel.append(contentStr);
         },
 
         _initNaviBar: function () {
@@ -90,7 +122,7 @@
                 var $selected_li = this.top.$menu.eq(this.opts.selected_index);
                 $selected_li.addClass("active");
                 //构造辅助的红条选中样式的dom元素
-                this.top.$panel.append("<div class='Znavi_slider'></div>");
+                this.top.$panel.append("<div class='Znavi_slider'/>");
                 var $slide_bar = $(".Znavi_slider").css({
                     "left": $selected_li.position().left + "px",
                     "width": $selected_li.outerWidth() + "px",
