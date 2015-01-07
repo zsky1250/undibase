@@ -22,6 +22,7 @@
     var zUI = function (options) {
         var DEFAULTS = {
             topMenuSelc: "#module",
+            topSettingsSelc:"#settings",
             leftPanelSelc: "#left-panel",
             mainPanelSelc: "#main-panel-wrapper",
             locationPanelSelc: "#localtion-panel",
@@ -56,7 +57,8 @@
                 list:null
             };
             this.top = {
-                '$panel': $(this.opts.topMenuSelc),
+                '$menuPanel': $(this.opts.topMenuSelc),
+                '$settingPanel':$(this.opts.topSettingsSelc),
                 //假定panel中含有<a>的<li>为menu item
                 '$menu': $("li:has(a)", this.opts.topMenuSelc)
             };
@@ -83,7 +85,7 @@
             this.selected = {$topA: null, $leftA: null};
 
             this.loadMenu.done($.proxy(function(data){
-                this.__buildNaviMenu(data);
+                this._buildNaviMenu(data);
 
             }),this);
             this._initNaviBar();
@@ -99,20 +101,49 @@
             });
         },
 
-        __buildNaviMenu : function(data){
+        _buildNaviMenu : function(data){
             this.menu.list = data;
-            var topMenuDivider = '<li class="vdivider"></li>';
+            if(data.length==0){
+                this.top.$menuPanel.hide();
+                this.top.$settingPanel.hide();
+                return;
+            }else if(data.length==1){
+                //如果只有一个菜单项的情况
+                if(data[0].uri=='settings.html'){
+                    //是settings,隐藏menu
+                    this.top.$menuPanel.hide();
+                }else{
+                    this.top.$settingPanel.hide();
+                }
+            }
+            var zui = this;
+            var divider = '<li class="vdivider"/>';
             //menu content str: '<li><a href="1.html"><i class="fa  fa-truck fa-lg"></i>采购管理</a></li>';
             var contentStr = "";
+            var menulist = [];
             $.each(data,function(index,elem){
                 if(index==data.length-1&&elem.uri=='settings.html'){
-                    //设置的样式。
+                    //创建settingspanel的内容。
+                    var settingStr = divider;
+                    settingStr +='<li class="dropdown"><a  class="dropdown-toggle"  data-toggle="dropdown">'
+                                +elem.name+'<i class="fa fa-lg '+elem.icon+'"></a>';
+                    settingStr += '<ul class="dropdown-menu" role="menu">';
+                    if(data.subMenus!=null&&data.subMenus.length>0){
+                        var settinglist = [];
+                        $.each(data.subMenus,function(index,elem){
+                            settinglist[index] = '<li><a href="'+elem.uri+'">'+elem.name+'</a></li>';
+                        });
+                        settingStr+=settinglist.join('');
+                    }
+                    settingStr+='</ul></li>';
+                    zui.top.$settingPanel.append(settingStr);
+                }else{
+                    menulist[index] = divider
+                        +'<li>'+'<a ref="'+elem.name+'"><i class="fa fa-lg '+elem.icon+'"></i>'+elem.name+'</a></li>';
                 }
-                contentStr += topMenuDivider;
-                contentStr += '<li>'+'<a ref="'+elem.name+'"><i class="fa fa-lg '+elem.icon+'"></i>'+elem.name+'</a></li>'
             });
-           contentStr+=topMenuDivider;
-            this.top.$panel.append(contentStr);
+            contentStr += menulist.join('')+divider;
+            this.top.$menuPanel.append(contentStr);
         },
 
         _initNaviBar: function () {
