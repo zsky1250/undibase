@@ -8017,9 +8017,6 @@ button.close {
   color: rgba(255, 255, 255, 0.8);
   font-size: 16px;
 }
-.navbar-zface .navbar-nav > li > a i {
-  margin-right: 5px;
-}
 .navbar-zface .navbar-nav > li > a:hover,
 .navbar-zface .navbar-nav > li > a:focus {
   color: #ffffff;
@@ -8043,6 +8040,9 @@ button.close {
   margin-top: 5px;
   border-left: 1px solid #6a6a6a;
   border-right: 1px solid #2c2c2c;
+}
+.navbar-zface .navbar-nav li a i {
+  margin-right: 5px;
 }
 .navbar-zface .navbar-toggle {
   border-color: #2b2b2b;

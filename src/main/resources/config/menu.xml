@@ -2,7 +2,7 @@
 
 <Menu name="admin">
 	<Menus>
-		<MenuItem name="我的面板" uri="mine.html" icon="fa-dashborad">
+		<MenuItem name="我的面板" uri="mine.html" icon="fa-tachometer">
 			<SubMenus>
 				<MenuItem name="用户信息">
 					<SubMenus>
@@ -74,7 +74,7 @@
 			</SubMenus>
 		</MenuItem>
 
-		<MenuItem name="设置" uri="settings.html" icon="fa-cog">
+		<MenuItem name="系统设置" uri="settings.html" icon="fa-cog">
 			<SubMenus>
 				<MenuItem name="基本设置" uri="test.html" icon="fa-circle-o-notch"/>
 				<MenuItem name="站点设置" uri="test.html" icon="fa-global"/>

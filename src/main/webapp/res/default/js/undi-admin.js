@@ -53,14 +53,14 @@
         _init: function () {
             //define variables
             this.menu = {
-                url:"admin/menu.json",
+                url:"menu.json",
                 list:null
             };
             this.top = {
                 '$menuPanel': $(this.opts.topMenuSelc),
                 '$settingPanel':$(this.opts.topSettingsSelc),
                 //假定panel中含有<a>的<li>为menu item
-                '$menu': $("li:has(a)", this.opts.topMenuSelc)
+                '$menu': null
             };
             this.left = {
                 '$panel': $(this.opts.leftPanelSelc),
@@ -84,14 +84,13 @@
             }
             this.selected = {$topA: null, $leftA: null};
 
-            this.loadMenu.done($.proxy(function(data){
-                this._buildNaviMenu(data);
-
-            }),this);
-            this._initNaviBar();
-            this._initLeftPanel();
-            this._initLocationPanel();
-            this._initDialog();
+            this.loadMenu().done($.proxy(function(data){
+                this._buildNaviMenu(data.menu);
+                this._initNaviBar();
+                this._initLeftPanel();
+                this._initLocationPanel();
+                this._initDialog();
+            },this));
         },
 
         loadMenu:function(){
@@ -126,12 +125,12 @@
                     //创建settingspanel的内容。
                     var settingStr = divider;
                     settingStr +='<li class="dropdown"><a  class="dropdown-toggle"  data-toggle="dropdown">'
-                                +elem.name+'<i class="fa fa-lg '+elem.icon+'"></a>';
+                            +'<i class="fa fa-lg '+elem.icon+'"></i>'+elem.name+'</a>';
                     settingStr += '<ul class="dropdown-menu" role="menu">';
-                    if(data.subMenus!=null&&data.subMenus.length>0){
+                    if(elem.subMenus!=null&&elem.subMenus.length>0){
                         var settinglist = [];
-                        $.each(data.subMenus,function(index,elem){
-                            settinglist[index] = '<li><a href="'+elem.uri+'">'+elem.name+'</a></li>';
+                        $.each(elem.subMenus,function(index,elem){
+                            settinglist[index] = '<li><a href="'+elem.uri+'"><i class="fa '+elem.icon+'"></i>'+elem.name+'</a></li>';
                         });
                         settingStr+=settinglist.join('');
                     }
@@ -144,16 +143,17 @@
             });
             contentStr += menulist.join('')+divider;
             this.top.$menuPanel.append(contentStr);
+            this.top.$menu = this.top.$menuPanel.find("li:has(a)");
         },
 
-        _initNaviBar: function () {
+        _initNaviBar: function() {
             if (this.top.$menu.length != 0) {
                 //module中存在li则加上选中的style。
                 //因为是从数据库读取的module，可能因为没数据造成selected不存在。
                 var $selected_li = this.top.$menu.eq(this.opts.selected_index);
                 $selected_li.addClass("active");
                 //构造辅助的红条选中样式的dom元素
-                this.top.$panel.append("<div class='Znavi_slider'/>");
+                this.top.$menuPanel.append("<div class='Znavi_slider'/>");
                 var $slide_bar = $(".Znavi_slider").css({
                     "left": $selected_li.position().left + "px",
                     "width": $selected_li.outerWidth() + "px",
@@ -167,7 +167,7 @@
                     _moveNaviSlider($slide_bar, $(this));
                 });
                 //焦点移走了，红条跳回到selected元素上。
-                this.top.$panel.mouseleave(function () {
+                this.top.$menuPanel.mouseleave(function () {
                     _moveNaviSlider($slide_bar, $selected_li);
                 });
 
