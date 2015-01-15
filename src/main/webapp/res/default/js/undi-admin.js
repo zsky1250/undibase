@@ -32,8 +32,6 @@
             home_index: 0,
             collapseWidth: "60px",
             leftPanelCollapsed: false,
-            leftMenuUrl: 'index/left',
-            mainPanelUrl: 'index/main',
             allowDuplicatedClick: true
         };
 
@@ -143,6 +141,9 @@
             });
             contentStr += menulist.join('')+divider;
             this.top.$menuPanel.append(contentStr);
+            //加入红色横条
+            this.top.$menuPanel.append("<div class='Znavi_slider'/>");
+            //将Menu中的链接保存到$menu数组对象中，为初始化准备。
             this.top.$menu = this.top.$menuPanel.find("li:has(a)");
         },
 
@@ -153,7 +154,6 @@
                 var $selected_li = this.top.$menu.eq(this.opts.selected_index);
                 $selected_li.addClass("active");
                 //构造辅助的红条选中样式的dom元素
-                this.top.$menuPanel.append("<div class='Znavi_slider'/>");
                 var $slide_bar = $(".Znavi_slider").css({
                     "left": $selected_li.position().left + "px",
                     "width": $selected_li.outerWidth() + "px",
@@ -174,7 +174,6 @@
 
                 //注册载入leftMenu的逻辑。和加选中样式。
                 //监听事件用on,事件驱动型，更好！
-                var url = this.opts.leftMenuUrl;
                 //全局引用
                 var zui = this;
                 this.top.$menu.on('click.zUI', 'a', function (e,source) {
@@ -182,7 +181,7 @@
                     var $cur_Li = $(this).parent('li');
                     if (zui.opts.allowDuplicatedClick || $selected_li[0] != $cur_Li[0]) {
                         if(!e.hasOwnProperty('originalEvent')&&source==='location'){
-                            //event is triggered and source is from location.
+                            //event is triggered from inner and source is location.
                             zui._removeLeftMenuSelected();
                             //trigger location changed event
                             zui.location.$panel.trigger('locationChanged.zUI', 'top');
