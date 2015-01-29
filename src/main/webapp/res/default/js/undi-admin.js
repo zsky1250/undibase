@@ -147,6 +147,27 @@
             this.top.$menu = this.top.$menuPanel.find("li:has(a)");
         },
 
+
+        _buildLeftMenu : function(topMenuAttr){
+            $.each(this.menu.list,function(index,topMenu){
+                if(topMenu.uri===topMenuAttr){
+                    //找到合适的topMenu，遍历获取leftMenu
+                    var leftMenuList = topMenu.subMenus;
+                    var menulist = [];
+                    $.each(leftMenuList,function(index,MenuItem){
+                        if(MenuItem.subMenus==null){
+                            //没有子菜单，就把当前项当做直接访问菜单项。
+                        menulist[index] = '<a href="'+MenuItem.uri+'" class="list-group-item"><i class="fa-left-panel-icon '+MenuItem.icon+'"></i><span class="list-text">修改密码</span></a>';
+                        }else{
+                            //有子菜单项，就把当前想当做一个类型表示，再便利其子菜单，得到可以访问的菜单项。
+                        }
+
+                    });
+                    return;
+                }
+            });
+        },
+
         _initNaviBar: function() {
             if (this.top.$menu.length != 0) {
                 //module中存在li则加上选中的style。
@@ -186,7 +207,7 @@
                             //trigger location changed event
                             zui.location.$panel.trigger('locationChanged.zUI', 'top');
                         }else {
-                            var leftXHR = loadContext(url, $(this).attr("href"),zui);
+                           /* var leftXHR = loadContext(url, $(this).attr("href"),zui);
                             leftXHR.done(function (data) {
                                 //choose selected class
                                 $selected_li.removeClass("active");
@@ -201,7 +222,8 @@
                                 zui.left.$menu.empty().html(data);
                                 //adjust left menu collapse status.
                                 zui._changeLeftMenuCollpased();
-                            });
+                            });*/
+                            _buildLeftMenu($(this).attr("href"));
                         }
                         var mainXHR = loadContext($(this).attr('href'),null,zui);
                         mainXHR.done(function (data) {
