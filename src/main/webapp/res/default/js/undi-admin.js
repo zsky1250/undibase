@@ -136,7 +136,7 @@
                     zui.top.$settingPanel.append(settingStr);
                 }else{
                     menulist[index] = divider
-                        +'<li>'+'<a ref="'+elem.name+'"><i class="fa fa-lg '+elem.icon+'"></i>'+elem.name+'</a></li>';
+                        +'<li>'+'<a href="'+elem.uri+'"><i class="fa fa-lg '+elem.icon+'"></i>'+elem.name+'</a></li>';
                 }
             });
             contentStr += menulist.join('')+divider;
@@ -149,6 +149,7 @@
 
 
         _buildLeftMenu : function(topMenuAttr){
+            var zui = this;
             $.each(this.menu.list,function(index,topMenu){
                 if(topMenu.uri===topMenuAttr){
                     //找到合适的topMenu，遍历获取leftMenu
@@ -157,12 +158,20 @@
                     $.each(leftMenuList,function(index,MenuItem){
                         if(MenuItem.subMenus==null){
                             //没有子菜单，就把当前项当做直接访问菜单项。
-                        menulist[index] = '<a href="'+MenuItem.uri+'" class="list-group-item"><i class="fa-left-panel-icon '+MenuItem.icon+'"></i><span class="list-text">修改密码</span></a>';
+                        menulist[index] = '<a href="'+MenuItem.uri+'" class="list-group-item"><i class="fa-left-panel-icon '+MenuItem.icon+'"></i><span class="list-text">'+MenuItem.name+'</span></a>';
                         }else{
-                            //有子菜单项，就把当前想当做一个类型表示，再便利其子菜单，得到可以访问的菜单项。
+                            //有子菜单项，就把当前想当做一个类型表示，再遍历其子菜单，得到可以访问的菜单项。（如果变态到4级Menu，这里就不考虑了...）
+                            var menuItemList = [];
+                            menuItemList[0] = '<div class="list-divider">'+MenuItem.name+'</div>';
+                            $.each(MenuItem.subMenus,function(index,MenuItem){
+                                menuItemList[index+1] = '<a href="'+MenuItem.uri+'" class="list-group-item"><i class="fa-left-panel-icon '+MenuItem.icon+'"></i><span class="list-text">'+MenuItem.name+'</span></a>';
+                            });
+                            menulist[index] = menuItemList.join('');
                         }
-
                     });
+
+                    var contentStr = menulist.join('');
+                    zui.left.$menu.html(contentStr);
                     return;
                 }
             });
@@ -223,7 +232,7 @@
                                 //adjust left menu collapse status.
                                 zui._changeLeftMenuCollpased();
                             });*/
-                            _buildLeftMenu($(this).attr("href"));
+                            zui._buildLeftMenu($(this).attr("href"));
                         }
                         var mainXHR = loadContext($(this).attr('href'),null,zui);
                         mainXHR.done(function (data) {
