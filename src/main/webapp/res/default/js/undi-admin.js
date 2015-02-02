@@ -145,36 +145,51 @@
             this.top.$menuPanel.append("<div class='Znavi_slider'/>");
             //将Menu中的链接保存到$menu数组对象中，为初始化准备。
             this.top.$menu = this.top.$menuPanel.find("li:has(a)");
+
+            this._buildLeftMenu(this.selected_index);
         },
 
-
-        _buildLeftMenu : function(topMenuAttr){
+        _buildLeftMenu : function(choosedTopMenuItem){
             var zui = this;
-            $.each(this.menu.list,function(index,topMenu){
-                if(topMenu.uri===topMenuAttr){
-                    //找到合适的topMenu，遍历获取leftMenu
-                    var leftMenuList = topMenu.subMenus;
-                    var menulist = [];
-                    $.each(leftMenuList,function(index,MenuItem){
-                        if(MenuItem.subMenus==null){
-                            //没有子菜单，就把当前项当做直接访问菜单项。
-                        menulist[index] = '<a href="'+MenuItem.uri+'" class="list-group-item"><i class="fa-left-panel-icon '+MenuItem.icon+'"></i><span class="list-text">'+MenuItem.name+'</span></a>';
-                        }else{
-                            //有子菜单项，就把当前想当做一个类型表示，再遍历其子菜单，得到可以访问的菜单项。（如果变态到4级Menu，这里就不考虑了...）
-                            var menuItemList = [];
-                            menuItemList[0] = '<div class="list-divider">'+MenuItem.name+'</div>';
-                            $.each(MenuItem.subMenus,function(index,MenuItem){
-                                menuItemList[index+1] = '<a href="'+MenuItem.uri+'" class="list-group-item"><i class="fa-left-panel-icon '+MenuItem.icon+'"></i><span class="list-text">'+MenuItem.name+'</span></a>';
-                            });
-                            menulist[index] = menuItemList.join('');
-                        }
+            var topMenu = this._getSelectedMenu(choosedTopMenuItem);
+            //找到合适的topMenu，遍历获取leftMenu
+            var leftMenuList = topMenu.subMenus;
+            if(leftMenuList==null) return;
+            var menulist = [];
+            $.each(leftMenuList,function(index,MenuItem){
+                if(MenuItem.subMenus==null){
+                    //没有子菜单，就把当前项当做直接访问菜单项。
+                menulist[index] = '<a href="'+MenuItem.uri+'" class="list-group-item"><i class="fa-left-panel-icon '+MenuItem.icon+'"></i><span class="list-text">'+MenuItem.name+'</span></a>';
+                }else{
+                    //有子菜单项，就把当前想当做一个类型表示，再遍历其子菜单，得到可以访问的菜单项。（如果变态到4级Menu，这里就不考虑了...）
+                    var menuItemList = [];
+                    menuItemList[0] = '<div class="list-divider">'+MenuItem.name+'</div>';
+                    $.each(MenuItem.subMenus,function(index,MenuItem){
+                        menuItemList[index+1] = '<a href="'+MenuItem.uri+'" class="list-group-item"><i class="fa-left-panel-icon '+MenuItem.icon+'"></i><span class="list-text">'+MenuItem.name+'</span></a>';
                     });
-
-                    var contentStr = menulist.join('');
-                    zui.left.$menu.html(contentStr);
-                    return;
+                    menulist[index] = menuItemList.join('');
                 }
             });
+
+            var contentStr = menulist.join('');
+            zui.left.$menu.html(contentStr);
+        },
+
+        _getSelectedMenu : function(choosedTopMenuItem){
+            if($.isNumeric(choosedTopMenuItem)){
+                //传入的是menu.list的index
+               return this.menu.list[choosedTopMenuItem]
+            }else{
+                //传入的是一个uri地址，需要自己比较，得到index
+                var menuItem;
+                $.each(this.menu.list,function(index,topMenu) {
+                    if(topMenu.uri == choosedTopMenuItem){
+                        menuItem = topMenu
+                        return false;
+                    }
+                });
+                return menuItem;
+            }
         },
 
         _initNaviBar: function() {

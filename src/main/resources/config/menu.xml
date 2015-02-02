@@ -23,13 +23,15 @@
 			</SubMenus>
 		</MenuItem>
 		<MenuItem name="内容管理" uri="content.html" icon="fa-newspaper-o">
-			<MenuItem name="信息管理" uri="test.html" icon="fa-file-text-o"/>
-			<MenuItem name="表单模板" uri="test.html" icon="fa-list-alt"/>
-			<MenuItem name="附件管理" uri="test.html" icon="fa-paperclip"/>
-			<MenuItem name="评论管理" uri="test.html" icon="fa-comment-o"/>
-			<MenuItem name="投票管理" uri="test.html" icon="fa-thumbs-o-up"/>
-			<MenuItem name="采集管理" uri="test.html" icon="fa-yelp"/>
-			<MenuItem name="碎片管理" uri="test.html" icon="fa-recycle"/>
+			<SubMenus>
+				<MenuItem name="信息管理" uri="test.html" icon="fa-file-text-o"/>
+				<MenuItem name="表单模板" uri="test.html" icon="fa-list-alt"/>
+				<MenuItem name="附件管理" uri="test.html" icon="fa-paperclip"/>
+				<MenuItem name="评论管理" uri="test.html" icon="fa-comment-o"/>
+				<MenuItem name="投票管理" uri="test.html" icon="fa-thumbs-o-up"/>
+				<MenuItem name="采集管理" uri="test.html" icon="fa-yelp"/>
+				<MenuItem name="碎片管理" uri="test.html" icon="fa-recycle"/>
+			</SubMenus>
 		</MenuItem>
 
 		<MenuItem name="栏目管理" uri="catalog.html" icon="fa-sitemap">
