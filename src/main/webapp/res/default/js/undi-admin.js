@@ -88,6 +88,7 @@
                 this._initLeftPanel();
                 this._initLocationPanel();
                 this._initDialog();
+                this._initMainPanel();
             },this));
         },
 
@@ -146,12 +147,13 @@
             //将Menu中的链接保存到$menu数组对象中，为初始化准备。
             this.top.$menu = this.top.$menuPanel.find("li:has(a)");
 
-            this._buildLeftMenu(this.selected_index);
+            this._buildLeftMenu(this.opts.selected_index);
         },
 
         _buildLeftMenu : function(choosedTopMenuItem){
             var zui = this;
             var topMenu = this._getSelectedMenu(choosedTopMenuItem);
+            if(topMenu==null) return;
             //找到合适的topMenu，遍历获取leftMenu
             var leftMenuList = topMenu.subMenus;
             if(leftMenuList==null) return;
@@ -181,10 +183,10 @@
                return this.menu.list[choosedTopMenuItem]
             }else{
                 //传入的是一个uri地址，需要自己比较，得到index
-                var menuItem;
+                var menuItem=null;
                 $.each(this.menu.list,function(index,topMenu) {
                     if(topMenu.uri == choosedTopMenuItem){
-                        menuItem = topMenu
+                        menuItem = topMenu;
                         return false;
                     }
                 });
@@ -248,6 +250,17 @@
                                 zui._changeLeftMenuCollpased();
                             });*/
                             zui._buildLeftMenu($(this).attr("href"));
+                            //choose selected class
+                            $selected_li.removeClass("active");
+                            $selected_li = $cur_Li.addClass("active");
+                            //cache the selected <a> into zui object
+                            zui.selected.$topA = $selected_li.children("a:first");
+                            //remove left menu selected class.
+                            zui._removeLeftMenuSelected();
+                            //trigger location changed event
+                            zui.location.$panel.trigger('locationChanged.zUI', 'top');;
+                            //adjust left menu collapse status.
+                            zui._changeLeftMenuCollpased();
                         }
                         var mainXHR = loadContext($(this).attr('href'),null,zui);
                         mainXHR.done(function (data) {
@@ -269,14 +282,15 @@
                 this.left.$panel.find("div.avator").removeClass("avator-sm");
                 //adjust welcome panel.
                 this.left.$panel.find("div.welcome").removeClass("welcome-sm").children("span").show();
-                //collpase a text.
+                //adjust a text.
                 this.left.$panel.find("a.list-group-item").each(function () {
                     $(this).children("span.list-text").html($(this).attr("title"));
                     $(this).attr("title", "");
                     //adjust badget
                     $(this).children("span.badge").removeClass("badge-sm");
+                    $(this).css("border-bottom",$(this).attr("border-bottom"));
                 });
-                //collpase divider text.
+                //adjust divider text.
                 this.left.$panel.find("div.list-divider").each(function (index) {
                     if (index == 0) {
                         //显示第一个divider。
@@ -298,15 +312,17 @@
                 this.left.$panel.find("div.avator").addClass("avator-sm");
                 //adjust welcome panel.
                 this.left.$panel.find("div.welcome").addClass("welcome-sm").children("span").hide();
-                //collpase a text.
+                //adjust a text.
                 this.left.$panel.find("a.list-group-item").each(function () {
                     //alert($container.text());
                     $(this).attr("title", $(this).children("span.list-text").text());
                     $(this).children("span.list-text").html("&nbsp;");
+                    $(this).attr("border-bottom",$(this).css("border-bottom"));
+                    $(this).css("border-bottom","none");
                     //adjust badget
                     $(this).children("span.badge").addClass("badge-sm");
                 });
-                //collpase divider text.
+                //adjust divider text.
                 this.left.$panel.find("div.list-divider").each(function (index) {
                     if (index == 0) {
                         $(this).hide();

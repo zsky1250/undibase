@@ -8273,7 +8273,7 @@ a:focus {
   width: 100%;
 }
 .left-panel-list .list-divider {
-  border-bottom: 1px solid #7e7e7e;
+  border-bottom: 1px solid #f5f5f5;
   padding: 10px 15px 5px 0;
   text-align: right;
   color: #f5f5f5;
@@ -8303,6 +8303,7 @@ a:focus {
 }
 .left-panel-list .list-group-item {
   padding-right: 0;
+  border-bottom: 1px solid #e39c80;
 }
 .left-panel-list .list-group-item.active {
   background-image: -webkit-linear-gradient(left, #5fb6eb 0%, #1987cb 100%);
@@ -8473,3 +8474,4 @@ a.processing-bar > p:hover {
 .modal-header h4 i {
   margin-right: 10px;
 }
+/*# sourceMappingURL=undi-admin.css.map */
