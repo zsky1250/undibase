@@ -18,8 +18,8 @@ public class ErrorContoller {
 
     @RequestMapping("/error/PageNotFound")
     public String PageNotFound(HttpServletRequest request,Model model){
-        model.addAttribute("status", request.getAttribute("javax.servlet.error.status_code"));
-        model.addAttribute("reason", request.getAttribute("javax.servlet.error.message"));
+        model.addAttribute("code", request.getAttribute("javax.servlet.error.status_code"));
+        model.addAttribute("msg", request.getAttribute("javax.servlet.error.message"));
         return "404";
     }
 

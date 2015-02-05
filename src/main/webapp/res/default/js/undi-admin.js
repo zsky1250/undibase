@@ -264,7 +264,7 @@
                         }
                         var mainXHR = loadContext($(this).attr('href'),null,zui);
                         mainXHR.done(function (data) {
-                            zui.getMainPage(data,true,true);
+                            zui.showMainPage(data,true,true);
                         });
                     }
                 });
@@ -368,7 +368,7 @@
                         //触发location事件。
                         zui.location.$panel.trigger('locationChanged.zUI', 'left');
                         //载入内容
-                        zui.getMainPage(data,true,true);
+                        zui.showMainPage(data,true,true);
                     });
                 }
             });
@@ -457,7 +457,7 @@
          * @returns {zUI} 方便链式操作。
          */
 
-        getMainPage: function(data,loadInNew,fx){
+        showMainPage: function(data,loadInNew,fx){
             if(loadInNew){
                 this.main.$panel.empty();
                 this.main.contentStack.splice(0, this.main.contentStack.length);

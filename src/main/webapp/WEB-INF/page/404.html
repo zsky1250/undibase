@@ -1,10 +1,7 @@
-<!DOCTYPE html>
-<html>
-<head lang="en">
-    <meta charset="UTF-8">
-    <title></title>
-</head>
-<body>
-
-</body>
-</html>
+<div class="row notice">
+    <div class="col-md-4 icon"><i class="fa fa-5x fa-meh-o"></i></div>
+    <div class="col-md-8 error-text">
+        <div class="row"><h1 class="error-code">${code!}</h1></div>
+        <div class="row"><p class="error-msg"><#if code?? && code?int==404>找不到该页面了，点击按钮返回<br/></#if>${msg!}</p></div>
+    </div>
+</div>
