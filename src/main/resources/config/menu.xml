@@ -12,13 +12,15 @@
 				</MenuItem>
 				<MenuItem name="定制面板">
 					<SubMenus>
-						<MenuItem name="组件管理" uri="" icon=""/>
-						<MenuItem name="通知提示" uri="" icon=""/>
+						<MenuItem name="组件管理" uri="" icon="fa-cubes"/>
+						<MenuItem name="通知提示" uri="" icon="fa-bullhorn"/>
 					</SubMenus>
 				</MenuItem>
 				<MenuItem name="常用操作管理">
-					<MenuItem name="写信息" uri="make-content.html" icon="fa-pencel-square-o"/>
-					<MenuItem name="待审核信息" uri="confirming-content.html" icon="fa-check-square-o"/>
+					<SubMenus>
+						<MenuItem name="写信息" uri="make-content.html" icon="fa-pencil-square-o"/>
+						<MenuItem name="待审核信息" uri="confirming-content.html" icon="fa-check-square-o"/>
+					</SubMenus>
 				</MenuItem>
 			</SubMenus>
 		</MenuItem>
@@ -62,7 +64,7 @@
 		</MenuItem>
 
 		<MenuItem name="辅助管理" uri="support.html" icon="fa-briefcase">
-			<SubMenus>test.html
+			<SubMenus>
 				<MenuItem name="安全管理" icon="">
 					<SubMenus>
 						<MenuItem name="防火墙设置" uri="test.html" icon=""/>
