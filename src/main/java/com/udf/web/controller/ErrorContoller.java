@@ -22,6 +22,4 @@ public class ErrorContoller {
         model.addAttribute("msg", request.getAttribute("javax.servlet.error.message"));
         return "404";
     }
-
-
 }
