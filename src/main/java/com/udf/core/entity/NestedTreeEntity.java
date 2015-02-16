@@ -2,12 +2,13 @@ package com.udf.core.entity;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by zwr on 2015/2/15.
  */
 @MappedSuperclass
-public class AbstracNestedTree<T> {
+public abstract class NestedTreeEntity<T extends NestedTreeEntity> {
 
     @Id
     @GeneratedValue
@@ -22,7 +23,7 @@ public class AbstracNestedTree<T> {
     private T parent;
 
     @OneToMany(mappedBy = "parent")
-    private ArrayList<T> children;
+    private List<T> children;
 
     public int getId() {
         return id;
@@ -56,11 +57,11 @@ public class AbstracNestedTree<T> {
         this.parent = parent;
     }
 
-    public ArrayList<T> getChildren() {
+    public List<T> getChildren() {
         return children;
     }
 
-    public void setChildren(ArrayList<T> children) {
+    public void setChildren(List<T> children) {
         this.children = children;
     }
 }

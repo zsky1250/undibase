@@ -48,12 +48,12 @@
 	<!-- <appender-ref ref="FILE" /> -->
 	<!-- </root> -->
 
-	<logger name="org.springframework.web" level="debug" additivity="false">
+	<logger name="org.springframework.web" level="info" additivity="false">
 		<appender-ref ref="STDOUT" />
 		<!-- <appender-ref ref="FILE-OWN" /> -->
 	</logger>
 
-	<logger name="freemarker" level="debug" additivity="false">
+	<logger name="freemarker" level="error" additivity="false">
 		<appender-ref ref="STDOUT" />
 		<!-- <appender-ref ref="FILE-OWN" /> -->
 	</logger>

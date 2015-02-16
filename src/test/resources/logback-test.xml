@@ -8,7 +8,7 @@
 		</encoder>
 	</appender>
 
-	<root level="debug">
+	<root level="error">
 		<appender-ref ref="STDOUT" />
 	</root>
 
@@ -16,9 +16,13 @@
 	<!-- <appender-ref ref="FILE" /> -->
 	<!-- </root> -->
 
-	<logger name="org.springframework.web" level="trace" additivity="false">
+	<logger name="org.springframework.web" level="info" additivity="false">
 		<appender-ref ref="STDOUT" />
 		<!-- <appender-ref ref="FILE-OWN" /> -->
+	</logger>
+
+	<logger name="com.udf" level="debug" additivity="false">
+		<appender-ref ref="STDOUT"/>
 	</logger>
 
 

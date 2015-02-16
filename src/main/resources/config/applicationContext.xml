@@ -1,4 +1,4 @@
-\<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:cache="http://www.springframework.org/schema/cache"
@@ -26,7 +26,7 @@
 	<!--数据库连接配置 使用c3p0管理数据连接池 -->
 	<bean id="propertyConfigurer"
 		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-		<property name="location" value="/WEB-INF/config/jdbc.properties" />
+		<property name="location" value="/config/jdbc.properties" />
 	</bean>
 
 	<!-- 数据源 -->
@@ -79,7 +79,7 @@
 		</property>
 		<property name="jpaVendorAdapter">
 			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
-				<property name="generateDdl" value="false" />
+				<property name="generateDdl" value="true" />
 				<property name="database" value="MYSQL" />
 				<property name="databasePlatform" value="org.hibernate.dialect.MySQL5InnoDBDialect" />
 				<property name="showSql" value="true" />
@@ -171,7 +171,7 @@
 
 
 	<!--开启springAOP,默认用JDK动态代理，面向接口 -->
-	<aop:aspectj-autoproxy expose-proxy="true" />
+	<!--<aop:aspectj-autoproxy expose-proxy="true" />-->
 
 	<!--	内容协商：
 	参考：http://spring.io/blog/2013/05/11/content-negotiation-using-spring-mvc
