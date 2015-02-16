@@ -27,7 +27,7 @@ public class CatalogCrudTest {
 
     private static Logger logger = LoggerFactory.getLogger(CatalogCrudTest.class);
 
-    @Test
+@Test
     @Transactional
     public void testInsertCatNode(){
         Catalog cat = new Catalog();
@@ -36,5 +36,17 @@ public class CatalogCrudTest {
         logger.debug("==>in listner:instance-{}",cat);
         em.persist(cat);
     }
+
+    @Test
+    @Transactional
+    public void testInsertCATIntoParent(){
+        Catalog parent = em.find(Catalog.class, 1);
+        Catalog cat = new Catalog();
+        cat.setName("ab");
+        cat.setParent(parent);
+        em.persist(cat);
+    }
+
+
 
 }

@@ -10,7 +10,7 @@ import javax.persistence.EntityListeners;
  */
 @Entity
 @EntityListeners({JPATreeListner.class})
-public class Catalog extends NestedTreeEntity<Catalog> {
+public class Catalog extends NestedTreeEntity<Catalog>{
 
     private String name;
     private String url;
