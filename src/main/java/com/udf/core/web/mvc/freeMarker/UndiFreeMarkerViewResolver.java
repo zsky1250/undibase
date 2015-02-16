@@ -1,4 +1,4 @@
-package com.udf.web.mvc.freeMarker;
+package com.udf.core.web.mvc.freeMarker;
 
 import org.springframework.web.servlet.view.AbstractTemplateViewResolver;
 

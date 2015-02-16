@@ -83,7 +83,7 @@
     <!-- freeMarker view -->
     <bean id="freeMarkerViewResolver" class="org.springframework.web.servlet.view.AbstractTemplateViewResolver">
         <!--这里不用FreeMarkerViewResolver是为了能有效的注入自己的UndiFreeMarkerView-->
-        <property name="viewClass" value="com.udf.web.mvc.freeMarker.UndiFreeMarkerView"/>
+        <property name="viewClass" value="com.udf.core.web.mvc.freeMarker.UndiFreeMarkerView"/>
         <property name="contentType" value="text/html; charset=utf-8"/>
         <property name="cache" value="true"/>
         <property name="prefix" value="/page/"/>
@@ -113,7 +113,7 @@
     </bean>
 
     <!-- JSON view -->
-    <bean id="jsonViewResolver" class="com.udf.web.mvc.json.MappingJackson2ViewResolver">
+    <bean id="jsonViewResolver" class="com.udf.core.web.mvc.json.MappingJackson2ViewResolver">
         <property name="view">
             <bean class="org.springframework.web.servlet.view.json.MappingJackson2JsonView">
                 <property name="prettyPrint" value="true"/>

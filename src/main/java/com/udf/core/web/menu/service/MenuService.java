@@ -1,9 +1,7 @@
-package com.udf.web.menu.service;
+package com.udf.core.web.menu.service;
 
-import com.udf.web.menu.bean.Menu;
-import com.udf.web.menu.bean.MenuItem;
-import org.apache.commons.collections4.ListUtils;
-import org.apache.commons.lang3.ArrayUtils;
+import com.udf.core.web.menu.bean.Menu;
+import com.udf.core.web.menu.bean.MenuItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.oxm.Unmarshaller;
@@ -14,8 +12,6 @@ import javax.annotation.Resource;
 import javax.xml.transform.stream.StreamSource;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 

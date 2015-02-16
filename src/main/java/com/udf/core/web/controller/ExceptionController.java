@@ -1,4 +1,4 @@
-package com.udf.web.controller;
+package com.udf.core.web.controller;
 
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;

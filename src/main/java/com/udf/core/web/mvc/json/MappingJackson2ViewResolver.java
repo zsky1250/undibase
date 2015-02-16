@@ -1,4 +1,4 @@
-package com.udf.web.mvc.json;
+package com.udf.core.web.mvc.json;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -6,7 +6,6 @@ import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
-import javax.annotation.Resource;
 import java.util.Locale;
 
 /**

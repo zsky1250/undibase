@@ -1,4 +1,4 @@
-package com.udf.web.menu.bean;
+package com.udf.core.web.menu.bean;
 
 
 import javax.xml.bind.annotation.*;

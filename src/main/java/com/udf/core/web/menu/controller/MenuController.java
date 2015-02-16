@@ -1,6 +1,6 @@
-package com.udf.web.menu.controller;
+package com.udf.core.web.menu.controller;
 
-import com.udf.web.menu.service.MenuService;
+import com.udf.core.web.menu.service.MenuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
