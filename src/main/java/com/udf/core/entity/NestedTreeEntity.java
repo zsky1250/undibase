@@ -22,8 +22,11 @@ public abstract class NestedTreeEntity<T extends NestedTreeEntity> {
     @JoinColumn(name="parent")
     private T parent;
 
-    @OneToMany(mappedBy = "parent")
+    @OneToMany(mappedBy = "parent",cascade = CascadeType.REMOVE)
     private List<T> children;
+
+    @Transient
+    private T oriParent;
 
     public int getId() {
         return id;
@@ -54,7 +57,16 @@ public abstract class NestedTreeEntity<T extends NestedTreeEntity> {
     }
 
     public void setParent(T parent) {
+        this.oriParent = this.parent;
         this.parent = parent;
+    }
+
+    public T getOriParent() {
+        return oriParent;
+    }
+
+    public void emptyOriParent(){
+        this.oriParent = null;
     }
 
     public List<T> getChildren() {

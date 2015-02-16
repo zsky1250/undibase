@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.util.ArrayList;
 
 /**
  * Created by zwr on 2015/2/16.
@@ -37,16 +36,38 @@ public class CatalogCrudTest {
         em.persist(cat);
     }
 
-    @Test
-    @Transactional
-    public void testInsertCATIntoParent(){
-        Catalog parent = em.find(Catalog.class,2);
+    private void insertCATIntoParent(int parentID, String name){
+        Catalog parent = em.find(Catalog.class,parentID);
         Catalog cat = new Catalog();
-        cat.setName("abb");
+        cat.setName(name);
         cat.setParent(parent);
         em.persist(cat);
     }
 
+    @Transactional
+    @Test
+    public void batchInsert(){
+        char name = 'A';
+        for(int i = 0;i<10;i++){
+            insertCATIntoParent(i, String.valueOf(name++));
+        }
+        insertCATIntoParent(3,"HH");
+        insertCATIntoParent(3,"QQ");
+    }
 
+    @Test
+    @Transactional
+    public void deleteCATNode(){
+        Catalog node = em.find(Catalog.class,4);
+        em.remove(node);
+    }
+
+    @Test
+    @Transactional
+    public void updateCATNode(){
+        Catalog node = em.find(Catalog.class,3);
+        Catalog newParent = em.find(Catalog.class,1);
+        node.setParent(newParent);
+    }
 
 }
