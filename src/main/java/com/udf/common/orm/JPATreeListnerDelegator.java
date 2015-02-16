@@ -65,12 +65,12 @@ public class JPATreeListnerDelegator {
             CriteriaUpdate update = cb.createCriteriaUpdate(node.getClass());
             Root<? extends NestedTreeEntity> updateRoot = update.from(node.getClass());
             //更改rht
-            update.set(updateRoot.get("rgt"), cb.sum(cb.parameter(Integer.class, "name"), 2));
+            update.set(updateRoot.get("rgt"), cb.sum(updateRoot.<Integer>get("rgt"), 2));
             update.where(cb.greaterThanOrEqualTo(updateRoot.<Integer>get("rgt"), cb.parameter(Integer.class, "position")));
-            em.createQuery(update).setParameter("name",parentMaxRightPosition).executeUpdate();
-            update.set(updateRoot.get("lft"),cb.sum(cb.parameter(Integer.class, "name"),2));
+            em.createQuery(update).setParameter("position",parentMaxRightPosition).executeUpdate();
+            update.set(updateRoot.get("lft"),cb.sum(updateRoot.<Integer>get("lft"),2));
             update.where(cb.greaterThanOrEqualTo(updateRoot.<Integer>get("lft"),cb.parameter(Integer.class,"position")));
-            em.createQuery(update).setParameter("name",parentMaxRightPosition).executeUpdate();
+            em.createQuery(update).setParameter("position",parentMaxRightPosition).executeUpdate();
             node.setLft(parentMaxRightPosition);
             node.setRgt(parentMaxRightPosition+1);
         }

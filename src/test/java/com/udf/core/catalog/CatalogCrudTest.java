@@ -27,7 +27,7 @@ public class CatalogCrudTest {
 
     private static Logger logger = LoggerFactory.getLogger(CatalogCrudTest.class);
 
-@Test
+    @Test
     @Transactional
     public void testInsertCatNode(){
         Catalog cat = new Catalog();
@@ -40,9 +40,9 @@ public class CatalogCrudTest {
     @Test
     @Transactional
     public void testInsertCATIntoParent(){
-        Catalog parent = em.find(Catalog.class, 1);
+        Catalog parent = em.find(Catalog.class,2);
         Catalog cat = new Catalog();
-        cat.setName("ab");
+        cat.setName("abb");
         cat.setParent(parent);
         em.persist(cat);
     }
