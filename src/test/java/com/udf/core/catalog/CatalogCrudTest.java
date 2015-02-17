@@ -66,7 +66,7 @@ public class CatalogCrudTest {
     @Transactional
     public void updateCATNode(){
         Catalog node = em.find(Catalog.class,3);
-        Catalog newParent = em.find(Catalog.class,1);
+        Catalog newParent = em.find(Catalog.class,2);
         node.setParent(newParent);
     }
 

@@ -29,11 +29,16 @@ public class JPATreeListnerDelegator {
     private static Logger logger = LoggerFactory.getLogger(JPATreeListnerDelegator.class);
 
     /**
-     * 插入新节点，调整树结构
+     * 插入新节点，调整树结构(lft & rgt)
+     * 找到当前合适的位置（如果需要，调整其他节点给当前节点腾出位置）
+     * 设置当前节点的lft rgt
      * @param node
      */
     public void preSave(NestedTreeEntity node){
+        logger.debug("-->Start Listner for insert node:");
         NestedTreeEntity parent = node.getParent();
+        int span = 2-1+1;
+        int position;
         if(parent==null){
             /**
              * 如果当前节点是根节点:
@@ -41,9 +46,8 @@ public class JPATreeListnerDelegator {
              * 2.修改bean的lft,rgt
              * 3.bean会执行插入操作（由于这是lisnter，bean以执行插入，这里不要重复执行操作，设置好值即可）
             */
-            int position = queryForPosition(node,true);
-            node.setLft(position+1);
-            node.setRgt(position+2);
+            position = queryForRootNodePosition(node.getClass());
+            position++;
         }else{
             /**
              * 如果当前节点不是根节点:
@@ -51,11 +55,12 @@ public class JPATreeListnerDelegator {
              * 2.批量修改现存受影响的节点（受到）
              * 2.修改新节点的左右值
              */
-            int position = queryForPosition(node,false);
-            makeSpaceForNewNode(node,2-1+1,position);
-            node.setLft(position);
-            node.setRgt(position+1);
+            position = queryForNonRootNodePosition(node.getClass(),parent);
+            makeSpaceForNode(node.getClass(), span, position);
         }
+        node.setLft(position);
+        node.setRgt(position+1);
+        logger.debug("-->finish insert node:");
     }
 
     /**
@@ -64,47 +69,47 @@ public class JPATreeListnerDelegator {
      * 2.为当前节点的新位置腾出空间（在targetParent下，扩展span个空间）
      * 3.调整当前节点的位置 （先计算偏移量，targetParent原来的rgt-node.lft）
      * 4.调整当前节点之前的位置（在oriParent下，缩减span个空间）
+     * **************
+     * 话虽如此，考虑到move操作都是从 原状态->中间态->(中间态2)->最终态，而JPA只能通过listener动态修改位置
+     * 所以最后还要执行保存现有节点的操作
+     * 我们只能模拟出现在节点的变化
+     * 用simulateXXX函数代表现有节点的变化
+     *
      * @param node
      */
 
     public void preUpdate(NestedTreeEntity node){
         if(node.getOriParent()!=null&&node.getOriParent()!=node.getParent()){
-            logger.debug("Move node from parentID={} to parentID={}",node.getOriParent().getId(),node.getParent().getId());
-            //step1 计算span
-            int oriRgt = node.getRgt();
-            int oriLft = node.getLft();
-            int span = oriRgt-oriLft+1;
-            //step2 扩展空间
-            NestedTreeEntity curParent = node.getParent();
-            int curPosition = 0;
-            if(curParent==null){
-                /**
-                 * 如果当前节点是根节点:
-                 * 1.找到可用的lft和rgt值。（lft=表中现有节点中最大的rgt+1，rgt=lft+1）
-                 * 2.修改bean的lft,rgt
-                 * 3.bean会执行插入操作（由于这是lisnter，bean以执行插入，这里不要重复执行操作，设置好值即可）
-                 */
-                curPosition = queryForPosition(node,true);
-            }else{
-                /**
-                 * 如果当前节点不是根节点:
-                 * 1.查询父节点的最大右值，作为新节点的插入位置。
-                 * 2.批量修改现存受影响的节点（受到）
-                 * 2.修改新节点的左右值
-                 */
-                curPosition = queryForPosition(node,false);
-                makeSpaceForNewNode(node,span,curPosition);
-            }
-            //step 3.
-            // 3.1 调整自己
-            node.setLft(curPosition);
-            node.setRgt(curPosition+span);
-            int offset = curPosition-node.getLft();
-            //3.2 调整子树
-            updateSubTree(node,node.getLft()+1,node.getRgt()-1,offset);
-            //step 4.缩减原先位置
-            makeSpaceForNewNode(node,-span,oriRgt);
 
+            logger.debug("-->Start Listner for Move node={} from parentID={} to parentID={}",node.getId(),node.getOriParent().getId(),node.getParent().getId());
+            Class beanClass = node.getClass();
+            //step1 计算span
+            int span = node.getRgt()-node.getLft()+1;
+
+            //step2 扩展空间
+            logger.debug("-->1. query for parent RGT,and make space for new position");
+            NestedTreeEntity curParent = node.getParent();
+            int curParentRgt;
+            if(curParent==null){
+                curParentRgt = queryForRootNodePosition(beanClass);
+            }else{
+                curParentRgt = queryForNonRootNodePosition(beanClass, curParent);
+                makeSpaceForNode(beanClass, span, curParentRgt);
+                simulateCurNodeChange(node,span,curParentRgt);
+            }
+
+            //step 3.
+            logger.debug("-->2. adjust self including subtree");
+            int offset = curParentRgt-node.getLft();
+            int MiddleStatusOfRgt = node.getRgt();
+            moveSubTree(node, node.getLft() + 1, node.getRgt() - 1, offset);
+            simulateCurNodeChange(node,offset,-1);
+
+            //step 4.缩减原先位置
+            logger.debug("-->3. remove the space of original position");
+            makeSpaceForNode(beanClass, -span, MiddleStatusOfRgt);
+            simulateCurNodeChange(node,-span,MiddleStatusOfRgt);
+            logger.debug("-->finish Move node={} from parentID={} to parentID={}",node.getId(),node.getOriParent().getId(),node.getParent().getId());
         }
 
     }
@@ -118,136 +123,198 @@ public class JPATreeListnerDelegator {
      */
 
     public void preRemove(NestedTreeEntity node){
+        logger.debug("-->Start Listner for delete node={} from ID={}",node.getId());
         int span = node.getRgt()-node.getLft()+1;
+
         if(span>1){
             //有子树，删除子树
+            logger.debug("--> cascade delete subtree:");
             deleteSubTreeCascade(node);
         }
-        makeSpaceForNewNode(node,-span,node.getRgt());
+        logger.debug("--> remove the space of original position:");
+        makeSpaceForNode(node.getClass(), -span, node.getRgt());
+        logger.debug("-->finish Listner for delete node={} from ID={}",node.getId());
     }
 
     /**
-     * 查询获取节点应插入位置
-     * 构造查询 相当于jpql：select max(xx) from xx;
-     * @param node 当前节点
-     * @param isRoot 是否为根节点
+     * 插入的是一个根节点，位置为当前节点中的最大RGT值
+     * JPQL:SELECT MAX(node.rgt) FROM xxx node
+     * @param nodeclass
      * @return
      */
-
     @Transactional
-    private int queryForPosition(NestedTreeEntity node,boolean isRoot){
+    private int queryForRootNodePosition(Class nodeclass){
+        CriteriaQuery<Integer> query = builder.createQuery(Integer.class);
+        Root<? extends NestedTreeEntity> root = query.from(nodeclass);
+        query.select(builder.max(root.<Integer>get("rgt")));
+        Integer position = em.createQuery(query).setFlushMode(FlushModeType.COMMIT).getSingleResult();
+        if(position==null) position = 0;
+        return position;
+    }
+
+    /**
+     * 插入的是一个非根节点，位置为目标父节点的RGT
+     * JPQL:SELECT MAX(node.rgt) FROM xxx node
+     * @param nodeclass
+     * @return
+     */
+    @Transactional
+    private int queryForNonRootNodePosition(Class nodeclass,NestedTreeEntity parent){
         CriteriaQuery<Integer> cq = builder.createQuery(Integer.class);
-        Root<? extends NestedTreeEntity> root = cq.from(node.getClass());
-        Integer max = null;
-        if(isRoot){
-            //JPQL:select max(node.rgt) from XXX node
-            cq.select(builder.max(root.<Integer>get("rgt")));
-            max = em.createQuery(cq).setFlushMode(FlushModeType.COMMIT).getSingleResult();
-        }else{
-            //JPQL:SELECT node.rgt FROM xxx node WHERE node = node.parent
-            cq.select(root.<Integer>get("rgt"));
-            cq.where(builder.equal(root, builder.parameter(node.getClass(), "parent")));
-            max = em.createQuery(cq).setFlushMode(FlushModeType.COMMIT)
-                    .setParameter("parent", node.getParent()).getSingleResult();
-        }
-        if(max==null) return 0;
-        return max;
+        Root<? extends NestedTreeEntity> root = cq.from(nodeclass);
+        cq.select(root.<Integer>get("rgt"));
+        cq.where(builder.equal(root, builder.parameter(nodeclass, "parent")));
+        Integer position = em.createQuery(cq).setFlushMode(FlushModeType.COMMIT)
+                        .setParameter("parent", parent).getSingleResult();
+        return position.intValue();
     }
 
     /**
      * 批量更新节点的rgt,lft值，给当前节点腾出合适的地方
-     * @param node
+     * @param nodeclass
      * @param from
      */
-    private void makeSpaceForNewNode(NestedTreeEntity node,int nodespan,int from){
+    private void makeSpaceForNode(Class nodeclass, int nodespan, int from){
         logger.debug("make space for node change:from {},span={}", from, nodespan);
-        batchUpdateLFT(node,nodespan,from);
-        batchUpdateRGT(node,nodespan,from);
+        batchUpdateLFT(nodeclass,nodespan,from);
+        batchUpdateRGT(nodeclass,nodespan,from);
     }
 
     /**
-     * JPQL:UPDATE xx node set node.rgt=node.rgt+node where node.rgt>from
-     * @param node
+     * JPQL:UPDATE xx node SET node.rgt=node.rgt + :nodespan WHERE node.rgt >= :from
+     * @param nodecalss
      * @param nodespan
-     * @param from = ? in jpql
+     * @param from
      */
     @Transactional
-    private void batchUpdateRGT(NestedTreeEntity node,int nodespan, int from) {
-        CriteriaUpdate update = builder.createCriteriaUpdate(node.getClass());
-        Root<? extends NestedTreeEntity> updateRoot = update.from(node.getClass());
+    private void batchUpdateRGT(Class nodecalss,int nodespan, int from) {
+        CriteriaUpdate update = builder.createCriteriaUpdate(nodecalss);
+        Root<? extends NestedTreeEntity> updateRoot = update.from(nodecalss);
         update.set(updateRoot.get("rgt"), builder.sum(updateRoot.<Integer>get("rgt"), builder.parameter(Integer.class,"span")))
               .where(builder.greaterThanOrEqualTo(updateRoot.<Integer>get("rgt"), builder.parameter(Integer.class, "position")));
         em.createQuery(update)
           .setParameter("span", nodespan)
           .setParameter("position",from)
-          .executeUpdate();
+                .setFlushMode(FlushModeType.COMMIT)
+                .executeUpdate();
     }
 
 
     /**
      * 批量更新节点的rgt，给当前节点腾出合适的地方
-     * JPQL:UPDATE xx node set node.lft=node.lft+:nodespan where node.lft>from
-     * @param node
+     * JPQL:UPDATE xx node SET node.lft=node.lft+:nodespan where node.lft > :from
+     * @param nodeclass
      * @Param nodespan
      * @param from
      */
     @Transactional
-    private void batchUpdateLFT(NestedTreeEntity node,int nodespan, int from) {
-        CriteriaUpdate update = builder.createCriteriaUpdate(node.getClass());
-        Root<? extends NestedTreeEntity> updateRoot = update.from(node.getClass());
+    private void batchUpdateLFT(Class nodeclass,int nodespan, int from) {
+        CriteriaUpdate update = builder.createCriteriaUpdate(nodeclass);
+        Root<? extends NestedTreeEntity> updateRoot = update.from(nodeclass);
         update.set(updateRoot.get("lft"), builder.sum(updateRoot.<Integer>get("lft"), builder.parameter(Integer.class,"span")))
               .where(builder.greaterThanOrEqualTo(updateRoot.<Integer>get("lft"), builder.parameter(Integer.class, "position")));
         em.createQuery(update)
           .setParameter("span", nodespan)
           .setParameter("position", from)
+          .setFlushMode(FlushModeType.COMMIT)
           .executeUpdate();
     }
+
+    /**
+     * 级联删除子树
+     * step1：把关系设置为空
+     * step2：删除
+     * @param node
+     */
 
     private void deleteSubTreeCascade(NestedTreeEntity node){
         int from = node.getLft()+1;
         int to = node.getRgt()-1;
         logger.debug("delete sub-tree cascade from {} to {}",from,to);
-        emptyTreeRelation(node,from,to);
-        deleteSubTree(node,from,to);
+        emptyTreeRelation(node.getClass(),from,to);
+        deleteSubTree(node.getClass(),from,to);
     }
 
+    /**
+     * 清空关系
+     * JPQL:UPDATE XXX node SET node.parent = NULL WHERE node.lft BETWEEN :from AND :to
+     * @param nodeclass
+     * @param from
+     * @param to
+     */
     @Transactional
-    private void emptyTreeRelation(NestedTreeEntity rootnode,int from,int to){
-        CriteriaUpdate update = builder.createCriteriaUpdate(rootnode.getClass());
-        Root<? extends  NestedTreeEntity> root = update.from(rootnode.getClass());
-        update.set(root.get("parent"),builder.nullLiteral(rootnode.getClass()))
+    private void emptyTreeRelation(Class nodeclass,int from,int to){
+        CriteriaUpdate update = builder.createCriteriaUpdate(nodeclass);
+        Root<? extends  NestedTreeEntity> root = update.from(nodeclass);
+        update.set(root.get("parent"),builder.nullLiteral(nodeclass))
                 .where(builder.between(root.<Integer>get("lft"), builder.parameter(Integer.class, "lft"), builder.parameter(Integer.class,"rgt")));
         em.createQuery(update)
-          .setParameter("lft",from)
+          .setParameter("lft", from)
           .setParameter("rgt", to)
-          .executeUpdate();
+                .setFlushMode(FlushModeType.COMMIT)
+                .executeUpdate();
 
     }
 
+    /**
+     * 删除子树
+     * JPQL:DELETE FROM xx node where node.lft BETWEEN :from AND :to
+     * @param nodeclass
+     * @param from
+     * @param to
+     */
+
     @Transactional
-    private void deleteSubTree(NestedTreeEntity node,int from,int to){
-        CriteriaDelete delete = builder.createCriteriaDelete(node.getClass());
-        Root<? extends NestedTreeEntity> root = delete.from(node.getClass());
+    private void deleteSubTree(Class nodeclass,int from,int to){
+        CriteriaDelete delete = builder.createCriteriaDelete(nodeclass);
+        Root<? extends NestedTreeEntity> root = delete.from(nodeclass);
         delete.where(builder.between(root.<Integer>get("lft"),builder.parameter(Integer.class, "lft"), builder.parameter(Integer.class,"rgt")));
         em.createQuery(delete)
-          .setParameter("lft",from)
-          .setParameter("rgt", to)
-          .executeUpdate();
+          .setParameter("lft", from)
+          .setParameter("rgt", to).setFlushMode(FlushModeType.COMMIT).executeUpdate();
 
     }
 
+    /**
+     * 移动子树
+     * JPQL:UPDATE xxx node SET node.lft=node.lft+:offset,node.rgt = node.rgt+:offset WHERE node.lft BETWEEN :from AND :to
+     * @param rootnode
+     * @param from
+     * @param to
+     * @param offset
+     */
     @Transactional
-    public void updateSubTree(NestedTreeEntity rootnode,int from,int to,int offset){
+    public void moveSubTree(NestedTreeEntity rootnode, int from, int to, int offset){
+        logger.debug("move subTree:from={},to={},offset={}",from,to,offset);
         CriteriaUpdate update = builder.createCriteriaUpdate(rootnode.getClass());
         Root<? extends  NestedTreeEntity> root = update.from(rootnode.getClass());
         update.set(root.get("lft"),builder.sum(root.<Integer>get("lft"), builder.parameter(Integer.class,"offset")))
                 .set(root.get("rgt"),builder.sum(root.<Integer>get("rgt"), builder.parameter(Integer.class,"offset")))
                 .where(builder.between(root.<Integer>get("lft"), builder.parameter(Integer.class, "lft"), builder.parameter(Integer.class, "rgt")));
         em.createQuery(update)
-                .setParameter("offset",offset)
+                .setParameter("offset", offset)
                 .setParameter("lft", from)
                 .setParameter("rgt", to)
+                .setFlushMode(FlushModeType.COMMIT)
                 .executeUpdate();
+    }
+
+    /**
+     * 因为使用JPA Listner，最终还要执行update node的操作。
+     * 所以这里只模拟出node合适的左右值，以便最后执行。
+     * @param node
+     * @param offset
+     * @param from
+     */
+    private void simulateCurNodeChange(NestedTreeEntity node,int offset,int from){
+        if(from<0){
+            //没有范围代表目前节点肯定受影响，直接应用影响
+            node.setLft(node.getLft() + offset);
+            node.setRgt(node.getRgt()+offset);
+        }else{
+            if(node.getRgt()>=from) node.setRgt(node.getRgt()+offset);
+            if(node.getLft()>=from) node.setLft(node.getLft()+offset);
+        }
     }
 
 
