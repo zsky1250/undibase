@@ -2,6 +2,7 @@ package com.udf.common.orm;
 
 import com.udf.core.entity.NestedTreeEntity;
 
+import javax.persistence.PostLoad;
 import javax.persistence.PrePersist;
 import javax.persistence.PreRemove;
 import javax.persistence.PreUpdate;
@@ -39,4 +40,6 @@ public class JPATreeListner {
     public void preRemove(NestedTreeEntity node){
         delegator.preRemove(node);
     }
+
+
 }

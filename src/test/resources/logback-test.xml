@@ -16,7 +16,7 @@
 	<!-- <appender-ref ref="FILE" /> -->
 	<!-- </root> -->
 
-	<logger name="org.springframework.web" level="info" additivity="false">
+	<logger name="org.springframework.web" level="error" additivity="false">
 		<appender-ref ref="STDOUT" />
 		<!-- <appender-ref ref="FILE-OWN" /> -->
 	</logger>
@@ -25,5 +25,8 @@
 		<appender-ref ref="STDOUT"/>
 	</logger>
 
+	<logger name="p6spy" level="debug" additivity="false">
+		<appender-ref ref="STDOUT"/>
+	</logger>
 
 </configuration>

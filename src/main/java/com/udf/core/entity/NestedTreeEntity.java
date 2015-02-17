@@ -22,7 +22,7 @@ public abstract class NestedTreeEntity<T extends NestedTreeEntity> {
     @JoinColumn(name="parent")
     private T parent;
 
-    @OneToMany(mappedBy = "parent",cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "parent")
     private List<T> children;
 
     @Transient

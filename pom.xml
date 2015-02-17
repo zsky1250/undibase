@@ -36,6 +36,7 @@
 		<aspectj-version>1.8.2</aspectj-version>
 		<struts2-core-version>2.3.16.3</struts2-core-version>
 		<gson-version>2.3</gson-version>
+		<p6spy.version>2.1.2</p6spy.version>
 	</properties>
 
 	<dependencies>
@@ -63,6 +64,14 @@
 			<scope>test</scope>
 			<type>jar</type>
 		</dependency>
+
+		<dependency>
+			<groupId>p6spy</groupId>
+			<artifactId>p6spy</artifactId>
+			<version>${p6spy.version}</version>
+			<!--<scope>test</scope>-->
+		</dependency>
+
 
 		<!--============== SpringFramework ============== -->
 		<!-- Spring四大基础 core container -->

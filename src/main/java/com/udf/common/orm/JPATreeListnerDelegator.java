@@ -95,7 +95,7 @@ public class JPATreeListnerDelegator {
             }else{
                 curParentRgt = queryForNonRootNodePosition(beanClass, curParent);
                 makeSpaceForNode(beanClass, span, curParentRgt);
-                simulateCurNodeChange(node,span,curParentRgt);
+                simulateCurNodeChange(node, span, curParentRgt);
             }
 
             //step 3.
@@ -109,7 +109,10 @@ public class JPATreeListnerDelegator {
             logger.debug("-->3. remove the space of original position");
             makeSpaceForNode(beanClass, -span, MiddleStatusOfRgt);
             simulateCurNodeChange(node,-span,MiddleStatusOfRgt);
+
+            //清空node的oriParent，以免给对象再次被持久化的时候。误认为是更改了parent
             logger.debug("-->finish Move node={} from parentID={} to parentID={}",node.getId(),node.getOriParent().getId(),node.getParent().getId());
+            node.emptyOriParent();
         }
 
     }
@@ -268,9 +271,9 @@ public class JPATreeListnerDelegator {
     private void deleteSubTree(Class nodeclass,int from,int to){
         CriteriaDelete delete = builder.createCriteriaDelete(nodeclass);
         Root<? extends NestedTreeEntity> root = delete.from(nodeclass);
-        delete.where(builder.between(root.<Integer>get("lft"),builder.parameter(Integer.class, "lft"), builder.parameter(Integer.class,"rgt")));
+        delete.where(builder.between(root.<Integer>get("lft"), builder.parameter(Integer.class, "lft"), builder.parameter(Integer.class,"rgt")));
         em.createQuery(delete)
-          .setParameter("lft", from)
+                .setParameter("lft", from)
           .setParameter("rgt", to).setFlushMode(FlushModeType.COMMIT).executeUpdate();
 
     }
@@ -288,8 +291,8 @@ public class JPATreeListnerDelegator {
         logger.debug("move subTree:from={},to={},offset={}",from,to,offset);
         CriteriaUpdate update = builder.createCriteriaUpdate(rootnode.getClass());
         Root<? extends  NestedTreeEntity> root = update.from(rootnode.getClass());
-        update.set(root.get("lft"),builder.sum(root.<Integer>get("lft"), builder.parameter(Integer.class,"offset")))
-                .set(root.get("rgt"),builder.sum(root.<Integer>get("rgt"), builder.parameter(Integer.class,"offset")))
+        update.set(root.get("lft"), builder.sum(root.<Integer>get("lft"), builder.parameter(Integer.class,"offset")))
+                .set(root.get("rgt"), builder.sum(root.<Integer>get("rgt"), builder.parameter(Integer.class,"offset")))
                 .where(builder.between(root.<Integer>get("lft"), builder.parameter(Integer.class, "lft"), builder.parameter(Integer.class, "rgt")));
         em.createQuery(update)
                 .setParameter("offset", offset)

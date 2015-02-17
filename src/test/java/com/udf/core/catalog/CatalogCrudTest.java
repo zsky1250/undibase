@@ -1,10 +1,13 @@
 package com.udf.core.catalog;
 
+import com.udf.core.catalog.dao.ICatalogDao;
 import com.udf.core.entity.Catalog;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
@@ -23,6 +26,9 @@ public class CatalogCrudTest {
 
     @PersistenceContext
     EntityManager em;
+
+    @Autowired
+    ICatalogDao catDao;
 
     private static Logger logger = LoggerFactory.getLogger(CatalogCrudTest.class);
 
@@ -58,16 +64,37 @@ public class CatalogCrudTest {
     @Test
     @Transactional
     public void deleteCATNode(){
-        Catalog node = em.find(Catalog.class,4);
+        Catalog node = em.find(Catalog.class,3);
         em.remove(node);
     }
 
     @Test
     @Transactional
     public void updateCATNode(){
-        Catalog node = em.find(Catalog.class,3);
-        Catalog newParent = em.find(Catalog.class,2);
+        Catalog node = em.find(Catalog.class,12);
+        Catalog newParent = em.find(Catalog.class,3);
+        em.detach(node);
         node.setParent(newParent);
+        System.out.println("parent before merge:"+node.getOriParent());
+        em.merge(node);
+        System.out.println("parent after merge:"+node.getOriParent());
+    }
+
+    @Test
+    @Transactional
+    public void insertBySDJ(){
+        Catalog cat = new Catalog();
+        cat.setName("abc");
+        catDao.save(cat);
+    }
+
+    @Test
+    public void updateBySDJ(){
+        Catalog node = catDao.findOne(24);
+        Catalog newParent = catDao.findOne(1);
+        node.setParent(newParent);
+        catDao.save(node);
+
     }
 
 }
