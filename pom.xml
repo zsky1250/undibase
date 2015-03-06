@@ -66,12 +66,12 @@
 		</dependency>
 
 		<!--生成SQL值监视-->
-		<!--<dependency>-->
-			<!--<groupId>p6spy</groupId>-->
-			<!--<artifactId>p6spy</artifactId>-->
-			<!--<version>${p6spy.version}</version>-->
-			<!--&lt;!&ndash;<scope>test</scope>&ndash;&gt;-->
-		<!--</dependency>-->
+		<dependency>
+			<groupId>p6spy</groupId>
+			<artifactId>p6spy</artifactId>
+			<version>${p6spy.version}</version>
+			<!--<scope>test</scope>-->
+		</dependency>
 
 
 		<!--============== SpringFramework ============== -->

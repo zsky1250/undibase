@@ -57,8 +57,8 @@ public class CatalogCrudTest {
         for(int i = 0;i<10;i++){
             insertCATIntoParent(i, String.valueOf(name++));
         }
-        insertCATIntoParent(3,"HH");
-        insertCATIntoParent(3,"QQ");
+        insertCATIntoParent(3, "HH");
+        insertCATIntoParent(3, "QQ");
     }
 
     @Test
@@ -71,13 +71,11 @@ public class CatalogCrudTest {
     @Test
     @Transactional
     public void updateCATNode(){
-        Catalog node = em.find(Catalog.class,3);
+        Catalog node = em.find(Catalog.class,11);
         Catalog newParent = em.find(Catalog.class,2);
         em.detach(node);
         node.setParent(newParent);
-        System.out.println("parent before merge:"+node.getOriParent());
         em.merge(node);
-        System.out.println("parent after merge:"+node.getOriParent());
     }
 
     @Test
@@ -93,7 +91,7 @@ public class CatalogCrudTest {
         Catalog node = catDao.findOne(3);
         Catalog newParent = catDao.findOne(2);
         node.setParent(newParent);
-       // catDao.save(node);
+        catDao.save(node);
 
     }
 

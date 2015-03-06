@@ -1,5 +1,7 @@
 package com.udf.core.entity;
 
+import org.springframework.context.annotation.Lazy;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,9 +26,6 @@ public abstract class NestedTreeEntity<T extends NestedTreeEntity> {
 
     @OneToMany(mappedBy = "parent")
     private List<T> children;
-
-    @Transient
-    private T oriParent;
 
     public int getId() {
         return id;
@@ -57,16 +56,7 @@ public abstract class NestedTreeEntity<T extends NestedTreeEntity> {
     }
 
     public void setParent(T parent) {
-        this.oriParent = this.parent;
         this.parent = parent;
-    }
-
-    public T getOriParent() {
-        return oriParent;
-    }
-
-    public void emptyOriParent(){
-        this.oriParent = null;
     }
 
     public List<T> getChildren() {
@@ -75,5 +65,10 @@ public abstract class NestedTreeEntity<T extends NestedTreeEntity> {
 
     public void setChildren(List<T> children) {
         this.children = children;
+    }
+
+    @Override
+    public String toString(){
+        return this.getClass().toString()+"_"+id;
     }
 }

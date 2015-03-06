@@ -10,6 +10,7 @@ import javax.annotation.PostConstruct;
 import javax.persistence.*;
 import javax.persistence.criteria.*;
 import javax.transaction.Transactional;
+import java.util.HashMap;
 
 
 /**
@@ -17,16 +18,16 @@ import javax.transaction.Transactional;
  */
 @Service
 @Lazy(false)
-public class JPATreeListnerDelegator {
+public class JPATreeListenerDelegator {
 
     @PersistenceContext
     EntityManager em;
 
     private CriteriaBuilder builder;
 
-    private static boolean inProcess=false;
+    private HashMap<String,NestedTreeEntity> parentChangeMap;
 
-    private static Logger logger = LoggerFactory.getLogger(JPATreeListnerDelegator.class);
+    private static Logger logger = LoggerFactory.getLogger(JPATreeListenerDelegator.class);
 
     /**
      * 插入新节点，调整树结构(lft & rgt)
@@ -79,9 +80,10 @@ public class JPATreeListnerDelegator {
      */
 
     public void preUpdate(NestedTreeEntity node){
-        if(node.getOriParent()!=null&&node.getOriParent()!=node.getParent()){
+        NestedTreeEntity oriParent = parentChangeMap.get(node.getClass().toString()+"_"+node.getId());
+        if((oriParent!=null||node.getParent()!=null)&&oriParent!=node.getParent()){
 
-            logger.debug("-->Start Listner for Move node={} from parentID={} to parentID={}",node.getId(),node.getOriParent().getId(),node.getParent().getId());
+            logger.debug("-->Start Listner for Move node={} from parentID={} to parentID={}",node.getId(),oriParent.getId(),node.getParent().getId());
             Class beanClass = node.getClass();
             //step1 计算span
             int span = node.getRgt()-node.getLft()+1;
@@ -111,8 +113,8 @@ public class JPATreeListnerDelegator {
             simulateCurNodeChange(node,-span,MiddleStatusOfRgt);
 
             //清空node的oriParent，以免给对象再次被持久化的时候。误认为是更改了parent
-            logger.debug("-->finish Move node={} from parentID={} to parentID={}",node.getId(),node.getOriParent().getId(),node.getParent().getId());
-            node.emptyOriParent();
+            logger.debug("-->finish Move node={} from parentID={} to parentID={}", node.getId(), oriParent.getId(), node.getParent().getId());
+            parentChangeMap.put(node.getClass().toString()+"_"+node.getId(),node);
         }
 
     }
@@ -324,7 +326,9 @@ public class JPATreeListnerDelegator {
 
     @PostConstruct
     public void delegateTo(){
-        JPATreeListner.setDelegator(this);
+        parentChangeMap = new HashMap<>();
+        JPATreeListener.setDelegator(this);
+        JPATreeAspect.setListenerHashMap(parentChangeMap);
         builder = em.getCriteriaBuilder();
     }
 

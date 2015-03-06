@@ -1,6 +1,6 @@
 package com.udf.core.entity;
 
-import com.udf.common.orm.JPATreeListner;
+import com.udf.common.orm.JPATreeListener;
 
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
@@ -9,7 +9,7 @@ import javax.persistence.EntityListeners;
  * Created by zwr on 2015/2/15.
  */
 @Entity
-@EntityListeners({JPATreeListner.class})
+@EntityListeners({JPATreeListener.class})
 public class Catalog extends NestedTreeEntity<Catalog>{
 
     private String name;

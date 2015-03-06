@@ -2,7 +2,6 @@ package com.udf.common.orm;
 
 import com.udf.core.entity.NestedTreeEntity;
 
-import javax.persistence.PostLoad;
 import javax.persistence.PrePersist;
 import javax.persistence.PreRemove;
 import javax.persistence.PreUpdate;
@@ -11,19 +10,19 @@ import javax.persistence.PreUpdate;
  * Created by zwr on 2015/2/15.
  */
 
-public class JPATreeListner {
+public class JPATreeListener {
 
 
 
-    private static JPATreeListnerDelegator delegator;
+    private static JPATreeListenerDelegator delegator;
 
 
-    public static JPATreeListnerDelegator getDelegator() {
+    public static JPATreeListenerDelegator getDelegator() {
         return delegator;
     }
 
-    public static void setDelegator(JPATreeListnerDelegator delegator) {
-        JPATreeListner.delegator = delegator;
+    public static void setDelegator(JPATreeListenerDelegator delegator) {
+        JPATreeListener.delegator = delegator;
     }
 
     @PrePersist
