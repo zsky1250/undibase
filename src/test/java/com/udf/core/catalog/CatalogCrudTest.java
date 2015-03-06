@@ -71,8 +71,8 @@ public class CatalogCrudTest {
     @Test
     @Transactional
     public void updateCATNode(){
-        Catalog node = em.find(Catalog.class,12);
-        Catalog newParent = em.find(Catalog.class,3);
+        Catalog node = em.find(Catalog.class,3);
+        Catalog newParent = em.find(Catalog.class,2);
         em.detach(node);
         node.setParent(newParent);
         System.out.println("parent before merge:"+node.getOriParent());
@@ -90,10 +90,10 @@ public class CatalogCrudTest {
 
     @Test
     public void updateBySDJ(){
-        Catalog node = catDao.findOne(24);
-        Catalog newParent = catDao.findOne(1);
+        Catalog node = catDao.findOne(3);
+        Catalog newParent = catDao.findOne(2);
         node.setParent(newParent);
-        catDao.save(node);
+       // catDao.save(node);
 
     }
 
