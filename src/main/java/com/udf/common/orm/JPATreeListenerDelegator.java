@@ -56,7 +56,7 @@ public class JPATreeListenerDelegator {
              * 2.批量修改现存受影响的节点（受到）
              * 2.修改新节点的左右值
              */
-            position = queryForNonRootNodePosition(node.getClass(),parent);
+            position = queryForNonRootNodePositionByFetched(node.getClass(), parent);
             makeSpaceForNode(node.getClass(), span, position);
         }
         node.setLft(position);
@@ -80,9 +80,10 @@ public class JPATreeListenerDelegator {
      */
 
     public void preUpdate(NestedTreeEntity node){
-        NestedTreeEntity oriParent = parentChangeMap.get(node.getClass().toString()+"_"+node.getId());
-        if((oriParent!=null||node.getParent()!=null)&&oriParent!=node.getParent()){
-
+        NestedTreeEntity oriParent = parentChangeMap.get(node.toString());
+        NestedTreeEntity newParent = node.getParent();
+        if((oriParent!=null&&oriParent!=newParent)||(oriParent==null&&newParent!=null)){
+            System.out.println(oriParent.getId());
             logger.debug("-->Start Listner for Move node={} from parentID={} to parentID={}",node.getId(),oriParent.getId(),node.getParent().getId());
             Class beanClass = node.getClass();
             //step1 计算span
@@ -95,7 +96,7 @@ public class JPATreeListenerDelegator {
             if(curParent==null){
                 curParentRgt = queryForRootNodePosition(beanClass);
             }else{
-                curParentRgt = queryForNonRootNodePosition(beanClass, curParent);
+                curParentRgt = queryForNonRootNodePositionByFetched(beanClass, curParent);
                 makeSpaceForNode(beanClass, span, curParentRgt);
                 simulateCurNodeChange(node, span, curParentRgt);
             }
@@ -112,9 +113,10 @@ public class JPATreeListenerDelegator {
             makeSpaceForNode(beanClass, -span, MiddleStatusOfRgt);
             simulateCurNodeChange(node,-span,MiddleStatusOfRgt);
 
-            //清空node的oriParent，以免给对象再次被持久化的时候。误认为是更改了parent
+            //更新node parent map，以免对象再次被持久化的时，误认为是更改了parent
+            parentChangeMap.put(node.getClass().toString() + "_" + node.getId(), node);
+
             logger.debug("-->finish Move node={} from parentID={} to parentID={}", node.getId(), oriParent.getId(), node.getParent().getId());
-            parentChangeMap.put(node.getClass().toString()+"_"+node.getId(),node);
         }
 
     }
@@ -158,8 +160,9 @@ public class JPATreeListenerDelegator {
     }
 
     /**
-     * 插入的是一个非根节点，位置为目标父节点的RGT
-     * JPQL:SELECT MAX(node.rgt) FROM xxx node
+     * 查询父节点的RGT
+     * 当插入的是一个非根节点，位置为目标父节点的RGT
+     * JPQL:SELECT node.rgt FROM xxx node where node.id = :parent
      * @param nodeclass
      * @return
      */
@@ -172,6 +175,17 @@ public class JPATreeListenerDelegator {
         Integer position = em.createQuery(cq).setFlushMode(FlushModeType.COMMIT)
                         .setParameter("parent", parent).getSingleResult();
         return position.intValue();
+    }
+
+    /**
+     * 得到父节点的RGT。（上一个方法的特殊优化，效率好一点）
+     * 因为Fetch的关系。会提前查询执行一次查询parent节点的操作。这里直接用fetch到的结果即可。
+     * @param nodeclass
+     * @return
+     */
+    @Transactional
+    private int queryForNonRootNodePositionByFetched(Class nodeclass,NestedTreeEntity parent){
+        return parent.getRgt();
     }
 
     /**

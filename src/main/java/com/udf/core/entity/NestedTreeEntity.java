@@ -20,7 +20,10 @@ public abstract class NestedTreeEntity<T extends NestedTreeEntity> {
 
     private int rgt;
 
-    @ManyToOne
+    @Column(name="parent",updatable = false,insertable = false,nullable = true)
+    private Integer parentID;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="parent")
     private T parent;
 
@@ -67,8 +70,18 @@ public abstract class NestedTreeEntity<T extends NestedTreeEntity> {
         this.children = children;
     }
 
+
+    public Integer getParentID() {
+        return parentID;
+    }
+
+
     @Override
     public String toString(){
         return this.getClass().toString()+"_"+id;
+    }
+
+    public String getParentString(){
+        return this.getClass().toString()+"_"+parentID;
     }
 }

@@ -34,10 +34,12 @@ public class JPATreeAspect {
     @Before(value = "treeParentChange(newParent)")
     public void recordParentChange(JoinPoint pjp,NestedTreeEntity newParent){
         NestedTreeEntity curnode = (NestedTreeEntity)pjp.getThis();
-        logger.debug("new parent:{},ori parent:{}",newParent.toString(),curnode.getParent().toString());
-        if(curnode.getParent().getId()!=newParent.getId()){
+        logger.debug("new parent:{},ori parent:{}",newParent.toString(),curnode.getParentString());
+        if(curnode.getParentID()!=newParent.getId()){
             listnerMap.put(curnode.toString(), curnode.getParent());
-            logger.debug("cache ori parent:{} into hashmap.",curnode.getParent().toString());
+            logger.debug("cache ori parent:{} into hashmap.",curnode.getParentString());
+        }else{
+            logger.debug("No noting for caching original parent");
         }
     }
 

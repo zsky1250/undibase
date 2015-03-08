@@ -7,7 +7,6 @@ import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
@@ -15,6 +14,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 
 /**
  * Created by zwr on 2015/2/16.
@@ -88,11 +90,44 @@ public class CatalogCrudTest {
 
     @Test
     public void updateBySDJ(){
-        Catalog node = catDao.findOne(3);
-        Catalog newParent = catDao.findOne(2);
-        node.setParent(newParent);
-        catDao.save(node);
+        Catalog node = catDao.findOne(22);
+        System.out.println(node.getParentID());
+//        Catalog newParent = catDao.findOne(2);
+//        node.setParent(newParent);
+//        catDao.save(node);
 
+    }
+
+    @Test
+    @Transactional
+    public void testMerge(){
+
+        Catalog node = catDao.findOne(9);
+        Catalog medianode = catDao.findOne(8);
+        Catalog medianode2 = catDao.findOne(6);
+        Catalog newparent = catDao.findOne(1);
+        System.out.println("before merge:"+node+" hash code:"+node.hashCode());
+//        node.setUrl("abccc");
+
+
+        node.setParent(medianode);
+        node.setParent(medianode2);
+        node.setParent(newparent);
+//        System.out.println(node.getParentID());
+//        System.out.println(node.getParent().toString());
+        catDao.save(node);
+        System.out.println("after merge:"+node+" hash code:"+node.hashCode());
+
+
+//        CriteriaBuilder builder = em.getCriteriaBuilder();
+//        CriteriaQuery<Catalog> cq = builder.createQuery(Catalog.class);
+//        Root<Catalog> root = cq.from(Catalog.class);
+//        cq.where(builder.equal(root, builder.parameter(Catalog.class, "parent")));
+//        Catalog parent = em.createQuery(cq).setParameter("parent",node.getParent()).getSingleResult();
+//        System.out.println("parent:"+
+
+//        int parentid = em.createQuery("select cat.id from Catalog cat where cat = :parent",Integer.class).setParameter("parent",node.getParent()).getSingleResult();
+//        System.out.println("parent:"+parentid);
     }
 
 }
