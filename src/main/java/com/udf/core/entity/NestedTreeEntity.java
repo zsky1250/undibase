@@ -27,7 +27,7 @@ public abstract class NestedTreeEntity<T extends NestedTreeEntity> {
     @JoinColumn(name="parent")
     private T parent;
 
-    @OneToMany(mappedBy = "parent")
+    @OneToMany(mappedBy = "parent",fetch = FetchType.LAZY)
     private List<T> children;
 
     public int getId() {
@@ -71,7 +71,7 @@ public abstract class NestedTreeEntity<T extends NestedTreeEntity> {
     }
 
 
-    public Integer getParentID() {
+    public Integer getParentIDBeforeUpdate() {
         return parentID;
     }
 

@@ -14,9 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 
 /**
  * Created by zwr on 2015/2/16.
@@ -24,7 +21,7 @@ import javax.persistence.criteria.Root;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath:config/applicationContext.xml")
 @TransactionConfiguration(transactionManager = "transactionManager",defaultRollback = false)
-public class CatalogCrudTest {
+public class NestedTreeCRUDTest {
 
     @PersistenceContext
     EntityManager em;
@@ -32,7 +29,7 @@ public class CatalogCrudTest {
     @Autowired
     ICatalogDao catDao;
 
-    private static Logger logger = LoggerFactory.getLogger(CatalogCrudTest.class);
+    private static Logger logger = LoggerFactory.getLogger(NestedTreeCRUDTest.class);
 
     @Test
     @Transactional
@@ -43,6 +40,7 @@ public class CatalogCrudTest {
         logger.debug("==>in listner:instance-{}",cat);
         em.persist(cat);
     }
+
 
     private void insertCATIntoParent(int parentID, String name){
         Catalog parent = em.find(Catalog.class,parentID);
@@ -70,11 +68,30 @@ public class CatalogCrudTest {
         em.remove(node);
     }
 
+
+    @Test
+    public void updateBySDJSave(){
+        Catalog node = catDao.findOne(12);
+        System.out.println(node.getParentIDBeforeUpdate());
+        Catalog newParent = catDao.findOne(2);
+        node.setParent(newParent);
+        catDao.save(node);
+
+    }
+
     @Test
     @Transactional
-    public void updateCATNode(){
-        Catalog node = em.find(Catalog.class,11);
-        Catalog newParent = em.find(Catalog.class,2);
+    public void updateByJPAUpdate(){
+        Catalog node = em.find(Catalog.class, 11);
+        Catalog newParent = em.find(Catalog.class, 2);
+        node.setParent(newParent);
+    }
+
+    @Test
+    @Transactional
+    public void updateByJPAMerge(){
+        Catalog node = em.find(Catalog.class, 11);
+        Catalog newParent = em.find(Catalog.class, 3);
         em.detach(node);
         node.setParent(newParent);
         em.merge(node);
@@ -88,46 +105,16 @@ public class CatalogCrudTest {
         catDao.save(cat);
     }
 
-    @Test
-    public void updateBySDJ(){
-        Catalog node = catDao.findOne(22);
-        System.out.println(node.getParentID());
-//        Catalog newParent = catDao.findOne(2);
-//        node.setParent(newParent);
-//        catDao.save(node);
 
-    }
 
     @Test
-    @Transactional
-    public void testMerge(){
-
-        Catalog node = catDao.findOne(9);
-        Catalog medianode = catDao.findOne(8);
-        Catalog medianode2 = catDao.findOne(6);
-        Catalog newparent = catDao.findOne(1);
-        System.out.println("before merge:"+node+" hash code:"+node.hashCode());
-//        node.setUrl("abccc");
-
-
-        node.setParent(medianode);
-        node.setParent(medianode2);
-        node.setParent(newparent);
-//        System.out.println(node.getParentID());
-//        System.out.println(node.getParent().toString());
+    public void testLazyLoad(){
+        Catalog node = catDao.findOne(10);
+//        System.out.println(node.getParent());
+        Catalog newParent = catDao.findOne(1);
+        node.setParent(newParent);
         catDao.save(node);
-        System.out.println("after merge:"+node+" hash code:"+node.hashCode());
 
-
-//        CriteriaBuilder builder = em.getCriteriaBuilder();
-//        CriteriaQuery<Catalog> cq = builder.createQuery(Catalog.class);
-//        Root<Catalog> root = cq.from(Catalog.class);
-//        cq.where(builder.equal(root, builder.parameter(Catalog.class, "parent")));
-//        Catalog parent = em.createQuery(cq).setParameter("parent",node.getParent()).getSingleResult();
-//        System.out.println("parent:"+
-
-//        int parentid = em.createQuery("select cat.id from Catalog cat where cat = :parent",Integer.class).setParameter("parent",node.getParent()).getSingleResult();
-//        System.out.println("parent:"+parentid);
     }
 
 }

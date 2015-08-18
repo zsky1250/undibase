@@ -7,7 +7,9 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
-import javax.persistence.*;
+import javax.persistence.EntityManager;
+import javax.persistence.FlushModeType;
+import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.*;
 import javax.transaction.Transactional;
 import java.util.HashMap;
@@ -18,14 +20,16 @@ import java.util.HashMap;
  */
 @Service
 @Lazy(false)
-public class JPATreeListenerDelegator {
+public class JPATreeListenerDelegatorV1 {
 
     @PersistenceContext
     EntityManager em;
 
     private CriteriaBuilder builder;
 
-    private static Logger logger = LoggerFactory.getLogger(JPATreeListenerDelegator.class);
+    private HashMap<String,NestedTreeEntity> parentChangeMap;
+
+    private static Logger logger = LoggerFactory.getLogger(JPATreeListenerDelegatorV1.class);
 
     /**
      * 插入新节点，调整树结构(lft & rgt)
@@ -78,16 +82,17 @@ public class JPATreeListenerDelegator {
      */
 
     public void preUpdate(NestedTreeEntity node){
-        Integer oriParentID = node.getParentIDBeforeUpdate();
+        NestedTreeEntity oriParent = parentChangeMap.get(node.toString());
         NestedTreeEntity newParent = node.getParent();
-        if((oriParentID!=null&&oriParentID!=newParent.getId())||(oriParentID==null&&newParent!=null)){
-            logger.debug("-->Start Listner for Move node={} from parentID={} to parentID={}",node.getId(),oriParentID,newParent.getId());
+        if((oriParent!=null&&oriParent!=newParent)||(oriParent==null&&newParent!=null)){
+            System.out.println(oriParent.getId());
+            logger.debug("-->Start Listner for Move node={} from parentID={} to parentID={}",node.getId(),oriParent.getId(),node.getParent().getId());
             Class beanClass = node.getClass();
             //step1 计算span
             int span = node.getRgt()-node.getLft()+1;
 
             //step2 扩展空间
-            logger.debug("-->1. query for parent RGT,and make space for target position");
+            logger.debug("-->1. query for parent RGT,and make space for new position");
             NestedTreeEntity curParent = node.getParent();
             int curParentRgt;
             if(curParent==null){
@@ -110,7 +115,10 @@ public class JPATreeListenerDelegator {
             makeSpaceForNode(beanClass, -span, MiddleStatusOfRgt);
             simulateCurNodeChange(node,-span,MiddleStatusOfRgt);
 
-            logger.debug("-->finish Move node={} from parentID={} to parentID={}", node.getId(), oriParentID, newParent.getId());
+            //更新node parent map，以免对象再次被持久化的时，误认为是更改了parent
+            parentChangeMap.put(node.getClass().toString() + "_" + node.getId(), node);
+
+            logger.debug("-->finish Move node={} from parentID={} to parentID={}", node.getId(), oriParent.getId(), node.getParent().getId());
         }
 
     }
@@ -244,8 +252,8 @@ public class JPATreeListenerDelegator {
         int from = node.getLft()+1;
         int to = node.getRgt()-1;
         logger.debug("delete sub-tree cascade from {} to {}",from,to);
-        emptyTreeRelation(node.getClass(), from, to);
-        deleteSubTree(node.getClass(), from, to);
+        emptyTreeRelation(node.getClass(),from,to);
+        deleteSubTree(node.getClass(),from,to);
     }
 
     /**
@@ -260,7 +268,7 @@ public class JPATreeListenerDelegator {
         CriteriaUpdate update = builder.createCriteriaUpdate(nodeclass);
         Root<? extends  NestedTreeEntity> root = update.from(nodeclass);
         update.set(root.get("parent"),builder.nullLiteral(nodeclass))
-                .where(builder.between(root.<Integer>get("lft"), builder.parameter(Integer.class, "lft"), builder.parameter(Integer.class, "rgt")));
+                .where(builder.between(root.<Integer>get("lft"), builder.parameter(Integer.class, "lft"), builder.parameter(Integer.class,"rgt")));
         em.createQuery(update)
           .setParameter("lft", from)
           .setParameter("rgt", to)
@@ -281,7 +289,7 @@ public class JPATreeListenerDelegator {
     private void deleteSubTree(Class nodeclass,int from,int to){
         CriteriaDelete delete = builder.createCriteriaDelete(nodeclass);
         Root<? extends NestedTreeEntity> root = delete.from(nodeclass);
-        delete.where(builder.between(root.<Integer>get("lft"), builder.parameter(Integer.class, "lft"), builder.parameter(Integer.class, "rgt")));
+        delete.where(builder.between(root.<Integer>get("lft"), builder.parameter(Integer.class, "lft"), builder.parameter(Integer.class,"rgt")));
         em.createQuery(delete)
                 .setParameter("lft", from)
           .setParameter("rgt", to).setFlushMode(FlushModeType.COMMIT).executeUpdate();
@@ -321,20 +329,22 @@ public class JPATreeListenerDelegator {
      */
     private void simulateCurNodeChange(NestedTreeEntity node,int offset,int from){
         if(from<0){
-            //from=-1 代表当前节点需要改变，直接应用影响
+            //没有范围代表目前节点肯定受影响，直接应用影响
             node.setLft(node.getLft() + offset);
             node.setRgt(node.getRgt()+offset);
         }else{
-            //由于树结构调整，用于恢复原来的位置
-            // 先查看当前节点是否在from范围内，如果在，应用影响。
             if(node.getRgt()>=from) node.setRgt(node.getRgt()+offset);
             if(node.getLft()>=from) node.setLft(node.getLft()+offset);
         }
     }
 
+
+
     @PostConstruct
     public void delegateTo(){
-        JPATreeListener.setDelegator(this);
+        parentChangeMap = new HashMap<>();
+//        JPATreeListener.setDelegator(this);
+//        JPATreeAspect.setListenerHashMap(parentChangeMap);
         builder = em.getCriteriaBuilder();
     }
 

@@ -12,10 +12,7 @@ import javax.persistence.PreUpdate;
 
 public class JPATreeListener {
 
-
-
     private static JPATreeListenerDelegator delegator;
-
 
     public static JPATreeListenerDelegator getDelegator() {
         return delegator;
