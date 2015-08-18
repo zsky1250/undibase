@@ -1,4 +1,4 @@
-package com.udf.core.catalog.dao;
+package com.udf.core.nestedTree.dao;
 
 import com.udf.core.entity.Catalog;
 import org.springframework.data.jpa.repository.JpaRepository;

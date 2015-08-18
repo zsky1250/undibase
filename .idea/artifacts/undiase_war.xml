@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="undiase:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <root id="archive" name="undibase.war">
+      <element id="artifact" artifact-name="undiase:war exploded" />
+    </root>
+  </artifact>
+</component>

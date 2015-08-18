@@ -1,6 +1,6 @@
 package com.udf.core.catalog;
 
-import com.udf.core.catalog.dao.ICatalogDao;
+import com.udf.core.nestedTree.dao.ICatalogDao;
 import com.udf.core.entity.Catalog;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,11 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -42,10 +40,9 @@ public class NestedTreeQueryTest {
 
     }
 
-
     private List queryByRootID(Integer rootID){
-        Catalog root = catDao.findOne(rootID);
-        List tree = queryByRootNode(root);
+        List<Catalog> tree = em.createQuery("select child From Catalog child,Catalog parent where child.lft between parent.lft and parent.rgt and parent.id=?1")
+                .setParameter(1, rootID.intValue()).getResultList();
         return tree;
     }
 

@@ -65,6 +65,8 @@
     <!-- 静态资源映射 -->
     <mvc:resources mapping="/res/**" location="/res/"/>
     <mvc:default-servlet-handler />
+
+
     <!-- ============= view =============-->
     <!-- 配置后台Freemarker相关属性，这里还要配置自己写的标签。和前台可能不共用，所以单独拿出来。 -->
 

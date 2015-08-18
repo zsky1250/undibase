@@ -86,7 +86,7 @@
 
 	<!-- jpa Entity Factory 配置 -->
 	<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
-		<property name="dataSource" ref="p6spy-dataSource" />
+		<property name="dataSource" ref="dataSource" />
 		<property name="packagesToScan" value="com.udf.**.entity" />
 		<property name="persistenceUnitName" value="undi.jpa.hibernate" />
 		<property name="persistenceProvider">
@@ -119,7 +119,7 @@
 				<!-- 不检查@NamedQuery -->
 				<!-- <entry key="hibernate.query.startup_check" value="false"/> -->
 				<!-- <entry key="hibernate.query.substitutions" value="${hibernate.query.substitutions}"/> -->
-				<entry key="hibernate.default_batch_fetch_size" value="16" />
+				<entry key="hibernate.default_batch_fetch_size" value="10" />
 				<entry key="hibernate.max_fetch_depth" value="3" />
 				<entry key="hibernate.generate_statistics" value="false" />
 				<!-- 字节码反射优化? -->
@@ -207,7 +207,7 @@
 		<property name="useJaf" value="false"/>
 
 		<property name="mediaTypes">
-			<!--favorPathExtension, favorParameter是true时起作用.仅用JAF后，手动转换-->
+			<!--favorPathExtension, favorParameter是true时起作用.禁用JAF后，手动转换-->
 			<map>
 				<entry key="html" value="text/html" />
 				<entry key="json" value="application/json" />

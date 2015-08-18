@@ -13,6 +13,7 @@ import javax.persistence.EntityListeners;
 public class Catalog extends NestedTreeEntity<Catalog>{
 
     private String name;
+
     private String url;
 
 
