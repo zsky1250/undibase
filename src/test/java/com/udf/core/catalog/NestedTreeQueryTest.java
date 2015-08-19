@@ -6,6 +6,7 @@ import com.udf.common.orm.NestedSetUtil;
 import com.udf.core.entity.NestedSetEntity;
 import com.udf.core.nestedTree.dao.ICatalogDao;
 import com.udf.core.entity.Catalog;
+import com.udf.core.web.mvc.json.CatalogJsonView;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -63,6 +64,7 @@ public class NestedTreeQueryTest {
     public void testTreeConversion() throws JsonProcessingException {
         List<Catalog> resultList = NestedSetUtil.toHierachyTree(queryTree(1L));
         ObjectMapper jackson2Mapper = new ObjectMapper();
+        jackson2Mapper.addMixInAnnotations(Catalog.class, CatalogJsonView.class);
         System.out.println(jackson2Mapper.writerWithDefaultPrettyPrinter().writeValueAsString(resultList));
     }
 

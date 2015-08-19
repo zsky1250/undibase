@@ -1,4 +1,4 @@
-package com.udf.common.web;
+package com.udf.core.menu;
 
 import com.udf.core.web.menu.bean.MenuItem;
 import com.udf.core.web.menu.service.MenuService;

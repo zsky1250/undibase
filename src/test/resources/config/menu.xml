@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Menu name="admin">
+	<Menus>
+		<MenuItem name="我的面板" uri="mine.html" icon="fa-tachometer">
+			<SubMenus>
+				<MenuItem name="用户信息">
+					<SubMenus>
+						<MenuItem name="修改密码" uri="password.html" icon="fa-key"/>
+						<MenuItem name="详细信息" uri="user-details.html" icon="fa-info-circle"/>
+					</SubMenus>
+				</MenuItem>
+				<MenuItem name="定制面板">
+					<SubMenus>
+						<MenuItem name="组件管理" uri="" icon="fa-cubes"/>
+						<MenuItem name="通知提示" uri="" icon="fa-bullhorn"/>
+					</SubMenus>
+				</MenuItem>
+				<MenuItem name="常用操作管理">
+					<SubMenus>
+						<MenuItem name="写信息" uri="make-content.html" icon="fa-pencil-square-o"/>
+						<MenuItem name="待审核信息" uri="confirming-content.html" icon="fa-check-square-o"/>
+					</SubMenus>
+				</MenuItem>
+			</SubMenus>
+		</MenuItem>
+		<MenuItem name="内容管理" uri="content.html" icon="fa-newspaper-o">
+			<SubMenus>
+				<MenuItem name="信息管理" uri="test.html" icon="fa-file-text-o"/>
+				<MenuItem name="表单模板" uri="test.html" icon="fa-list-alt"/>
+				<MenuItem name="附件管理" uri="test.html" icon="fa-paperclip"/>
+				<MenuItem name="评论管理" uri="test.html" icon="fa-comment-o"/>
+				<MenuItem name="投票管理" uri="test.html" icon="fa-thumbs-o-up"/>
+				<MenuItem name="采集管理" uri="test.html" icon="fa-yelp"/>
+				<MenuItem name="碎片管理" uri="test.html" icon="fa-recycle"/>
+			</SubMenus>
+		</MenuItem>
+
+		<MenuItem name="栏目管理" uri="catalog.html" icon="fa-sitemap">
+			<SubMenus>
+				<MenuItem name="管理栏目" uri="test.html" icon="fa-folder-o"/>
+				<MenuItem name="专题管理" uri="test.html" icon="fa-send"/>
+				<MenuItem name="列表页模板" uri="test.html" icon="fa-list"/>
+				<MenuItem name="推荐位管理" uri="test.html" icon="fa-star"/>
+			</SubMenus>
+		</MenuItem>
+
+		<MenuItem name="用户管理" uri="user.html" icon="fa-user">
+			<SubMenus>
+				<MenuItem name="会员管理" uri="test.html" icon="fa-user"/>
+				<MenuItem name="会员组管理" uri="test.html" icon="fa-users"/>
+				<MenuItem name="管理员管理" uri="test.html" icon="fa-slack"/>
+				<MenuItem name="角色管理" uri="test.html" icon="fa-asterisk"/>
+				<MenuItem name="日志" uri="test.html" icon="fa-table"/>
+			</SubMenus>
+		</MenuItem>
+
+		<MenuItem name="界面管理" uri="frontui.html" icon="fa-delicious">
+			<SubMenus>
+				<MenuItem name="内容模板" uri="" icon="fa-book"/>
+				<MenuItem name="广告位管理" uri="" icon="fa-adn"/>
+				<MenuItem name="友情链接管理" uri="" icon="fa-link"/>
+			</SubMenus>
+		</MenuItem>
+
+		<MenuItem name="辅助管理" uri="support.html" icon="fa-briefcase">
+			<SubMenus>
+				<MenuItem name="安全管理" icon="">
+					<SubMenus>
+						<MenuItem name="防火墙设置" uri="test.html" icon=""/>
+						<MenuItem name="IP过滤设置" uri="test.html" icon=""/>
+					</SubMenus>
+				</MenuItem>
+				<MenuItem name="敏感词过滤" uri="test.html" icon=""/>
+				<MenuItem name="关键词" uri="test.html" icon=""/>
+				<MenuItem name="定时任务" uri="test.html" icon=""/>
+				<MenuItem name="统计" uri="test.html" icon=""/>
+			</SubMenus>
+		</MenuItem>
+
+		<MenuItem name="系统设置" uri="settings.html" icon="fa-cog">
+			<SubMenus>
+				<MenuItem name="基本设置" uri="test.html" icon="fa-circle-o-notch"/>
+				<MenuItem name="站点设置" uri="test.html" icon="fa-global"/>
+				<MenuItem name="网站信息" uri="test.html" icon="fa-terminal"/>
+				<MenuItem name="搜索设置" uri="test.html" icon="fa-serach"/>
+			</SubMenus>
+		</MenuItem>
+	</Menus>
+</Menu>
+

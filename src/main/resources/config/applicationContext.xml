@@ -26,7 +26,7 @@
 	<!--数据库连接配置 使用c3p0管理数据连接池 -->
 	<bean id="propertyConfigurer"
 		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-		<property name="location" value="/config/jdbc.properties" />
+		<property name="location" value="classpath:config/jdbc.properties" />
 	</bean>
 
 

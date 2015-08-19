@@ -1,5 +1,8 @@
 Nested Tree 开发小计：
-2015年2月 -- 实现了JPA操作insert,delete,update时自动更新nestedTree 结构
-             通过JPAListner做拦截器，增加额外的树结构调整操作。通过AOP Advice在记录节点变化前的父节点
-2015年6月 -- 由于工程使用SpringDataJPA 其中的更新操作使用的底层JPA的merge函数而不是update。所以需要AOP辅助记录之前的父节点
-             打算干脆不适用拦截器机制，二是在SpringDataJPA的接口中屏蔽原始的操作，自己写树结构调整的函数 达到目的。
+2015年2月 v1--实现了JPA操作insert,delete,update时自动更新nestedTree 结构
+              通过JPAListner做拦截器，增加额外的树结构调整操作。通过AOP Advice在记录节点变化前的父节点
+2015年6月 v2--由于工程使用SpringDataJPA 其中的更新操作使用的底层JPA的merge函数而不是update。所以需要AOP辅助记录之前的父节点
+              打算干脆不适用拦截器机制，二是在SpringDataJPA的接口中屏蔽原始的操作，自己写树结构调整的函数 达到目的。
+2015年8月 v3--可以给Entity中设定一个parentID的重复属性，然后这是其updateable=false insertable=false.这样读取的时候他会读到parent值
+              但在更新的操作（包括merge操作的时候） 这个parentID是不会因为node.setParent修改的
+              通过这个机制在监听器中：node.parent是修改后的parent值，node.parentID是原来的值，二者判断得出节点是否修改。

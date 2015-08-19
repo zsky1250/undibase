@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
-	   xmlns:aop="http://www.springframework.org/schema/aop" xmlns:cache="http://www.springframework.org/schema/cache"
-	   xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:tx="http://www.springframework.org/schema/tx"
-	   xmlns:jpa="http://www.springframework.org/schema/data/jpa"
-	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:cache="http://www.springframework.org/schema/cache"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 						http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
 						http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd
 						http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
 						http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
 						http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
 						http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd"
-	   default-lazy-init="true">
+	default-lazy-init="true">
 
 	<!-- 扫描注解Bean -->
 	<context:component-scan base-package="com.udf">
 		<context:exclude-filter type="annotation"
-								expression="org.springframework.stereotype.Controller" />
+			expression="org.springframework.stereotype.Controller" />
 		<context:exclude-filter type="annotation"
-								expression="org.springframework.web.bind.annotation.RestController" />
+			expression="org.springframework.web.bind.annotation.RestController" />
 		<context:exclude-filter type="annotation"
-								expression="org.springframework.web.bind.annotation.ControllerAdvice" />
+			expression="org.springframework.web.bind.annotation.ControllerAdvice" />
 	</context:component-scan>
 
 	<!--数据库连接配置 使用c3p0管理数据连接池 -->
 	<bean id="propertyConfigurer"
-		  class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 		<property name="location" value="classpath:config/jdbc.properties" />
 	</bean>
 
@@ -124,7 +124,7 @@
 				<entry key="hibernate.generate_statistics" value="false" />
 				<!-- 字节码反射优化? -->
 				<entry key="hibernate.bytecode.use_reflection_optimizer"
-					   value="true" />
+					value="true" />
 				<entry key="hibernate.cache.use_second_level_cache" value="false" />
 				<entry key="hibernate.cache.use_query_cache" value="false" />
 				<entry key="hibernate.cache.region.factory_class" value="org.hibernate.cache.ehcache.EhCacheRegionFactory" />
@@ -140,15 +140,15 @@
 	</bean>
 
 	<jpa:repositories base-package="com.udf.**.dao"
-					  repository-impl-postfix="Impl"
-					  entity-manager-factory-ref="entityManagerFactory"
-					  transaction-manager-ref="transactionManager">
+		repository-impl-postfix="Impl"
+		entity-manager-factory-ref="entityManagerFactory"
+		transaction-manager-ref="transactionManager">
 	</jpa:repositories>
 
 
 	<!--注解事务支持-->
 	<tx:annotation-driven transaction-manager="transactionManager" />
-
+	
 	<!--事务管理器配置 -->
 	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
 		<property name="entityManagerFactory" ref="entityManagerFactory" />
@@ -156,7 +156,7 @@
 
 	<!-- 国际化文件 -->
 	<bean id="messageSource"
-		  class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+		class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
 		<property name="cacheSeconds" value="-1" />
 		<property name="basenames">
 			<list>
@@ -166,7 +166,7 @@
 	</bean>
 
 	<bean id="validator" lazy-init="false"
-		  class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
+		class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
 		<property name="providerClass" value="org.hibernate.validator.HibernateValidator" />
 		<property name="validationMessageSource" ref="messageSource" />
 	</bean>

@@ -1,7 +1,5 @@
 package com.udf.core.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
@@ -25,7 +23,6 @@ public abstract class NestedSetEntity<T extends NestedSetEntity,ID extends Seria
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="parent")
-    @JsonIgnore
     private T parent;
 
     @OneToMany(mappedBy = "parent",fetch = FetchType.LAZY)
