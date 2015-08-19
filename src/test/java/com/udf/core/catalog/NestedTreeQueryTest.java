@@ -33,24 +33,11 @@ public class NestedTreeQueryTest {
 
     @Test
     public void testQueryTree(){
-        List<Catalog> tree = queryByRootID(3);
+        List<Catalog> tree = catDao.getTreeByRootID(3L);
         for (Catalog catalog : tree) {
             System.out.println(catalog.getName());
         }
 
     }
 
-    private List queryByRootID(Integer rootID){
-        List<Catalog> tree = em.createQuery("select child From Catalog child,Catalog parent where child.lft between parent.lft and parent.rgt and parent.id=?1")
-                .setParameter(1, rootID.intValue()).getResultList();
-        return tree;
-    }
-
-    private List<Catalog> queryByRootNode(Catalog root){
-        List<Catalog> resultList = em.createQuery("from Catalog node where node.lft >=?1 and node.rgt<=?2")
-                .setParameter(1, root.getLft())
-                .setParameter(2,root.getRgt())
-                .getResultList();
-        return resultList;
-    }
 }

@@ -139,10 +139,12 @@
 		</property>
 	</bean>
 
-	<jpa:repositories base-package="com.udf.**.dao"
-		repository-impl-postfix="Impl" entity-manager-factory-ref="entityManagerFactory"
+	<jpa:repositories base-package="com.udf.core.nestedTree.dao"
+		repository-impl-postfix="Impl"
+		entity-manager-factory-ref="entityManagerFactory"
 		transaction-manager-ref="transactionManager">
 	</jpa:repositories>
+
 
 	<!--注解事务支持-->
 	<tx:annotation-driven transaction-manager="transactionManager" />

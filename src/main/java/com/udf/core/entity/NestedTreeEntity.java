@@ -14,7 +14,7 @@ public abstract class NestedTreeEntity<T extends NestedTreeEntity> {
 
     @Id
     @GeneratedValue
-    private int id;
+    private long id;
 
     private int lft;
 
@@ -30,11 +30,11 @@ public abstract class NestedTreeEntity<T extends NestedTreeEntity> {
     @OneToMany(mappedBy = "parent",fetch = FetchType.LAZY)
     private List<T> children;
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 

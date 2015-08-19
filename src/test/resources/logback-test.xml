@@ -21,9 +21,16 @@
 		<!-- <appender-ref ref="FILE-OWN" /> -->
 	</logger>
 
+	<logger name="org.springframework.data" level="debug" additivity="false">
+		<appender-ref ref="STDOUT" />
+		<!-- <appender-ref ref="FILE-OWN" /> -->
+	</logger>
+
 	<logger name="com.udf" level="debug" additivity="false">
 		<appender-ref ref="STDOUT"/>
 	</logger>
+
+
 
 	<logger name="p6spy" level="debug" additivity="false">
 		<appender-ref ref="STDOUT"/>

@@ -71,9 +71,9 @@ public class NestedTreeCRUDTest {
 
     @Test
     public void updateBySDJSave(){
-        Catalog node = catDao.findOne(12);
+        Catalog node = catDao.findOne(12L);
         System.out.println(node.getParentIDBeforeUpdate());
-        Catalog newParent = catDao.findOne(2);
+        Catalog newParent = catDao.findOne(2l);
         node.setParent(newParent);
         catDao.save(node);
 
@@ -109,9 +109,9 @@ public class NestedTreeCRUDTest {
 
     @Test
     public void testLazyLoad(){
-        Catalog node = catDao.findOne(10);
+        Catalog node = catDao.findOne(10l);
 //        System.out.println(node.getParent());
-        Catalog newParent = catDao.findOne(1);
+        Catalog newParent = catDao.findOne(1L);
         node.setParent(newParent);
         catDao.save(node);
 
