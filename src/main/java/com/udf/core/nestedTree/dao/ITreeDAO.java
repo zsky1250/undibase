@@ -12,7 +12,7 @@ import java.util.List;
  * Created by 张未然 on 2015/8/18.
  */
 @Repository
-public interface INestedSetDAO<T,ID extends Serializable> {
+public interface ITreeDAO<T,ID extends Serializable> {
 
     /**
      * 根据节点ID返回树
@@ -22,7 +22,7 @@ public interface INestedSetDAO<T,ID extends Serializable> {
     public List<T> getTreeByRootID(Long ID);
 
     /**
-     * 根据根节点返回树
+     * 根据根节点返回树,如果能获取到node节点,建议使用这个方法,效率更高
      * @param node--父节点Entity
      * @return List--扁平树集合
      */
@@ -33,20 +33,13 @@ public interface INestedSetDAO<T,ID extends Serializable> {
      * @param ID--子节点ID
      * @return List--扁平树集合
      */
-    public List<T> findPath(Long ID);
+    public List<T> getParentPath(Long ID);
 
     /**
      * 查找父路径
-     * @param node--子节点Entity
+     * @param node--子节点Entity,如果能获取到node节点,建议使用这个方法,效率更高
      * @return List--扁平树集合
      */
-    public List<T> findPath(T node);
+    public List<T> getParentPath(T node);
 
-    /**
-     * 将一个扁平的树集合转化为嵌套结构
-     * Example:[a,b,c]-->[a,[b,[c]]]
-     * @Param 扁平化树节点集合
-     * @return  嵌套的树结构集合
-     */
-    public ArrayList<T> buildTree(List<T> flatTreeList);
 }

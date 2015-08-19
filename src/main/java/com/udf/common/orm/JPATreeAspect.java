@@ -1,16 +1,5 @@
 package com.udf.common.orm;
 
-import com.udf.core.entity.NestedTreeEntity;
-import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
-import org.aspectj.lang.annotation.Pointcut;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.annotation.Resource;
-import java.util.HashMap;
-
 /**
  * Created by zwr on 2015/3/6.
  * JPA Merged 不会保存对象原来的瞬时属性，所以merge的时候无法判断tree node有没有修改parent，从而无法顺利执行JPATreeListner

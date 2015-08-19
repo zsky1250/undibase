@@ -1,5 +1,9 @@
 package com.udf.core.catalog;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.udf.common.orm.NestedSetUtil;
+import com.udf.core.entity.NestedSetEntity;
 import com.udf.core.nestedTree.dao.ICatalogDao;
 import com.udf.core.entity.Catalog;
 import org.junit.Test;
@@ -10,9 +14,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -33,11 +39,31 @@ public class NestedTreeQueryTest {
 
     @Test
     public void testQueryTree(){
-        List<Catalog> tree = catDao.getTreeByRootID(3L);
-        for (Catalog catalog : tree) {
-            System.out.println(catalog.getName());
-        }
+        queryTree(null);
+    }
 
+    public List<Catalog> queryTree(Long nodeID){
+        nodeID=nodeID==null?1L:nodeID;
+        logger.info("Query For node's subTree {} ------->",nodeID);
+        List<Catalog> tree = catDao.getTreeByRootID(nodeID);
+        for (Catalog catalog : tree) {
+            System.out.println(catalog.getName()+"---"+catalog.getId());
+        }
+//        logger.info("Query For node's parentPath {} ------->",nodeID);
+//        tree.clear();
+//        tree = catDao.getParentPath(nodeID);
+//        for (Catalog catalog : tree) {
+//            System.out.println(catalog.getName());
+//        }
+        return tree;
+    }
+
+    @Test
+    @Transactional
+    public void testTreeConversion() throws JsonProcessingException {
+        List<Catalog> resultList = NestedSetUtil.toHierachyTree(queryTree(1L));
+        ObjectMapper jackson2Mapper = new ObjectMapper();
+        System.out.println(jackson2Mapper.writerWithDefaultPrettyPrinter().writeValueAsString(resultList));
     }
 
 }

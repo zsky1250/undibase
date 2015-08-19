@@ -1,6 +1,6 @@
 package com.udf.common.orm;
 
-import com.udf.core.entity.NestedTreeEntity;
+import com.udf.core.entity.NestedSetEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Lazy;
@@ -27,7 +27,7 @@ public class JPATreeListenerDelegatorV1 {
 
     private CriteriaBuilder builder;
 
-    private HashMap<String,NestedTreeEntity> parentChangeMap;
+    private HashMap<String,NestedSetEntity> parentChangeMap;
 
     private static Logger logger = LoggerFactory.getLogger(JPATreeListenerDelegatorV1.class);
 
@@ -37,9 +37,9 @@ public class JPATreeListenerDelegatorV1 {
      * 设置当前节点的lft rgt
      * @param node
      */
-    public void preSave(NestedTreeEntity node){
+    public void preSave(NestedSetEntity node){
         logger.debug("-->Start Listner for insert node:");
-        NestedTreeEntity parent = node.getParent();
+        NestedSetEntity parent = node.getParent();
         int span = 2-1+1;
         int position;
         if(parent==null){
@@ -81,9 +81,9 @@ public class JPATreeListenerDelegatorV1 {
      * @param node
      */
 
-    public void preUpdate(NestedTreeEntity node){
-        NestedTreeEntity oriParent = parentChangeMap.get(node.toString());
-        NestedTreeEntity newParent = node.getParent();
+    public void preUpdate(NestedSetEntity node){
+        NestedSetEntity oriParent = parentChangeMap.get(node.toString());
+        NestedSetEntity newParent = node.getParent();
         if((oriParent!=null&&oriParent!=newParent)||(oriParent==null&&newParent!=null)){
             System.out.println(oriParent.getId());
             logger.debug("-->Start Listner for Move node={} from parentID={} to parentID={}",node.getId(),oriParent.getId(),node.getParent().getId());
@@ -93,7 +93,7 @@ public class JPATreeListenerDelegatorV1 {
 
             //step2 扩展空间
             logger.debug("-->1. query for parent RGT,and make space for new position");
-            NestedTreeEntity curParent = node.getParent();
+            NestedSetEntity curParent = node.getParent();
             int curParentRgt;
             if(curParent==null){
                 curParentRgt = queryForRootNodePosition(beanClass);
@@ -131,7 +131,7 @@ public class JPATreeListenerDelegatorV1 {
      * @param node
      */
 
-    public void preRemove(NestedTreeEntity node){
+    public void preRemove(NestedSetEntity node){
         logger.debug("-->Start Listner for delete node={} from ID={}",node.getId());
         int span = node.getRgt()-node.getLft()+1;
 
@@ -154,7 +154,7 @@ public class JPATreeListenerDelegatorV1 {
     @Transactional
     private int queryForRootNodePosition(Class nodeclass){
         CriteriaQuery<Integer> query = builder.createQuery(Integer.class);
-        Root<? extends NestedTreeEntity> root = query.from(nodeclass);
+        Root<? extends NestedSetEntity> root = query.from(nodeclass);
         query.select(builder.max(root.<Integer>get("rgt")));
         Integer position = em.createQuery(query).setFlushMode(FlushModeType.COMMIT).getSingleResult();
         if(position==null) position = 0;
@@ -169,9 +169,9 @@ public class JPATreeListenerDelegatorV1 {
      * @return
      */
     @Transactional
-    private int queryForNonRootNodePosition(Class nodeclass,NestedTreeEntity parent){
+    private int queryForNonRootNodePosition(Class nodeclass,NestedSetEntity parent){
         CriteriaQuery<Integer> cq = builder.createQuery(Integer.class);
-        Root<? extends NestedTreeEntity> root = cq.from(nodeclass);
+        Root<? extends NestedSetEntity> root = cq.from(nodeclass);
         cq.select(root.<Integer>get("rgt"));
         cq.where(builder.equal(root, builder.parameter(nodeclass, "parent")));
         Integer position = em.createQuery(cq).setFlushMode(FlushModeType.COMMIT)
@@ -186,7 +186,7 @@ public class JPATreeListenerDelegatorV1 {
      * @return
      */
     @Transactional
-    private int queryForNonRootNodePositionByFetched(Class nodeclass,NestedTreeEntity parent){
+    private int queryForNonRootNodePositionByFetched(Class nodeclass,NestedSetEntity parent){
         return parent.getRgt();
     }
 
@@ -210,7 +210,7 @@ public class JPATreeListenerDelegatorV1 {
     @Transactional
     private void batchUpdateRGT(Class nodecalss,int nodespan, int from) {
         CriteriaUpdate update = builder.createCriteriaUpdate(nodecalss);
-        Root<? extends NestedTreeEntity> updateRoot = update.from(nodecalss);
+        Root<? extends NestedSetEntity> updateRoot = update.from(nodecalss);
         update.set(updateRoot.get("rgt"), builder.sum(updateRoot.<Integer>get("rgt"), builder.parameter(Integer.class,"span")))
               .where(builder.greaterThanOrEqualTo(updateRoot.<Integer>get("rgt"), builder.parameter(Integer.class, "position")));
         em.createQuery(update)
@@ -231,7 +231,7 @@ public class JPATreeListenerDelegatorV1 {
     @Transactional
     private void batchUpdateLFT(Class nodeclass,int nodespan, int from) {
         CriteriaUpdate update = builder.createCriteriaUpdate(nodeclass);
-        Root<? extends NestedTreeEntity> updateRoot = update.from(nodeclass);
+        Root<? extends NestedSetEntity> updateRoot = update.from(nodeclass);
         update.set(updateRoot.get("lft"), builder.sum(updateRoot.<Integer>get("lft"), builder.parameter(Integer.class,"span")))
               .where(builder.greaterThanOrEqualTo(updateRoot.<Integer>get("lft"), builder.parameter(Integer.class, "position")));
         em.createQuery(update)
@@ -248,7 +248,7 @@ public class JPATreeListenerDelegatorV1 {
      * @param node
      */
 
-    private void deleteSubTreeCascade(NestedTreeEntity node){
+    private void deleteSubTreeCascade(NestedSetEntity node){
         int from = node.getLft()+1;
         int to = node.getRgt()-1;
         logger.debug("delete sub-tree cascade from {} to {}",from,to);
@@ -266,7 +266,7 @@ public class JPATreeListenerDelegatorV1 {
     @Transactional
     private void emptyTreeRelation(Class nodeclass,int from,int to){
         CriteriaUpdate update = builder.createCriteriaUpdate(nodeclass);
-        Root<? extends  NestedTreeEntity> root = update.from(nodeclass);
+        Root<? extends NestedSetEntity> root = update.from(nodeclass);
         update.set(root.get("parent"),builder.nullLiteral(nodeclass))
                 .where(builder.between(root.<Integer>get("lft"), builder.parameter(Integer.class, "lft"), builder.parameter(Integer.class,"rgt")));
         em.createQuery(update)
@@ -288,7 +288,7 @@ public class JPATreeListenerDelegatorV1 {
     @Transactional
     private void deleteSubTree(Class nodeclass,int from,int to){
         CriteriaDelete delete = builder.createCriteriaDelete(nodeclass);
-        Root<? extends NestedTreeEntity> root = delete.from(nodeclass);
+        Root<? extends NestedSetEntity> root = delete.from(nodeclass);
         delete.where(builder.between(root.<Integer>get("lft"), builder.parameter(Integer.class, "lft"), builder.parameter(Integer.class,"rgt")));
         em.createQuery(delete)
                 .setParameter("lft", from)
@@ -305,10 +305,10 @@ public class JPATreeListenerDelegatorV1 {
      * @param offset
      */
     @Transactional
-    public void moveSubTree(NestedTreeEntity rootnode, int from, int to, int offset){
+    public void moveSubTree(NestedSetEntity rootnode, int from, int to, int offset){
         logger.debug("move subTree:from={},to={},offset={}",from,to,offset);
         CriteriaUpdate update = builder.createCriteriaUpdate(rootnode.getClass());
-        Root<? extends  NestedTreeEntity> root = update.from(rootnode.getClass());
+        Root<? extends NestedSetEntity> root = update.from(rootnode.getClass());
         update.set(root.get("lft"), builder.sum(root.<Integer>get("lft"), builder.parameter(Integer.class,"offset")))
                 .set(root.get("rgt"), builder.sum(root.<Integer>get("rgt"), builder.parameter(Integer.class,"offset")))
                 .where(builder.between(root.<Integer>get("lft"), builder.parameter(Integer.class, "lft"), builder.parameter(Integer.class, "rgt")));
@@ -327,7 +327,7 @@ public class JPATreeListenerDelegatorV1 {
      * @param offset
      * @param from
      */
-    private void simulateCurNodeChange(NestedTreeEntity node,int offset,int from){
+    private void simulateCurNodeChange(NestedSetEntity node,int offset,int from){
         if(from<0){
             //没有范围代表目前节点肯定受影响，直接应用影响
             node.setLft(node.getLft() + offset);

@@ -1,40 +1,41 @@
 package com.udf.core.entity;
 
-import org.springframework.context.annotation.Lazy;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
-import java.util.ArrayList;
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by zwr on 2015/2/15.
  */
 @MappedSuperclass
-public abstract class NestedTreeEntity<T extends NestedTreeEntity> {
+public abstract class NestedSetEntity<T extends NestedSetEntity,ID extends Serializable>{
 
     @Id
     @GeneratedValue
-    private long id;
+    private ID id;
 
     private int lft;
 
     private int rgt;
 
     @Column(name="parent",updatable = false,insertable = false,nullable = true)
-    private Integer parentID;
+    private Long parentID;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="parent")
+    @JsonIgnore
     private T parent;
 
     @OneToMany(mappedBy = "parent",fetch = FetchType.LAZY)
     private List<T> children;
 
-    public long getId() {
+    public ID getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(ID id) {
         this.id = id;
     }
 
@@ -71,7 +72,7 @@ public abstract class NestedTreeEntity<T extends NestedTreeEntity> {
     }
 
 
-    public Integer getParentIDBeforeUpdate() {
+    public Long getParentIDBeforeUpdate() {
         return parentID;
     }
 
@@ -81,7 +82,4 @@ public abstract class NestedTreeEntity<T extends NestedTreeEntity> {
         return this.getClass().toString()+"_"+id;
     }
 
-    public String getParentString(){
-        return this.getClass().toString()+"_"+parentID;
-    }
 }
