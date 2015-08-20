@@ -31,7 +31,7 @@ public class NestedSetTreeDAOImpl implements ITreeDAO<Catalog,ID> {
     }
 
     @Override
-    public List<Catalog> getTreeByRoot(Catalog node) {
+    public List<Catalog> getTreeByRootNode(Catalog node) {
         return em.createQuery("FROM Catalog node where node.lft between ?1 and ?2")
                 .setParameter(1,node.getLft())
                 .setParameter(2,node.getRgt())

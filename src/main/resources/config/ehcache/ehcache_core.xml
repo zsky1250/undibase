@@ -11,14 +11,24 @@
             overflowToDisk="false">
     </defaultCache>
 
-    <!--树结构缓存 10分钟-->
-    <cache name="treeCache"
+    <!--整棵树缓存 10分钟-->
+    <cache name="tree"
            maxEntriesLocalHeap="1000"
            eternal="false"
            timeToIdleSeconds="600"
            timeToLiveSeconds="0"
            overflowToDisk="false"
-           statistics="true
+           statistics="true">
+    </cache>
+
+    <!--树节点缓存 10分钟-->
+    <cache name="treeNode"
+           maxEntriesLocalHeap="1000"
+           eternal="false"
+           timeToIdleSeconds="600"
+           timeToLiveSeconds="0"
+           overflowToDisk="false"
+           statistics="true">
     </cache>
 
 

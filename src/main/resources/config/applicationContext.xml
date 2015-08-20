@@ -24,10 +24,13 @@
 	</context:component-scan>
 
 	<!--数据库连接配置 使用c3p0管理数据连接池 -->
-	<bean id="propertyConfigurer"
-		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-		<property name="location" value="classpath:config/jdbc.properties" />
-	</bean>
+	<context:property-placeholder location="classpath:config/jdbc.properties"/>
+	<!--等效配置，用上面的简便-->
+	<!--<bean id="propertyConfigurer"-->
+		<!--class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">-->
+		<!--<property name="location" value="classpath:config/jdbc.properties" />-->
+	<!--</bean>-->
+
 
 
 	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
@@ -218,4 +221,5 @@
 		</property>
 	</bean>
 
+	<import resource="springCache.xml"/>
 </beans>

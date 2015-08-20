@@ -26,7 +26,7 @@ public interface ITreeDAO<T,ID extends Serializable> {
      * @param node--父节点Entity
      * @return List--扁平树集合
      */
-    public List<T> getTreeByRoot(T node);
+    public List<T> getTreeByRootNode(T node);
 
     /**
      * 查找父路径

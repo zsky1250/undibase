@@ -6,6 +6,7 @@ import com.udf.common.orm.NestedSetUtil;
 import com.udf.core.entity.NestedSetEntity;
 import com.udf.core.nestedTree.dao.ICatalogDao;
 import com.udf.core.entity.Catalog;
+import com.udf.core.nestedTree.service.ICatalogService;
 import com.udf.core.web.mvc.json.CatalogJsonView;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,6 +36,9 @@ public class NestedTreeQueryTest {
 
     @Autowired
     ICatalogDao catDao;
+
+    @Autowired
+    ICatalogService catalogService;
 
     private static Logger logger = LoggerFactory.getLogger(NestedTreeQueryTest.class);
 
@@ -66,6 +70,14 @@ public class NestedTreeQueryTest {
         ObjectMapper jackson2Mapper = new ObjectMapper();
         jackson2Mapper.addMixInAnnotations(Catalog.class, CatalogJsonView.class);
         System.out.println(jackson2Mapper.writerWithDefaultPrettyPrinter().writeValueAsString(resultList));
+    }
+
+    @Test
+    public void testTreeCache(){
+        Catalog node = catDao.findOne(1L);
+        System.out.println("===============");
+        catalogService.getTreeByRootID(1L);
+        catalogService.getTreeByRootNode(node);
     }
 
 }

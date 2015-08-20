@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	   xmlns:cache="http://www.springframework.org/schema/cache"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	    					http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd">
 
-	<!--<cache:annotation-driven cache-manager="cacheManager" proxy-target-class="true"/>-->
+	<cache:annotation-driven cache-manager="springCacheManager" proxy-target-class="true"/>
 
 	<bean id="springCacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">
 		<property name="cacheManager" ref="ehcacheManager"/>
@@ -11,7 +13,7 @@
 
 	<!--ehcache-->
 	<bean id="ehcacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
-		<property name="configLocation" value="classpath:ehcache/ehcache_core.xml"/>
+		<property name="configLocation" value="classpath:config/ehcache/ehcache_core.xml"/>
 	</bean>
 
 

@@ -26,11 +26,18 @@
     </facet>
     <facet type="Spring" name="Spring">
       <configuration>
-        <fileset id="fileset" name="base" removed="false">
+        <fileset id="web application context" name="MVC application context" removed="true">
+          <file>file://$MODULE_DIR$/src/main/resources/config/applicationContext.xml</file>
+        </fileset>
+        <fileset id="web SpringMVC servlet context" name="MVC SpringMVC servlet context" removed="true">
+          <file>file://$MODULE_DIR$/src/main/resources/config/webApplicationContext.xml</file>
+        </fileset>
+        <fileset id="fileset3" name="Spring Application Context" removed="false">
+          <file>file://$MODULE_DIR$/src/main/resources/config/springCache.xml</file>
           <file>file://$MODULE_DIR$/src/main/resources/config/applicationContext.xml</file>
         </fileset>
         <fileset id="fileset2" name="web" removed="false">
-          <dependency>fileset</dependency>
+          <dependency>fileset3</dependency>
           <file>file://$MODULE_DIR$/src/main/resources/config/webApplicationContext.xml</file>
         </fileset>
       </configuration>
