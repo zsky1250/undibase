@@ -221,5 +221,17 @@
 		</property>
 	</bean>
 
+	<!--为辅助类set所需的entityManagerFactory-->
+	<bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+		<property name="staticMethod"
+				  value="com.udf.common.orm.NestedSetUtil.setEntityManagerFactory"/>
+		<property name="arguments" ref="entityManagerFactory"/>
+	</bean>
+	<bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+		<property name="staticMethod"
+				  value="com.udf.common.orm.JPATreeListener.wiredEntityManagerFactory"/>
+		<property name="arguments" ref="entityManagerFactory"/>
+	</bean>
+
 	<import resource="springCache.xml"/>
 </beans>

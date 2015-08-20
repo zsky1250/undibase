@@ -20,5 +20,5 @@ public interface ICatalogService {
 
     public Catalog findTreeNodeByID(Long id);
 
-    public boolean addTreeNode(Catalog node);
+    public boolean saveNode(Catalog node);
 }

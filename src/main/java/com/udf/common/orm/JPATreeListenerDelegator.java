@@ -10,6 +10,7 @@ import javax.annotation.PostConstruct;
 import javax.persistence.*;
 import javax.persistence.criteria.*;
 import javax.transaction.Transactional;
+import java.io.Serializable;
 
 
 /**
@@ -17,6 +18,7 @@ import javax.transaction.Transactional;
  */
 @Service
 @Lazy(false)
+@Deprecated
 public class JPATreeListenerDelegator {
 
     @PersistenceContext
@@ -79,7 +81,7 @@ public class JPATreeListenerDelegator {
     public void preUpdate(NestedSetEntity node){
         Long oriParentID = node.getParentIDBeforeUpdate();
         NestedSetEntity newParent = node.getParent();
-        if((oriParentID!=null&&oriParentID!=newParent.getId())||(oriParentID==null&&newParent!=null)){
+        if(NestedSetUtil.isParentChanged(node)){
             logger.debug("-->Start Listner for Move node={} from parentID={} to parentID={}",node.getId(),oriParentID,newParent.getId());
             Class beanClass = node.getClass();
             //step1 计算span
@@ -331,10 +333,22 @@ public class JPATreeListenerDelegator {
         }
     }
 
+    private Serializable reloadNodeOriParent(Class nodeclass, NestedSetEntity node){
+        logger.debug("reload {} for subcheck", node);
+        CriteriaQuery cq = builder.createQuery(NestedSetEntity.class);
+        Root<? extends NestedSetEntity> root = cq.from(node.getClass());
+        cq.select(root.<NestedSetEntity>get("parent"));
+        cq.where(builder.equal(root, builder.parameter(NestedSetEntity.class, "node")));
+        NestedSetEntity parent = (NestedSetEntity) em.createQuery(cq).setFlushMode(FlushModeType.COMMIT)
+                .setParameter("node", node).getSingleResult();
+        return parent.getId();
+    }
+
     @PostConstruct
     public void delegateTo(){
-        JPATreeListener.setDelegator(this);
+//        JPATreeListener.setDelegator(this);
         builder = em.getCriteriaBuilder();
     }
+
 
 }

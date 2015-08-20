@@ -20,6 +20,7 @@ import java.util.HashMap;
  */
 @Service
 @Lazy(false)
+@Deprecated
 public class JPATreeListenerDelegatorV1 {
 
     @PersistenceContext

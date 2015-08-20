@@ -117,4 +117,15 @@ public class NestedTreeCRUDTest {
 
     }
 
+    @Test
+    public void testQueryandMerge(){
+        Catalog node = catDao.findOne(2l);
+//        System.out.println(node.getParent()+"---"+node.getParentIDBeforeUpdate());
+        Catalog newNode = new Catalog();
+        newNode.setUrl("sdf");
+        newNode.setId(3l);
+        newNode.setParent(node);
+        catDao.save(newNode);
+    }
+
 }

@@ -96,15 +96,19 @@ public class CatalogService implements ICatalogService {
                @CachePut(value="treeNode",key="#node.getId()")
             }
     )
-    public boolean addTreeNode(Catalog node) {
+    public boolean saveNode(Catalog node) {
         if(node!=null){
+
+
+
             try {
                 catalogDao.save(node);
                 return true;
             }catch (Exception e){
-                logger.error("EROOR during add tree Node:\n{}", e.getMessage());
+                logger.error("EROOR during save tree Node:\n{}", e.getMessage());
             }
         }
         return false;
     }
+
 }
