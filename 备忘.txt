@@ -6,3 +6,5 @@ Nested Tree 开发小计：
 2015年8月 v3--可以给Entity中设定一个parentID的重复属性，然后这是其updateable=false insertable=false.这样读取的时候他会读到parent值
               但在更新的操作（包括merge操作的时候） 这个parentID是不会因为node.setParent修改的
               通过这个机制在监听器中：node.parent是修改后的parent值，node.parentID是原来的值，二者判断得出节点是否修改。
+2015年8月 v3.1 --性能调优，放弃使用代理模式，改为直接将EntityManager注入Listener中
+                在JPATreeListener中加入了一个静态的EM字段，然后通过SpringApplicationContext中配置MethodInvokingFactoryBean来注入EntityManager
