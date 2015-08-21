@@ -3,9 +3,8 @@ package com.udf.core.catalog;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.udf.common.orm.NestedSetUtil;
-import com.udf.core.entity.NestedSetEntity;
-import com.udf.core.nestedTree.dao.ICatalogDao;
 import com.udf.core.entity.Catalog;
+import com.udf.core.nestedTree.dao.ICatalogDao;
 import com.udf.core.nestedTree.service.ICatalogService;
 import com.udf.core.web.mvc.json.CatalogJsonView;
 import org.junit.Test;
@@ -20,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.util.ArrayList;
 import java.util.List;
 
 /**

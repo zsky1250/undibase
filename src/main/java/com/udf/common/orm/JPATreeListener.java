@@ -190,7 +190,7 @@ public class JPATreeListener {
     }
 
     /**
-     * JPQL:UPDATE xx node SET node.rgt=node.rgt + :nodespan WHERE node.rgt >= :from
+     * JPQL:UPDATE xx node SET node.rgt=node.rgt + :nodespan WHERE node.rgt > :from
      * @param node
      * @param nodespan
      * @param from
@@ -200,7 +200,7 @@ public class JPATreeListener {
         CriteriaUpdate update = builder.createCriteriaUpdate(node.getClass());
         Root<? extends NestedSetEntity> updateRoot = update.from(node.getClass());
         update.set(updateRoot.get("rgt"), builder.sum(updateRoot.<Integer>get("rgt"), builder.parameter(Integer.class,"span")))
-                .where(builder.greaterThanOrEqualTo(updateRoot.<Integer>get("rgt"), builder.parameter(Integer.class, "position")));
+                .where(builder.greaterThan(updateRoot.<Integer>get("rgt"), builder.parameter(Integer.class, "position")));
         em.createQuery(update)
                 .setParameter("span", nodespan)
                 .setParameter("position",from)
@@ -221,7 +221,7 @@ public class JPATreeListener {
         CriteriaUpdate update = builder.createCriteriaUpdate(node.getClass());
         Root<? extends NestedSetEntity> updateRoot = update.from(node.getClass());
         update.set(updateRoot.get("lft"), builder.sum(updateRoot.<Integer>get("lft"), builder.parameter(Integer.class,"span")))
-                .where(builder.greaterThanOrEqualTo(updateRoot.<Integer>get("lft"), builder.parameter(Integer.class, "position")));
+                .where(builder.greaterThan(updateRoot.<Integer>get("lft"), builder.parameter(Integer.class, "position")));
         em.createQuery(update)
                 .setParameter("span", nodespan)
                 .setParameter("position", from)

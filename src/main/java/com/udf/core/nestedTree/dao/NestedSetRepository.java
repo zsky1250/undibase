@@ -1,24 +1,23 @@
 package com.udf.core.nestedTree.dao;
 
+import com.udf.core.entity.NestedSetEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.NoRepositoryBean;
-import org.springframework.stereotype.Repository;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 标记结构，树操作的根接口.方便以后针对不同数据库扩展
- * Created by 张未然 on 2015/8/18.
+ * Created by 张未然 on 2015/8/21.
  */
-public interface ITreeDao<T,ID extends Serializable> {
-
+@NoRepositoryBean
+public interface NestedSetRepository<T extends NestedSetEntity,ID extends Serializable> extends JpaRepository<T,ID> {
     /**
      * 根据节点ID返回树
-     * @param ID--父节点ID
+     * @param id--父节点ID
      * @return List--扁平树集合
      */
-    public List<T> getTreeByRootID(Long ID);
+    public List<T> getTreeByRootID(ID id);
 
     /**
      * 根据根节点返回树,如果能获取到node节点,建议使用这个方法,效率更高
@@ -32,7 +31,7 @@ public interface ITreeDao<T,ID extends Serializable> {
      * @param ID--子节点ID
      * @return List--扁平树集合
      */
-    public List<T> getParentPath(Long ID);
+    public List<T> getParentPath(ID ID);
 
     /**
      * 查找父路径

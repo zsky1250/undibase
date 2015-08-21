@@ -1,23 +1,17 @@
 package com.udf.core.nestedTree.dao.impl;
 
-import com.sun.xml.internal.bind.v2.model.core.ID;
 import com.udf.core.entity.Catalog;
-import com.udf.core.nestedTree.dao.ITreeDAO;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
-import javax.management.Query;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
  * Created by 张未然 on 2015/8/19.
  */
 @Service("iCatalogDaoImpl")
-public class NestedSetTreeDAOImpl implements ITreeDAO<Catalog,ID> {
+public class NestedSetDao {
 
     @PersistenceContext
     EntityManager em;
@@ -51,6 +45,11 @@ public class NestedSetTreeDAOImpl implements ITreeDAO<Catalog,ID> {
         return em.createQuery("SELECT node FROM Catalog node where ?1 between node.lft and node.rgt")
                 .setParameter(1,node.getLft())
                 .getResultList();
+    }
+
+    @Override
+    public void batchAddChildren(Catalog parentNode, List<Catalog> children) {
+
     }
 
 

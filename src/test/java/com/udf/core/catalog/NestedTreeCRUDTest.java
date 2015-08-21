@@ -1,7 +1,7 @@
 package com.udf.core.catalog;
 
-import com.udf.core.nestedTree.dao.ICatalogDao;
 import com.udf.core.entity.Catalog;
+import com.udf.core.nestedTree.dao.ICatalogDao;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
