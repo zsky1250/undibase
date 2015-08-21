@@ -18,7 +18,7 @@ public interface ICatalogService {
 
     public boolean deleteSubTree(Long id);
 
-    public Catalog findTreeNodeByID(Long id);
+    public Catalog findNodeByID(Long id);
 
     public boolean saveNode(Catalog node);
 }

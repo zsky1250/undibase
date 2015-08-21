@@ -42,7 +42,8 @@ public class NestedTreeCRUDTest {
     }
 
 
-    private void insertCATIntoParent(int parentID, String name){
+    @Transactional
+    private void insertCATIntoParent(Long parentID, String name){
         Catalog parent = em.find(Catalog.class,parentID);
         Catalog cat = new Catalog();
         cat.setName(name);
@@ -50,15 +51,15 @@ public class NestedTreeCRUDTest {
         em.persist(cat);
     }
 
-    @Transactional
     @Test
+    @Transactional
     public void batchInsert(){
         char name = 'A';
         for(int i = 0;i<10;i++){
-            insertCATIntoParent(i, String.valueOf(name++));
+            insertCATIntoParent(Long.valueOf(i), String.valueOf(name++));
         }
-        insertCATIntoParent(3, "HH");
-        insertCATIntoParent(3, "QQ");
+        insertCATIntoParent(3l, "HH");
+        insertCATIntoParent(3l, "QQ");
     }
 
     @Test

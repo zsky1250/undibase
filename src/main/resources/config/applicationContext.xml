@@ -222,6 +222,7 @@
 	</bean>
 
 	<!--为辅助类set所需的entityManagerFactory-->
+	<!--文档说这种情况不需要返回值用methodInvokingBean更合适，可是这里好像不行-->
 	<bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
 		<property name="staticMethod"
 				  value="com.udf.common.orm.NestedSetUtil.setEntityManagerFactory"/>

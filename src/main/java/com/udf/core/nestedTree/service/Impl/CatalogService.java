@@ -83,24 +83,25 @@ public class CatalogService implements ICatalogService {
 
     @Override
     @Cacheable(value="treeNode",key="#id")
-    public Catalog findTreeNodeByID(Long id){
+    public Catalog findNodeByID(Long id){
         return catalogDao.findOne(id);
     }
 
     @Override
     @Caching(
             evict = {
-                @CacheEvict(value = "tree",allEntries = true),
+                //save操作修改了树结构
+                @CacheEvict(value ="tree",allEntries = true,condition = "T(com.udf.common.orm.NestedSetUtil).isParentChanged(#node)"),
+                //save操作修改了节点
+                @CacheEvict(value="treeNode",key="#node.getId()",condition = "!(T(com.udf.common.orm.NestedSetUtil).isNewNode(#node))")
             },
             put = {
-               @CachePut(value="treeNode",key="#node.getId()")
+                //save操作新增了节点
+                @CachePut(value="treeNode",key="#node.getId()",condition = "T(com.udf.common.orm.NestedSetUtil).isNewNode(#node)")
             }
     )
     public boolean saveNode(Catalog node) {
         if(node!=null){
-
-
-
             try {
                 catalogDao.save(node);
                 return true;
