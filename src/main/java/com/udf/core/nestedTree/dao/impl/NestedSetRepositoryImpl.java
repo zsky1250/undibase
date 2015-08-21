@@ -30,10 +30,6 @@ public class NestedSetRepositoryImpl<T extends NestedSetEntity,ID extends Serial
         builder = em.getCriteriaBuilder();
     }
 
-    public void sharedCustomMethod(ID id) {
-// implementation goes here
-    }
-
     /**
      * 根据节点ID返回树
      * @param id--父节点ID
@@ -42,6 +38,7 @@ public class NestedSetRepositoryImpl<T extends NestedSetEntity,ID extends Serial
      */
     public List<T> getTreeByRootID(ID id){
         Class<T> domainType = getDomainClass();
+        System.out.println("class type:+++"+domainType);
         CriteriaQuery query =  builder.createQuery(domainType);
         Root<T> child = query.from(domainType);
         Root<T> parent = query.from(domainType);
@@ -109,20 +106,10 @@ public class NestedSetRepositoryImpl<T extends NestedSetEntity,ID extends Serial
     }
 
     @Transactional
-    public void batchAddChildren(T parentNode,List<T> children){
-        //step1 给children标志位赋值执行插入
+    public void addChildrenInBatch(T parentNode, List<T> children){
         int parentRgt = parentNode.getRgt();
-        int flag = parentRgt;
-        for (T child : children) {
-            child.setLft(flag++);
-            child.setRgt(flag++);
-            FlushModeType oriFlushMode = em.getFlushMode();
-            em.setFlushMode(FlushModeType.COMMIT);
-            em.persist(child);
-            em.setFlushMode(oriFlushMode);
-        }
-        //step2 根据span批量调整受影响的树节点
-        int span = flag-parentRgt;
+        //step1 根据span批量调整受影响的树节点
+        int span = children.size()*2;
         Class<T> domainType = getDomainClass();
         //JPQL:UPDATE xx node SET node.lft=node.lft+:nodespan where node.lft > :from
         CriteriaUpdate update4Lft = builder.createCriteriaUpdate(domainType);
@@ -144,5 +131,16 @@ public class NestedSetRepositoryImpl<T extends NestedSetEntity,ID extends Serial
                 .setParameter("position",parentRgt)
                 .setFlushMode(FlushModeType.COMMIT)
                 .executeUpdate();
+        //step2 给children标志位赋值执行插入
+        for (T child : children) {
+            child.setLft(parentRgt++);
+            child.setRgt(parentRgt++);
+            child.setParent(parentNode);
+            child.setBatchInsert(true);
+            FlushModeType oriFlushMode = em.getFlushMode();
+            em.setFlushMode(FlushModeType.COMMIT);
+            em.persist(child);
+            em.setFlushMode(oriFlushMode);
+        }
     }
 }

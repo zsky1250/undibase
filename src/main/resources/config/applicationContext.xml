@@ -144,6 +144,7 @@
 
 	<jpa:repositories base-package="com.udf.core.nestedTree.dao"
 		repository-impl-postfix="Impl"
+		factory-class="com.udf.core.nestedTree.dao.UndiBaseRepositoryFactoryBean"
 		entity-manager-factory-ref="entityManagerFactory"
 		transaction-manager-ref="transactionManager">
 	</jpa:repositories>

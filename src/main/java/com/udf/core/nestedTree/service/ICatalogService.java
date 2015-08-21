@@ -14,11 +14,15 @@ public interface ICatalogService {
 
     List<Catalog> getTreeByRootNode(Catalog root);
 
-    public boolean deleteLeafNode(Long id);
+    List<Catalog> getTreeByRootID(Long rootID,boolean needSort);
 
-    public boolean deleteSubTree(Long id);
+    List<Catalog> getTreeByRootNode(Catalog root,boolean needSort);
+
+    public boolean deleteNode(Catalog node);
 
     public Catalog findNodeByID(Long id);
 
     public boolean saveNode(Catalog node);
+
+    public boolean addChildren(Catalog parent,List<Catalog> children);
 }

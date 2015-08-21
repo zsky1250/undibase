@@ -1,21 +1,15 @@
 package com.udf.common.orm;
 
-import com.udf.common.orm.bean.NestedSetBean;
-import com.udf.core.entity.Catalog;
 import com.udf.core.entity.NestedSetEntity;
 import org.springframework.orm.jpa.SharedEntityManagerCreator;
 
-import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.FlushModeType;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
+import java.util.*;
 
 /**
  * Created by 张未然 on 2015/8/19.
@@ -35,8 +29,26 @@ public class NestedSetUtil {
         ArrayList<T> resultList = new ArrayList<>();
         ListIterator<T> iterator = flatTreeList.listIterator();
         while(iterator.hasNext()){
-            resultList.add(buildTree(iterator));
+            resultList.add(buildTree(iterator,false));
         }
+        return resultList;
+    }
+
+    public static <T extends NestedSetEntity>List<T> toHierachyTree(List<T> flatTreeList,boolean needOrderd) {
+        if(flatTreeList==null) return null;
+        ArrayList<T> resultList = new ArrayList<>();
+        ListIterator<T> iterator = flatTreeList.listIterator();
+        while(iterator.hasNext()){
+            resultList.add(buildTree(iterator,needOrderd));
+        }
+        //递归算法会忽略最后一棵树的根节点排序。手工加上
+        if(needOrderd&&!resultList.isEmpty()){
+            T lastRoot = resultList.get(resultList.size() - 1);
+            if(lastRoot.getChildren().size()>1){
+                sort(lastRoot.getChildren());
+            }
+        }
+
         return resultList;
     }
 
@@ -46,7 +58,7 @@ public class NestedSetUtil {
      * @param <T>
      * @return
      */
-    private static <T extends NestedSetEntity>T buildTree(ListIterator<T> iter){
+    private static <T extends NestedSetEntity>T buildTree(ListIterator<T> iter,boolean needOrdered){
         T node = iter.next();
         if(isLeaf(node)){
             node.setChildren(null);
@@ -55,15 +67,26 @@ public class NestedSetUtil {
         ArrayList<T> children = new ArrayList<>();
         node.setChildren(children);
         while(iter.hasNext()){
-            T nextNode = buildTree(iter);
+            T nextNode = buildTree(iter,needOrdered);
             if(isInByNestedSet(node,nextNode)) {
                 children.add(nextNode);
             }else {
                 iter.previous();
+                //本级节点调整完毕
+                if(needOrdered&&children.size()>1) sort(children);
                 break;
             }
         }
         return node;
+    }
+
+    private static <T extends NestedSetEntity>void sort(List<T> children){
+        Collections.sort(children, new Comparator<T>() {
+            @Override
+            public int compare(T o1, T o2) {
+                return o2.getOrder()-o1.getOrder();
+            }
+        });
     }
 
     /**
@@ -108,11 +131,11 @@ public class NestedSetUtil {
             CriteriaBuilder builder = em.getCriteriaBuilder();
             CriteriaQuery cq = builder.createQuery(NestedSetEntity.class);
             Root<? extends NestedSetEntity> root = cq.from(node.getClass());
-            cq.select(root.<NestedSetEntity>get("parent"));
+            cq.select(root);
             cq.where(builder.equal(root, builder.parameter(NestedSetEntity.class, "node")));
-            NestedSetEntity parent = (NestedSetEntity) em.createQuery(cq).setFlushMode(FlushModeType.COMMIT)
+            NestedSetEntity nodeInDB = (NestedSetEntity) em.createQuery(cq).setFlushMode(FlushModeType.COMMIT)
                     .setParameter("node", node).getSingleResult();
-            oriParentID = (Long) parent.getId();
+            oriParentID = (Long) nodeInDB.getParentIDBeforeUpdate();
             if(oriParentID!=newParent.getId()){
                 return true;
             }

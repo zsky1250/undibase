@@ -17,29 +17,29 @@ public interface NestedSetRepository<T extends NestedSetEntity,ID extends Serial
      * @param id--父节点ID
      * @return List--扁平树集合
      */
-    public List<T> getTreeByRootID(ID id);
+    List<T> getTreeByRootID(ID id);
 
     /**
      * 根据根节点返回树,如果能获取到node节点,建议使用这个方法,效率更高
      * @param node--父节点Entity
      * @return List--扁平树集合
      */
-    public List<T> getTreeByRootNode(T node);
+    List<T> getTreeByRootNode(T node);
 
     /**
      * 查找父路径
      * @param ID--子节点ID
      * @return List--扁平树集合
      */
-    public List<T> getParentPath(ID ID);
+    List<T> getParentPath(ID ID);
 
     /**
      * 查找父路径
      * @param node--子节点Entity,如果能获取到node节点,建议使用这个方法,效率更高
      * @return List--扁平树集合
      */
-    public List<T> getParentPath(T node);
+    List<T> getParentPath(T node);
 
-    public void batchAddChildren(T parentNode,List<T> children);
+    void addChildrenInBatch(T parentNode, List<T> children);
 
 }

@@ -21,7 +21,7 @@
 		<!-- <appender-ref ref="FILE-OWN" /> -->
 	</logger>
 
-	<logger name="org.springframework.data" level="debug" additivity="false">
+	<logger name="org.springframework.data" level="trace" additivity="false">
 		<appender-ref ref="STDOUT" />
 		<!-- <appender-ref ref="FILE-OWN" /> -->
 	</logger>

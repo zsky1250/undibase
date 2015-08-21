@@ -28,6 +28,11 @@ public abstract class NestedSetEntity<T extends NestedSetEntity,ID extends Seria
     @OneToMany(mappedBy = "parent",fetch = FetchType.LAZY)
     private List<T> children;
 
+    private int order=1;
+
+    @Transient
+    private boolean batchInsert=false;
+
     public ID getId() {
         return id;
     }
@@ -68,11 +73,25 @@ public abstract class NestedSetEntity<T extends NestedSetEntity,ID extends Seria
         this.children = children;
     }
 
+    public int getOrder() {
+        return order;
+    }
+
+    public void setOrder(int order) {
+        this.order = order;
+    }
 
     public Long getParentIDBeforeUpdate() {
         return parentID;
     }
 
+    public boolean isBatchInsert() {
+        return batchInsert;
+    }
+
+    public void setBatchInsert(boolean batchInsert) {
+        this.batchInsert = batchInsert;
+    }
 
     @Override
     public String toString(){

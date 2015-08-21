@@ -61,10 +61,14 @@ public class NestedTreeQueryTest {
         return tree;
     }
 
+    private void preetyPrint(Catalog node){
+
+    }
+
     @Test
     @Transactional
     public void testTreeConversion() throws JsonProcessingException {
-        List<Catalog> resultList = NestedSetUtil.toHierachyTree(queryTree(1L));
+        List<Catalog> resultList = NestedSetUtil.toHierachyTree(queryTree(1L),true);
         ObjectMapper jackson2Mapper = new ObjectMapper();
         jackson2Mapper.addMixInAnnotations(Catalog.class, CatalogJsonView.class);
         System.out.println(jackson2Mapper.writerWithDefaultPrettyPrinter().writeValueAsString(resultList));
@@ -77,7 +81,6 @@ public class NestedTreeQueryTest {
         catalogService.getTreeByRootID(1L);
         catalogService.getTreeByRootNode(node);
     }
-
 
 
 }
