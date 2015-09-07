@@ -1,7 +1,7 @@
 package com.udf.core.menu;
 
-import com.udf.core.web.menu.bean.MenuItem;
-import com.udf.core.web.menu.service.MenuService;
+import com.udf.core.menu.bean.MenuItem;
+import com.udf.core.menu.service.MenuService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -142,9 +142,9 @@
 		</property>
 	</bean>
 
-	<jpa:repositories base-package="com.udf.core.nestedTree.dao"
+	<jpa:repositories base-package="com.udf.*.dao"
 		repository-impl-postfix="Impl"
-		factory-class="com.udf.core.nestedTree.dao.UndiBaseRepositoryFactoryBean"
+		factory-class="com.udf.core.orm.nestedSet.support.UndiBaseRepositoryFactoryBean"
 		entity-manager-factory-ref="entityManagerFactory"
 		transaction-manager-ref="transactionManager">
 	</jpa:repositories>
@@ -178,16 +178,14 @@
 	<bean id="Jaxb2Marshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
 		<property name="classesToBeBound">
 			<list>
-				<value>com.udf.core.web.menu.bean.Menu</value>
-				<value>com.udf.core.web.menu.bean.MenuItem</value>
+				<value>com.udf.core.menu.bean.Menu</value>
+				<value>com.udf.core.menu.bean.MenuItem</value>
 			</list>
 		</property>
 	</bean>
 
-	<bean id="MenuConfigurer" class="com.udf.core.web.menu.service.MenuConfigurer">
-		<constructor-arg>
-			<value>classpath:config/menu.xml</value>
-		</constructor-arg>
+	<bean class="com.udf.core.menu.service.MenuService">
+		<property name="location" value="classpath:config/menu.xml"/>
 	</bean>
 
 

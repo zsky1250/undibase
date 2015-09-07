@@ -1,8 +1,8 @@
 package com.udf.core.web.controller;
 
-import com.udf.common.orm.NestedSetUtil;
-import com.udf.core.entity.Catalog;
-import com.udf.core.nestedTree.dao.ICatalogDao;
+import com.udf.core.orm.nestedSet.support.NestedSetUtil;
+import com.udf.showcase.entity.Catalog;
+import com.udf.showcase.dao.ICatalogDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

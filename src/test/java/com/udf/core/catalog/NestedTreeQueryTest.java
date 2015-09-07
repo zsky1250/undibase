@@ -2,11 +2,11 @@ package com.udf.core.catalog;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.udf.common.orm.NestedSetUtil;
-import com.udf.core.entity.Catalog;
-import com.udf.core.nestedTree.dao.ICatalogDao;
-import com.udf.core.nestedTree.service.ICatalogService;
-import com.udf.core.web.mvc.json.CatalogJsonView;
+import com.udf.core.orm.nestedSet.support.NestedSetUtil;
+import com.udf.showcase.entity.Catalog;
+import com.udf.showcase.dao.ICatalogDao;
+import com.udf.showcase.service.ICatalogService;
+import com.udf.core.web.view.json.CatalogJsonView;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -68,7 +68,7 @@ public class NestedTreeQueryTest {
     @Test
     @Transactional
     public void testTreeConversion() throws JsonProcessingException {
-        List<Catalog> resultList = NestedSetUtil.toHierachyTree(queryTree(1L),true);
+        List<Catalog> resultList = NestedSetUtil.toHierachyTree(queryTree(1L), true);
         ObjectMapper jackson2Mapper = new ObjectMapper();
         jackson2Mapper.addMixInAnnotations(Catalog.class, CatalogJsonView.class);
         System.out.println(jackson2Mapper.writerWithDefaultPrettyPrinter().writeValueAsString(resultList));
