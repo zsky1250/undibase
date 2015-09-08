@@ -1,6 +1,6 @@
-package com.udf.common.orm;
+package com.udf.core.orm.nestedSet.support;
 
-import com.udf.core.entity.NestedSetEntity;
+import com.udf.core.orm.nestedSet.entity.NestedSetEntity;
 import org.springframework.orm.jpa.SharedEntityManagerCreator;
 
 import javax.persistence.EntityManager;
