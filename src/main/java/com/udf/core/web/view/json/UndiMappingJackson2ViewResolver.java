@@ -10,7 +10,12 @@ import java.util.Locale;
 
 /**
  * Created by zwr on 2014/12/18.
+ * 这个是自定义的针对Jackson2view的viewResolver
+ * 在ContentnegoationViewResolver中存在两种配置
+ * 1.把viewResolver和view都写到这个bean里 （推荐）
+ * 2.只配置一个空bean 然后把其他的viewResolver写到外面，ContentnegoationViewResolver会自动把其他的viewResolver加进去。
  */
+@Deprecated
 public class UndiMappingJackson2ViewResolver implements ViewResolver {
 
     private static Logger log = LoggerFactory.getLogger(UndiMappingJackson2ViewResolver.class);
