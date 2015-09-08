@@ -19,8 +19,12 @@ import java.util.Map;
  *
  *
  * Created by 张未然 on 2015/8/19.
+ *
+ * 目前来看 完全可以用MappingJackson2JsonView 替代 没必要自己再搞一个。
  */
 
+
+@Deprecated
 public class UndiMappingJackson2JsonView extends MappingJackson2JsonView {
 
     private Map<Class<?>,Class<?>> mixinMap;
