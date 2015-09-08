@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="dataSourceStorage">
+  <data-source name="undibase" uuid="eece3a51-babe-4b04-9f8d-b6624fce22be">
+    <database-info product="MySQL" version="5.6.15" jdbc-version="4.0" driver-name="MySQL Connector Java" driver-version="mysql-connector-java-5.1.35 ( Revision: 5fb9c5849535c13917c2cf9baaece6ef9693ef27 )">
+      <extra-name-characters>#@</extra-name-characters>
+      <identifier-quote-string>`</identifier-quote-string>
+    </database-info>
+    <case-sensitivity plain-identifiers="lower" quoted-identifiers="lower"/>
+    <schema name="" catalog="undibase"/>
+    <table name="catalog" schema="" catalog="undibase" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="lft" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="parent" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <column name="rgt" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="name" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <column name="url" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <foreign-key name="FK_cspy8bw8avso7fjfux1fg6s71" columns="parent" ref-table="catalog" ref-schema="" ref-catalog="undibase" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <exported-key name="FK_cspy8bw8avso7fjfux1fg6s71" table="catalog" schema="" catalog="undibase" columns="parent"/>
+      <index name="FK_cspy8bw8avso7fjfux1fg6s71" unique="false" columns="parent"/>
+    </table>
+  </data-source>
+</component>

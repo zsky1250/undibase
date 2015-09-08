@@ -1,6 +1,5 @@
 package com.udf.core.catalog;
 
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -9,7 +8,7 @@ import com.udf.core.orm.nestedSet.support.NestedSetUtil;
 import com.udf.showcase.entity.Catalog;
 import com.udf.showcase.dao.ICatalogDao;
 import com.udf.showcase.service.ICatalogService;
-import com.udf.core.web.view.json.CatalogJsonView;
+import com.udf.showcase.web.view.json.CatalogJsonView;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;

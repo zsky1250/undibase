@@ -1,4 +1,4 @@
-package com.udf.core.web.view.json;
+package com.udf.showcase.web.view.json;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;

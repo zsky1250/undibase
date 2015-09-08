@@ -12,60 +12,6 @@
        http://www.springframework.org/schema/mvc/spring-mvc.xsd
        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
 
-    <!-- 开启controller注解支持 -->
-    <!-- 注意事项请参考：http://jinnianshilongnian.iteye.com/blog/1762632 -->
-    <context:component-scan base-package="com.udf.**.controller"
-                            use-default-filters="false">
-        <context:include-filter type="annotation"
-                                expression="org.springframework.web.bind.annotation.RestController"/>
-        <context:include-filter type="annotation"
-                                expression="org.springframework.stereotype.Controller"/>
-        <context:include-filter type="annotation"
-                                expression="org.springframework.web.bind.annotation.ControllerAdvice"/>
-    </context:component-scan>
-
-    <!-- 开启事务管理 -->
-    <tx:annotation-driven transaction-manager="transactionManager"/>
-
-    <!-- 启动spring 注解扫描支持 -->
-    <mvc:annotation-driven validator="validator"
-                           conversion-service="conversionService"
-                           enable-matrix-variables="true"
-                           content-negotiation-manager="cnManager">
-        <!--这里指定content-negotiation-manager="cnManager" 作用是在@requestMapping中能使用 produces参数。-->
-        <mvc:message-converters register-defaults="true">
-            <!-- 解决spring @ResponseBody 默认返回编码为text/plain;charset=ISO-8859-1 出现的乱码 -->
-            <bean class="org.springframework.http.converter.StringHttpMessageConverter">
-                <constructor-arg value="UTF-8"/>
-                <property name="supportedMediaTypes">
-                    <list>
-                        <bean class="org.springframework.http.MediaType">
-                            <constructor-arg index="0" value="text"/>
-                            <constructor-arg index="1" value="plain"/>
-                            <constructor-arg index="2" value="UTF-8"/>
-                        </bean>
-                        <bean class="org.springframework.http.MediaType">
-                            <constructor-arg index="0" value="text"/>
-                            <constructor-arg index="1" value="html"/>
-                            <constructor-arg index="2" value="UTF-8"/>
-                        </bean>
-                    </list>
-                </property>
-            </bean>
-        </mvc:message-converters>
-        <!-- 参数绑定 -->
-        <mvc:argument-resolvers>
-            <bean class="org.springframework.data.web.PageableHandlerMethodArgumentResolver"/>
-        </mvc:argument-resolvers>
-    </mvc:annotation-driven>
-
-    <bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean"/>
-
-
-    <!-- 静态资源映射 -->
-    <mvc:resources mapping="/res/**" location="/res/"/>
-    <mvc:default-servlet-handler />
-
 
     <!-- ============= view =============-->
     <!-- 配置后台Freemarker相关属性，这里还要配置自己写的标签。和前台可能不共用，所以单独拿出来。 -->

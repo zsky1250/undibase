@@ -65,9 +65,9 @@ public class CatalogService implements ICatalogService {
             evict = {
                     @CacheEvict(value = "tree",allEntries = true),
                     //删除子树，清空treeNode
-                    @CacheEvict(value = "treeNode",allEntries = true,condition = "!(T(com.udf.common.orm.NestedSetUtil).isLeaf(#node))"),
+                    @CacheEvict(value = "treeNode",allEntries = true,condition = "!(T(com.udf.core.orm.nestedSet.support.NestedSetUtil).isLeaf(#node))"),
                     //删除叶子节点，清除单个节点缓存
-                    @CacheEvict(value = "treeNode",key = "#node?.getId()",condition = "T(com.udf.common.orm.NestedSetUtil).isLeaf(#node)")
+                    @CacheEvict(value = "treeNode",key = "#node?.getId()",condition = "T(com.udf.core.orm.nestedSet.support.NestedSetUtil).isLeaf(#node)")
             }
     )
     @Override
@@ -93,13 +93,13 @@ public class CatalogService implements ICatalogService {
     @Caching(
             evict = {
                 //save操作修改了树结构
-                @CacheEvict(value ="tree",allEntries = true,condition = "T(com.udf.common.orm.NestedSetUtil).isParentChanged(#node)"),
+                @CacheEvict(value ="tree",allEntries = true,condition = "T(com.udf.core.orm.nestedSet.support.NestedSetUtil).isParentChanged(#node)"),
                 //save操作修改了节点
-                @CacheEvict(value="treeNode",key="#node?.getId()",condition = "!(T(com.udf.common.orm.NestedSetUtil).isNewNode(#node))")
+                @CacheEvict(value="treeNode",key="#node?.getId()",condition = "!(T(com.udf.core.orm.nestedSet.support.NestedSetUtil).isNewNode(#node))")
             },
             put = {
                 //save操作新增了节点
-                @CachePut(value="treeNode",key="#node?.getId()",condition = "T(com.udf.common.orm.NestedSetUtil).isNewNode(#node)")
+                @CachePut(value="treeNode",key="#node?.getId()",condition = "T(com.udf.core.orm.nestedSet.support.NestedSetUtil).isNewNode(#node)")
             }
     )
     public boolean saveNode(Catalog node) {

@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="sqlprofiler">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/sqlprofiler.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

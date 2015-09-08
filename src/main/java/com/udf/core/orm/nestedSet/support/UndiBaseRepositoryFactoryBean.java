@@ -6,6 +6,7 @@ import com.udf.core.orm.nestedSet.dao.NestedSetRepositoryImpl;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.support.JpaRepositoryFactory;
 import org.springframework.data.jpa.repository.support.JpaRepositoryFactoryBean;
+import org.springframework.data.repository.core.RepositoryInformation;
 import org.springframework.data.repository.core.RepositoryMetadata;
 import org.springframework.data.repository.core.support.RepositoryFactorySupport;
 
@@ -33,7 +34,7 @@ public class UndiBaseRepositoryFactoryBean<R extends JpaRepository<T, I>, T, I e
             this.em = em;
         }
 
-        protected Object getTargetRepository(RepositoryMetadata metadata) {
+        protected Object getTargetRepository(RepositoryInformation metadata) {
             if(isNestedSetRepository(metadata)){
                 return new NestedSetRepositoryImpl<NestedSetEntity,I>((Class<NestedSetEntity>) metadata.getDomainType(),em);
             }

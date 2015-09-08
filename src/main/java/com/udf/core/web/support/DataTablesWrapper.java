@@ -15,7 +15,6 @@ public class DataTablesWrapper {
         dt.setDraw(draw + 1);
         dt.setRecordsTotal(result.getTotalElements());
         dt.setRecordsFiltered(result.getTotalElements());
-//        FilterProvider p = SimpleBeanPropertyFilter.filterOutAllExcept("department.");
         return dt;
     }
 

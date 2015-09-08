@@ -2,15 +2,19 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
        xmlns:context="http://www.springframework.org/schema/context"
-       xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:tx="http://www.springframework.org/schema/tx"
-       xsi:schemaLocation="
-       http://www.springframework.org/schema/beans
-       http://www.springframework.org/schema/beans/spring-beans.xsd
-       http://www.springframework.org/schema/context
-       http://www.springframework.org/schema/context/spring-context.xsd
-       http://www.springframework.org/schema/mvc
-       http://www.springframework.org/schema/mvc/spring-mvc.xsd
-       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context
+                           http://www.springframework.org/schema/context/spring-context.xsd
+                           http://www.springframework.org/schema/mvc
+                           http://www.springframework.org/schema/mvc/spring-mvc.xsd
+                           http://www.springframework.org/schema/tx
+                           http://www.springframework.org/schema/tx/spring-tx.xsd
+                           http://www.springframework.org/schema/util
+                           http://www.springframework.org/schema/util/spring-util.xsd">
 
     <!-- 开启controller注解支持 -->
     <!-- 注意事项请参考：http://jinnianshilongnian.iteye.com/blog/1762632 -->
@@ -59,42 +63,53 @@
         </mvc:argument-resolvers>
     </mvc:annotation-driven>
 
-    <bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean"/>
 
 
     <!-- 静态资源映射 -->
     <mvc:resources mapping="/res/**" location="/res/"/>
     <mvc:default-servlet-handler />
 
+    <!--配置用于直接跳转的controller-->
+    <mvc:view-controller path="/" view-name="login"/>
 
-    <!-- ============= view =============-->
-    <!-- 配置后台Freemarker相关属性，这里还要配置自己写的标签。和前台可能不共用，所以单独拿出来。 -->
 
-
+    <!--===============viewResolver========================================================-->
     <bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
         <property name="contentNegotiationManager" ref="cnManager"/>
+        <property name="viewResolvers">
+            <list>
+                <bean class="com.udf.core.web.view.UndiFreeMarkerViewResolver">
+                    <property name="contentType" value="text/html; charset=utf-8" />
+                    <property name="viewClass" value="com.udf.core.web.view.freemarker.RichFreeMarkerView" />
+                    <property name="cache" value="true" />
+                    <property name="prefix" value="html/" />
+                    <property name="suffix" value=".html" />
+                    <property name="requestContextAttribute" value="request" />
+                    <property name="exposeSpringMacroHelpers" value="true" />
+                    <property name="exposeRequestAttributes" value="false" />
+                    <property name="exposeSessionAttributes" value="false" />
+                </bean>
+                <!-- jstl view-->
+                <!--<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">-->
+                <!--<property name="order" value="2"/>-->
+                <!--<property name="prefix" value="WEB-INF/views"/>-->
+                <!--<property name="suffix" value=".jsp"/>-->
+                <!--</bean>-->
+            </list>
+        </property>
+        <property name="defaultViews">
+            <list>
+                <!--一般返回纯数据的在这里，像json,xml-->
+                <bean class="org.springframework.web.servlet.view.json.MappingJackson2JsonView">
+                    <property name="extractValueFromSingleKeyModel" value="true"/>
+                    <property name="prettyPrint" value="false"/>
+                    <property name="objectMapper" ref="undiObjectMapper"/>
+                </bean>
+            </list>
+        </property>
     </bean>
 
-    <!-- jstl view-->
-    <!--<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">-->
-        <!--<property name="order" value="2"/>-->
-        <!--<property name="prefix" value="WEB-INF/views"/>-->
-        <!--<property name="suffix" value=".jsp"/>-->
-    <!--</bean>-->
 
-    <!-- freeMarker view -->
-    <bean id="freeMarkerViewResolver" class="org.springframework.web.servlet.view.AbstractTemplateViewResolver">
-        <!--这里不用FreeMarkerViewResolver是为了能有效的注入自己的UndiFreeMarkerView-->
-        <property name="viewClass" value="com.udf.core.web.view.freeMarker.UndiFreeMarkerView"/>
-        <property name="contentType" value="text/html; charset=utf-8"/>
-        <property name="cache" value="true"/>
-        <property name="prefix" value="/page/"/>
-        <property name="suffix" value=".html"/>
-        <property name="requestContextAttribute" value="request"/>
-        <property name="exposeSpringMacroHelpers" value="true"/>
-        <property name="exposeRequestAttributes" value="true"/>
-        <property name="exposeSessionAttributes" value="true"/>
-    </bean>
     <bean class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
         <property name="templateLoaderPath" value="/WEB-INF/"/>
         <!--<property name="freemarkerSettings">-->
@@ -102,29 +117,30 @@
         <!--<prop key="locale">zh_CN</prop>-->
         <!--</props>-->
         <!--</property>-->
-        <property name="freemarkerSettings" ref="freemarkerPropSettings"/>
+        <property name="freemarkerSettings" ref="freemarkerProps"/>
         <!-- <property name="freemarkerVariables"> -->
         <!-- <map> -->
         <!-- </map> -->
         <!-- </property> -->
     </bean>
     <!-- 设置freeMarker的配置文件路径 -->
-    <bean id="freemarkerPropSettings"
-          class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+    <bean id="freemarkerProps" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
         <property name="location" value="/WEB-INF/config/freemarker.properties"/>
     </bean>
 
-    <!-- JSON view -->
-    <bean id="jsonViewResolver" class="com.udf.core.web.view.json.UndiMappingJackson2ViewResolver">
-        <property name="view">
-            <bean class="com.udf.core.web.view.json.UndiMappingJackson2JsonView">
-                <property name="prettyPrint" value="false"/>
-                <property name="mixinMap">
-                    <map>
-                        <entry key="com.udf.showcase.entity.Catalog" value="com.udf.core.web.view.json.CatalogJsonView"/>
-                    </map>
-                </property>
-            </bean>
+    <!--设置Jackson2用的ObjectMapper 定制了一些序列化用到的属性-->
+    <bean id="undiObjectMapper" class="org.springframework.http.converter.json.Jackson2ObjectMapperFactoryBean">
+        <property name="mixIns">
+            <map>
+                <entry key="com.udf.showcase.entity.Catalog" value="com.udf.showcase.web.view.json.CatalogJsonView"/>
+            </map>
+        </property>
+        <property name="featuresToEnable">
+            <array>
+                <util:constant static-field="com.fasterxml.jackson.databind.DeserializationFeature$ACCEPT_EMPTY_STRING_AS_NULL_OBJECT"/>
+                <util:constant static-field="com.fasterxml.jackson.core.JsonParser.Feature.ALLOW_UNQUOTED_CONTROL_CHARS"/>
+            </array>
+
         </property>
     </bean>
 </beans>
