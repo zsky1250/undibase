@@ -1,6 +1,9 @@
 package com.udf.core.catalog;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.udf.core.orm.nestedSet.support.NestedSetUtil;
 import com.udf.showcase.entity.Catalog;
@@ -19,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -82,5 +86,13 @@ public class NestedTreeQueryTest {
         catalogService.getTreeByRootNode(node);
     }
 
-
+@Test
+public void testJo() throws IOException {
+    String s = "{\"name\":\"12\",\"code\":\"\"}";
+    ObjectMapper om = new ObjectMapper();
+    om.configure(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT,true);
+    om.configure(JsonParser.Feature.ALLOW_UNQUOTED_CONTROL_CHARS,true);
+    StaffQueryVO staffQueryVO = om.readValue(s, StaffQueryVO.class);
+    System.out.println(staffQueryVO.getName()+"---"+staffQueryVO.getCode());
+}
 }

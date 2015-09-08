@@ -28,7 +28,7 @@ public abstract class NestedSetEntity<T extends NestedSetEntity,ID extends Seria
     @OneToMany(mappedBy = "parent",fetch = FetchType.LAZY)
     private List<T> children;
 
-    private int order=1;
+    private int seq=1;
 
     @Transient
     private boolean batchInsert=false;
@@ -73,12 +73,12 @@ public abstract class NestedSetEntity<T extends NestedSetEntity,ID extends Seria
         this.children = children;
     }
 
-    public int getOrder() {
-        return order;
+    public int getSeq() {
+        return seq;
     }
 
-    public void setOrder(int order) {
-        this.order = order;
+    public void setSeq(int seq) {
+        this.seq = seq;
     }
 
     public Long getParentIDBeforeUpdate() {

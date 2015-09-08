@@ -22,8 +22,8 @@ import org.springframework.web.context.WebApplicationContext;
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextHierarchy({
-        @ContextConfiguration(name = "parent", locations = "classpath:config/applicationContext-test.xml"),
-        @ContextConfiguration(name = "child", locations = "classpath:config/webApplicationContext-test.xml")
+        @ContextConfiguration(name = "parent", locations = "classpath:config/applicationContext.xml"),
+        @ContextConfiguration(name = "child", locations = "classpath:config/webApplicationContext.xml")
 })
 public class TreeTest {
 
@@ -39,6 +39,16 @@ public class TreeTest {
     @Test
     public void testMenuStr() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/tree")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)) //执行请求
+                //.andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON)) //验证响应contentType
+                //.andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1))//使用Json path验证JSON 请参考http://goessner.net/articles/JsonPath/
+                .andDo(MockMvcResultHandlers.print());
+    }
+
+    @Test
+    public void testNodeStr() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.post("/treeNode")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)) //执行请求
                 //.andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON)) //验证响应contentType
