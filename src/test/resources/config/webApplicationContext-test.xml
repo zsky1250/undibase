@@ -85,7 +85,7 @@
     <!-- freeMarker view -->
     <bean id="freeMarkerViewResolver" class="org.springframework.web.servlet.view.AbstractTemplateViewResolver">
         <!--这里不用FreeMarkerViewResolver是为了能有效的注入自己的UndiFreeMarkerView-->
-        <property name="viewClass" value="com.udf.core.web.view.UndiFreeMarkerView"/>
+        <property name="viewClass" value="com.udf.core.web.view.freemarker.UndiFreeMarkerView"/>
         <property name="contentType" value="text/html; charset=utf-8"/>
         <property name="cache" value="true"/>
         <property name="prefix" value="/page/"/>

@@ -78,7 +78,7 @@
         <property name="contentNegotiationManager" ref="cnManager"/>
         <property name="viewResolvers">
             <list>
-                <bean class="com.udf.core.web.view.UndiFreeMarkerViewResolver">
+                <bean class="com.udf.core.web.view.freemarker.UndiFreeMarkerViewResolver">
                     <property name="contentType" value="text/html; charset=utf-8" />
                     <property name="viewClass" value="com.udf.core.web.view.freemarker.RichFreeMarkerView" />
                     <property name="cache" value="true" />
