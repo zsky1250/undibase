@@ -70,7 +70,7 @@
     <mvc:default-servlet-handler />
 
     <!--配置用于直接跳转的controller-->
-    <mvc:view-controller path="/" view-name="login"/>
+    <mvc:view-controller path="/" view-name="/login"/>
 
 
     <!--===============viewResolver========================================================-->
@@ -80,9 +80,9 @@
             <list>
                 <bean class="com.udf.core.web.view.freemarker.UndiFreeMarkerViewResolver">
                     <property name="contentType" value="text/html; charset=utf-8" />
-                    <property name="viewClass" value="com.udf.core.web.view.freemarker.RichFreeMarkerView" />
+                    <property name="viewClass" value="com.udf.core.web.view.freemarker.UndiFreeMarkerView" />
                     <property name="cache" value="true" />
-                    <property name="prefix" value="html/" />
+                    <property name="prefix" value="/page/" />
                     <property name="suffix" value=".html" />
                     <property name="requestContextAttribute" value="request" />
                     <property name="exposeSpringMacroHelpers" value="true" />
@@ -137,7 +137,7 @@
         </property>
         <property name="featuresToEnable">
             <array>
-                <util:constant static-field="com.fasterxml.jackson.databind.DeserializationFeature$ACCEPT_EMPTY_STRING_AS_NULL_OBJECT"/>
+                <util:constant static-field="com.fasterxml.jackson.databind.DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT"/>
                 <util:constant static-field="com.fasterxml.jackson.core.JsonParser.Feature.ALLOW_UNQUOTED_CONTROL_CHARS"/>
             </array>
 

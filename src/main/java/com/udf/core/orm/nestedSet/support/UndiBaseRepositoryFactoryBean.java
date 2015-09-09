@@ -17,7 +17,11 @@ import java.io.Serializable;
  * 实现RepositoryFacotryBean 供XML配置使用
  * 参考 《Spring-data-jpa-reference-1.8.2》中的 3.6.2节 Adding custom behavior to all repositories
  * Created by 张未然 on 2015/8/21.
+ *
+ * 需要在XML配置文件的JPA bean中 加上factory-class="com.udf.core.orm.nestedSet.support.UndiBaseRepositoryFactoryBean"
+ * Deperated from Spring Data JPA 1.9 because its new base-class xml config attribute
  */
+@Deprecated
 public class UndiBaseRepositoryFactoryBean<R extends JpaRepository<T, I>, T, I extends Serializable>
         extends JpaRepositoryFactoryBean<R, T, I> {
 

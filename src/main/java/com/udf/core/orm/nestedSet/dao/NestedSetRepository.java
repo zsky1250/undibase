@@ -12,6 +12,6 @@ import java.io.Serializable;
  *
  */
 @NoRepositoryBean
-public interface NestedSetRepository<T extends NestedSetEntity,ID extends Serializable> extends JpaRepository<T,ID>,ITreeDao<T,ID> {
+public interface NestedSetRepository<T extends NestedSetEntity,ID extends Serializable> extends JpaRepository<T,ID>,ISpringDataJpaNestedTreeDao<T,ID> {
 
 }

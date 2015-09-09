@@ -1,8 +1,8 @@
 package com.udf.core.catalog;
 
+import com.udf.showcase.dao.ICatalogDao;
 import com.udf.showcase.entity.Catalog;
 import com.udf.core.orm.nestedSet.entity.NestedSetEntity;
-import com.udf.showcase.dao.ICatalogDao;
 import com.udf.showcase.service.ICatalogService;
 import org.junit.Test;
 import org.junit.runner.RunWith;

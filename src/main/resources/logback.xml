@@ -40,23 +40,23 @@
 		</encoder>
 	</appender>
 
-	<root level="error">
+	<root level="DEBUG">
 		<appender-ref ref="STDOUT" />
 	</root>
 
-	<!-- <root level="trace"> -->
-	<!-- <appender-ref ref="FILE" /> -->
-	<!-- </root> -->
+	 <root level="trace">
+	 <appender-ref ref="STDOUT" />
+	 </root>
 
-	<logger name="org.springframework.web" level="info" additivity="false">
-		<appender-ref ref="STDOUT" />
-		<!-- <appender-ref ref="FILE-OWN" /> -->
-	</logger>
+	<!--<logger name="org.springframework.web" level="info" additivity="false">-->
+		<!--<appender-ref ref="STDOUT" />-->
+		<!--&lt;!&ndash; <appender-ref ref="FILE-OWN" /> &ndash;&gt;-->
+	<!--</logger>-->
 
-	<logger name="freemarker" level="error" additivity="false">
-		<appender-ref ref="STDOUT" />
-		<!-- <appender-ref ref="FILE-OWN" /> -->
-	</logger>
+	<!--<logger name="freemarker" level="error" additivity="false">-->
+		<!--<appender-ref ref="STDOUT" />-->
+		<!--&lt;!&ndash; <appender-ref ref="FILE-OWN" /> &ndash;&gt;-->
+	<!--</logger>-->
 
 
 </configuration>

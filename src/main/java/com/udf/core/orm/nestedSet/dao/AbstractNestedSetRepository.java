@@ -1,40 +1,31 @@
 package com.udf.core.orm.nestedSet.dao;
 
 import com.udf.core.orm.nestedSet.entity.NestedSetEntity;
-import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.FlushModeType;
-import javax.persistence.criteria.*;
+import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
+import javax.persistence.FlushModeType;
+import javax.persistence.PersistenceContext;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.CriteriaUpdate;
+import javax.persistence.criteria.Root;
 import java.io.Serializable;
 import java.util.List;
 
 /**
- * Created by 张未然 on 2015/8/21.
- *
- * Spring Data JPA - 树操作实现类。
- *
+ * Created by zwr on 2015/9/9.
  */
+public abstract class AbstractNestedSetRepository<T extends NestedSetEntity,ID extends Serializable> implements ISpringDataJpaNestedTreeDao<T,ID> {
 
-public class NestedSetRepositoryImpl<T extends NestedSetEntity,ID extends Serializable>
-    extends SimpleJpaRepository<T,ID> implements NestedSetRepository<T,ID>{
-
-
-    private final EntityManager em;
+    @PersistenceContext
+    private EntityManager em;
     private CriteriaBuilder builder;
 
-
-    public NestedSetRepositoryImpl(Class<T> domainClass, EntityManager entityManager) {
-        super(domainClass, entityManager);
-        // Keep the EntityManager around to used from the newly introduced methods.
-        this.em = entityManager;
+    @PostConstruct
+    private void createBuilder(){
         builder = em.getCriteriaBuilder();
-    }
-
-    @Override
-    public Class<T> getDomainClass(){
-        return super.getDomainClass();
     }
 
     /**
@@ -45,6 +36,7 @@ public class NestedSetRepositoryImpl<T extends NestedSetEntity,ID extends Serial
      */
     public List<T> getTreeByRootID(ID id){
         Class<T> domainType = getDomainClass();
+        System.out.println("class type:+++"+domainType);
         CriteriaQuery query =  builder.createQuery(domainType);
         Root<T> child = query.from(domainType);
         Root<T> parent = query.from(domainType);
@@ -53,11 +45,11 @@ public class NestedSetRepositoryImpl<T extends NestedSetEntity,ID extends Serial
         where = builder.and(WHERE表达式);
         query.where(where);*/
         query.select(child)
-             .where(builder.between(child.<Integer>get("lft"), parent.<Integer>get("lft"), parent.<Integer>get("rgt")),
-                     builder.equal(parent.<ID>get("id"),builder.parameter(id.getClass(), "parentID")));
+                .where(builder.between(child.<Integer>get("lft"), parent.<Integer>get("lft"), parent.<Integer>get("rgt")),
+                        builder.equal(parent.<ID>get("id"),builder.parameter(id.getClass(), "parentID")));
         return em.createQuery(query)
-                 .setParameter("parentID", id)
-                 .getResultList();
+                .setParameter("parentID", id)
+                .getResultList();
 
     }
 
@@ -73,8 +65,8 @@ public class NestedSetRepositoryImpl<T extends NestedSetEntity,ID extends Serial
         Root<T> root = query.from(domainType);
         query.where(builder.between(root.<Integer>get("lft"),builder.parameter(Integer.class,"lft"),builder.parameter(Integer.class,"rgt")));
         return em.createQuery(query)
-                 .setParameter("lft",node.getLft()).setParameter("rgt",node.getRgt())
-                 .getResultList();
+                .setParameter("lft",node.getLft()).setParameter("rgt",node.getRgt())
+                .getResultList();
     }
 
     /**
@@ -89,8 +81,8 @@ public class NestedSetRepositoryImpl<T extends NestedSetEntity,ID extends Serial
         Root<T> child = query.from(domainType);
         Root<T> parent = query.from(domainType);
         query.select(parent)
-             .where(builder.between(child.<Integer>get("lft"), parent.<Integer>get("lft"), parent.<Integer>get("rgt")),
-                     builder.equal(child.<ID>get("id"),builder.parameter(id.getClass(), "childID")));
+                .where(builder.between(child.<Integer>get("lft"), parent.<Integer>get("lft"), parent.<Integer>get("rgt")),
+                        builder.equal(child.<ID>get("id"),builder.parameter(id.getClass(), "childID")));
         return em.createQuery(query).setParameter("childID", id).getResultList();
 
     }
@@ -149,4 +141,5 @@ public class NestedSetRepositoryImpl<T extends NestedSetEntity,ID extends Serial
             em.setFlushMode(oriFlushMode);
         }
     }
+
 }

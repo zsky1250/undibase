@@ -1,5 +1,6 @@
 package com.udf.core.orm.nestedSet.dao;
 
+import com.udf.core.orm.nestedSet.entity.NestedSetEntity;
 import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.stereotype.Repository;
 
@@ -8,7 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 标记结构，树操作的根接口.方便以后针对不同数据库扩展
+ * 标记接口：
+ * 树操作的根接口.方便以后针对不同数据库扩展
  * Created by 张未然 on 2015/8/18.
  */
 public interface ITreeDao<T,ID extends Serializable> {
