@@ -15,7 +15,6 @@ import com.udf.core.orm.nestedSet.entity.NestedSetEntity;
 @JsonIgnoreProperties({"batchInsert","parentIDBeforeUpdate"})
 @JsonPropertyOrder({"name","id","order","children"})
 public abstract class NestedSetMixin extends NestedSetEntity {
-
      @JsonProperty("order")
      private int seq;
 }
