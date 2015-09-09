@@ -38,20 +38,20 @@ public class CatalogService implements ICatalogService {
 
     @Caching(
             cacheable = {
-                    @Cacheable(value="tree",key = "#rootID-ordered",condition = "needSort"),
-                    @Cacheable(value="tree",key = "#rootID",condition = "!needSort")
+                    @Cacheable(value="tree",key = "#rootID+'-ordered'",condition = "#needSort"),
+                    @Cacheable(value="tree",key = "#rootID",condition = "!#needSort")
             }
     )
     @Override
     public List<Catalog> getTreeByRootID(Long rootID, boolean needSort) {
         List<Catalog> flatTree = catalogDao.getTreeByRootID(rootID);
-        return NestedSetUtil.toHierachyTree(flatTree);
+        return NestedSetUtil.toHierachyTree(flatTree,needSort);
     }
 
     @Caching(
             cacheable = {
-                    @Cacheable(value="tree",key = "#rootNode?.getId()-ordered",condition = "needSort"),
-                    @Cacheable(value="tree",key = "#rootNode?.getId()",condition = "!needSort")
+                    @Cacheable(value="tree",key = "#rootNode?.getId()+'-ordered'",condition = "#needSort"),
+                    @Cacheable(value="tree",key = "#rootNode?.getId()",condition = "!#needSort")
             }
     )
     @Override

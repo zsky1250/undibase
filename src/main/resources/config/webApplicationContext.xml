@@ -132,7 +132,7 @@
     <bean id="undiObjectMapper" class="org.springframework.http.converter.json.Jackson2ObjectMapperFactoryBean">
         <property name="mixIns">
             <map>
-                <entry key="com.udf.showcase.entity.Catalog" value="com.udf.showcase.web.view.json.CatalogJsonView"/>
+                <entry key="com.udf.showcase.entity.Catalog" value="com.udf.core.orm.nestedSet.view.NestedSetMixin"/>
             </map>
         </property>
         <property name="featuresToEnable">
@@ -140,7 +140,6 @@
                 <util:constant static-field="com.fasterxml.jackson.databind.DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT"/>
                 <util:constant static-field="com.fasterxml.jackson.core.JsonParser.Feature.ALLOW_UNQUOTED_CONTROL_CHARS"/>
             </array>
-
         </property>
     </bean>
 </beans>

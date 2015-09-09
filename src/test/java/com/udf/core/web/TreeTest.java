@@ -37,8 +37,8 @@ public class TreeTest {
     }
 
     @Test
-    public void testMenuStr() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.post("/tree")
+    public void testWholeStr() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.post("/tree.json")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)) //执行请求
                 //.andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON)) //验证响应contentType
