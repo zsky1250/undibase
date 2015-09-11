@@ -16,7 +16,7 @@ http://vegas.jaysalvat.com/
       ]
   });
 
-2.设置参数 （vegas中每一副背景 都是一个slide）
+2.====》设置参数 （vegas中每一副背景 都是一个slide）
 
 ---整体--
     slide	            0	    Index number of initial slide.
@@ -91,7 +91,7 @@ http://vegas.jaysalvat.com/
                     return !devices.test(navigator.userAgent);
                 }
 
---回调和事件--
+3.====》回调和事件
    option名字         事件名         解释
     init	        vegasinit	    Function called when Vegas is applied to an element.
     play	        vegasplay	    Function called when Vegas starts to play the slideshow.
@@ -117,7 +117,7 @@ http://vegas.jaysalvat.com/
   });
 
 
-====》 方法调用
+4.====》 方法调用
     play       启动幻灯片展示             $elmt.vegas('play');
     pause	   暂停                      $elmt.vegas('pause');
     toggle     切换开启/暂停状态          $elmt.vegas('toggle');
@@ -136,4 +136,32 @@ http://vegas.jaysalvat.com/
   $elmt.vegas('options', 'transition', 'fade');
   $elmt.vegas('options', 'slides', [ ... ]);
 
-  Note that some options (preload overlay timer autoplay) can't be changed at runtime.
+*有一些属性不能再运行时修改 如：preload overlay timer autoplay.
+例子：
+    $elmt.vegas({
+       slides: [
+           { src: '/img/slide1.jpg' },
+           { src: '/img/slide2.jpg' }
+       ],
+       transition: 'slideLeft'
+   });
+
+   $('a#previous').on('click', function () {
+       $elmt.vegas('options', 'transition', 'slideRight2').vegas('previous');
+   });
+
+   $('a#next').on('click', function () {
+       $elmt.vegas('options', 'transition', 'slideLeft2').vegas('next');
+   });
+
+   $('a#add').on('click', function () {
+       var slides = $elmt.vegas('options', 'slides');
+
+       slides.push({ src:'/img/new-slide.jpg' });
+
+       $elmt
+           .vegas('options', 'slides', slides)
+           .vegas('options', 'transition', 'slideDown')
+           .vegas('jump',    slides.length - 1)
+           .vegas('options', 'transition', 'slideLeft2');
+   });
