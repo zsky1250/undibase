@@ -8,3 +8,5 @@ Nested Tree 开发小计：
               通过这个机制在监听器中：node.parent是修改后的parent值，node.parentID是原来的值，二者判断得出节点是否修改。
 2015年8月 v3.1 --性能调优，放弃使用代理模式，改为直接将EntityManager注入Listener中
                 在JPATreeListener中加入了一个静态的EM字段，然后通过SpringApplicationContext中配置MethodInvokingFactoryBean来注入EntityManager
+2015年9月 v3.2 --增加了一组树操作的API接口和抽象类。供SpringDataJPA继承。增加了一个工具类
+                showcase里有catalog的具体使用例子，可参考。

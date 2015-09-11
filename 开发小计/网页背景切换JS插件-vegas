@@ -1,0 +1,139 @@
+Vegas：以幻灯片的形式切换网页背景
+http://vegas.jaysalvat.com/
+
+简单的说明和API
+1.使用方法 （依赖jquery，指定vegas的js和css）
+  <script src="http://code.jquery.com/jquery.min.js"></script>
+  <link rel="stylesheet" href="/js/vegas/vegas.min.css">
+  <script src="/js/vegas/vegas.min.js"></script>
+
+  $("#example or body").vegas({
+      slides: [
+          { src: "/img/slide1.jpg" },
+          { src: "/img/slide2.jpg" },
+          { src: "/img/slide3.jpg" },
+          { src: "/img/slide4.jpg" }
+      ]
+  });
+
+2.设置参数 （vegas中每一副背景 都是一个slide）
+
+---整体--
+    slide	            0	    Index number of initial slide.
+    preload	            false	预加载图片和视频。
+    preload­Image	    false	Preload images at start. preload must be false .
+    preload­Video	    false	Preload videos at start. preload must be false .
+    timer	            true	显示隐藏时间控制条.时间控制条css类： .vegas-timer-progress .
+    overlay	            false	显隐遮罩层. Could be true false or the path of an overlay image pattern. These image can be found in the overlays folder. Read the Overlay section for more information.
+    autoplay            true	自动播放.
+    shuffle	            false	打乱slides集合的顺序.
+    delay	            5000	两个slides播放之间的延迟，单位毫秒.
+    cover	            true	true 背景图片拉伸以适应屏幕.
+                        false   背景图片完全显示.
+    color	            -	    每一个slide的背景色.
+    align	            center	slide中图片的水平对齐方式
+                                Could be center top right bottom left or a percentage.
+    valign	            center	slide中图片的垂直对齐方式
+                                Could be center top right bottom left or a percentage.
+    transition	        fade	两个slides之间的变换效果.
+                                Could be a transition name, random or an array of transition picked randomly.
+                                Read the Transition section for more information.
+    transition­Duration 1000	    两个duration之间的时间间隔，单位毫秒.
+                                如果值为 auto 即沿用 参数delay中设置的值.
+    transition­Register	 -	    Add custom transitions to the transitions list available in random mode.
+                                Read the Transition section for more information.
+    animation	         -	    两个slides之间的动画效果.
+                                Could be an animation name, random or an array of transition picked randomly.
+                                Read the Transition section for more information.
+    animation­Duration	auto	Set the animation duration in milliseconds.
+                                Could be auto so the animation duration will be equal to the slide delay .
+    animation­Register	 -	    Add custom animations to the animations list available in random mode. Read the Transition section for more information.
+    slides	             -	    存放内容的slide数组。
+
+--slides 具体展示内容即一个slide--
+    src	                 -	    Path of the image.
+    video	             -	    Path of the video. Could be a string or an array of sources.
+                                Read the Video section for more information.
+    delay	            5000	Delay beetween slides in milliseconds.
+    cover	            true	true the background image is scaled to fit the container.
+                                false the background image is displayed entirely.
+    color	             -	    Slide background color.
+    align	            center	Horizontal alignment of the image in the slide.
+                                Could be center top right bottom left or a percentage.
+    valign	            center	Vertical alignment of the image in the slide.
+                                Could be center top right bottom left or a percentage.
+    transition          fade	Set the transition of this slide. Could be a transition name, random or an array of transition picked randomly.
+                                Read the Transition section for more information.
+    transition­Duration	1000	Set the transition duration in milliseconds. Could be auto so the transition duration will be equal to the slide delay .
+    animation	        -	    Set the animation of this slide. Could be an animation name, random or an array of transition picked randomly.
+                                Read the Transition section for more information.
+    animation­Duration	auto	Set the animation duration in milliseconds. Could be auto so the animation duration will be equal to the slide delay .
+
+**vedio 是一种特殊的slide
+    video.src	        []	    Array of videos files
+    video.loop	        true	Loop the video
+    video.mute	        true	Mute the sound of the video
+ *例子：
+    $elmt.vegas({
+        timer: false,
+        transition: 'slideLeft2',
+        slides: [
+            { src: '/img/slide1.jpg' },
+            { src: '/img/slide2.jpg', transition: 'slideRight2' },
+            { src: '/img/slide3.jpg' },
+            { src: '/img/slide4.jpg', transition: 'slideRight2' }
+        ]
+    });
+ *vedio slide中可添加图片的src，作为vedio不能播放时的替代方式.
+ VEGAS 默认排除了手机设备播放视频.
+ 可重载这个方法：$.vegas.isVideoCompatible = function () {
+                     var devices = /(Android|webOS|Phone|iPad|iPod|BlackBerry|Windows Phone)/i;
+                    return !devices.test(navigator.userAgent);
+                }
+
+--回调和事件--
+   option名字         事件名         解释
+    init	        vegasinit	    Function called when Vegas is applied to an element.
+    play	        vegasplay	    Function called when Vegas starts to play the slideshow.
+    pause	        vegaspause	    Function called when Vegas pauses the slideshow.
+    walk	        vegaswalk	    Function called when Vegas changes the slide.
+  *例子：
+  $elmt.vegas({
+      slides: [
+          { src: '/img/slide1.jpg' },
+          { src: '/img/slide2.jpg' },
+          { src: '/img/slide3.jpg' },
+          { src: '/img/slide4.jpg' }
+      ],
+      init: function (globalSettings) {
+          console.log("Init");
+      },
+      play: function (index, slideSettings) {
+          console.log("Play");
+      },
+      walk: function (index, slideSettings) {
+          console.log("Slide index " + index + " image " + slideSettings.src);
+      }
+  });
+
+
+====》 方法调用
+    play       启动幻灯片展示             $elmt.vegas('play');
+    pause	   暂停                      $elmt.vegas('pause');
+    toggle     切换开启/暂停状态          $elmt.vegas('toggle');
+    next       切换到下一个slide          $elmt.vegas('next');
+    previous   切换到前一个slide          $elmt.vegas('previous');
+    jump       跳到某一个slide            $elmt.vegas('jump', 3);
+    shuffle    打乱slide数组             $elmt.vegas('shuffle');
+    playing    Return if the slideshow is playing/paused.  $elmt.vegas('playing');
+    current    返回现在播放的slide的下标    $elmt.vegas('current');
+    destroy    销毁dom元素中的vegas
+
+**获取vegas设置的属性
+  var transition = $elmt.vegas('options', 'transition');
+  var slides = $elmt.vegas('options', 'slides');
+**设置vegas属性
+  $elmt.vegas('options', 'transition', 'fade');
+  $elmt.vegas('options', 'slides', [ ... ]);
+
+  Note that some options (preload overlay timer autoplay) can't be changed at runtime.

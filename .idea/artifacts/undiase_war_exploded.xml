@@ -64,7 +64,7 @@
         </element>
       </element>
       <element id="directory" name="META-INF">
-        <element id="file-copy" path="E:\zwrws\undibase\target/MANIFEST.MF" />
+        <element id="file-copy" path="D:\ZWRWS\undibase\target/MANIFEST.MF" />
       </element>
       <element id="javaee-facet-resources" facet="undiase/web/Web" />
     </root>
