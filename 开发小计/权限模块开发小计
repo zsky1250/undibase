@@ -1,0 +1,80 @@
+2015.9--技术选型
+权限从2014.4开始搞，陆陆续续看完了SpringSecurity3的《reference》和《Pro SpringSecurity》两本书，shiro方面看了《和开涛学Shiro》2遍
+现在除了SS4 有啃了一下新的《reference》，还写了一个学习札记
+给我的感觉，shiro确实简单清晰，可是扩展点不够多。遇到问题了总是感觉会很着急。对于上手学习 shiro确实好。
+shiro VS SpringSecurity 也是一个讨论很长时间的话题了。
+在我看来技术上那个更全面，像CAS那些东西虽然shiro目前不支持，可是对我来说这都无妨，目前一段时间我是用不到。
+但给我的感觉SS略适合我，扩展点多，Spring风格。光是shiro里的filterDefination和密码加密就让我觉得有点别扭。
+考虑开发一个框架核心，还是提供多一点的扩展好，以后给自己省点事。
+就比如如CMS 涉及到前后台分开，权限很多很杂，不如实现一个上手难一点，但是能给以后留下开发空间的东西
+而且SS和SpringDataJPA集成也比较好，估计这方面也能把浪费在学习上的时间找回来一点。再说毕竟写了开发札记，以后忘了翻笔记吧
+所以决定--使用SS做权限的雏形，但要修改权限的粒度
+
+2015.9--任务目标
+1.修改SS的权限粒度。SS默认的粒度是Role，就说用户拥有的是角色，受保护资源需要的权限也是Role。但是一个系统里有好多好多的资源，就会产生好多
+Role_XXX字符串，再逐个比较确实浪费性能。计划扩展粒度，增加permission。一个资源对应一个permission。用户登录会得到一个Role，他是一个permission的集合。
+受保护资源定义的权限就是permission。访问控制的时候通过一个RolePermissionResolver将用户角色对应的permission拿到。在和受保护资源的permission比较。
+这么实现也方便后台进行维护。
+2.访问控制比较的实体对象不是String类。而是一个BytePermission类。参考：http://blog.csdn.net/scorpio3k/article/details/8100890
+即用二进制串表示增删改查操作。比方0001代表只能查，0011表示能改和查
+访问控制：用户权限和资源权限做按位与判断，如：userPermission & operationByte == operationByte 代表允许访问,否则禁止
+增加权限：用户权限按位或需要增加的权限即为新权限.如：userPermission = userPermission | addOperation1 | addOperation2
+删除权限：用户权限 和 要去除的权限取反 做按位与操作.如：userPermission = userPermission & (~removeOperation)
+初始化： int OperationPermission = 2^i 即2的次方。i从1开始，多一种权限i+1;
+Integer.toBinaryString(userPermission):可将int类型按照二进制串输出
+Integer it = Integer.valueOf("bit String", 2)：可将二进制转为int
+具体例子看 test中的com.udf.core.Security.testByteACOperation.
+3.针对CMS。
+3.1数据库设计：
+用户表：{userID}，userName
+角色表：{roleID}，roleName，roleType-[SuperAdmin,admin,normal]
+权限表：{roleID，resourceID,resourceType}，permission
+资源分为：menu--菜单；catalog--栏目；article--文章。分表存，每个表都有一个resourceType字段。表示资源类型，互不重复。
+用户-角色一对多关联，权限表有角色ID，资源ID，资源类型共同确定，permission是二进制字符串，表示具体哪些操作。
+3.2具体逻辑和实现：ss实现，出于性能考虑，对具体情况做了细分，可能有漏洞，但大体不影响。
+需实现的拓展点
+1.UndiResourceResolver：根据entity类名=resourceType 解析资源类型。 ApplicationContext初始化的时，在该bean中注册各种资源对应的entity
+                        根据访问url解析访问资源的具体类型。
+2.UndiPermissionResolver:通过用户角色解析出对应的资源。
+3.UndiBytePermissionUtils：二进制权限的增加，删除，比较。
+4.UndiSecurityMetaSource：根据访问的资源和用户的角色ID，获取需要的权限。
+4.AOP数据过滤功能：
+a.包括一个注解@UndiDataFilter(resourceType="xxx")，用数据列表的过滤，标注在service层获取数据集合的方法上。
+b.写一个@PointCut 用于扫描有标有注解的方法。
+c.写一个@Aruoud类型的Advice:根据SS中的具体Role和注解中的resource属性，组装一个JPA的权限Specification,如果原来方法参数中含Specification则把权限Specification和他拼合
+  作为新的参数传递给方法 如 where(oriSpecification).and(PermissionSpecification)。如果之前没有参数，则调用带参数的重载方法。
+  （所以受保护资源的dao接口必须是继承了JpaSpecificationExecutor，考虑在Repository-base-class中继承该接口）
+这样的话等于把数据过滤在数据库层完成。SS自带的datafilter拿到数据再和权限挨个比较，浪费性能，而且比较逻辑很难管理，不实用。
+5.针对不同类型的资源创建各自的投票器。分表是MenuVoter,catalogVoter和articleVoter。另还有一个SuperAdminVoter处于集合顶端，如果RoleType是超管，直接放行。其他角色则走其他投票器。
+voter实现逻辑：
+***对于文章：执行ArticalVoter.
+1.先通过UndiResourceResolver解析投票器是否支持该资源的访问控制。
+2.判断资源来自前/后台。后台的url中含有一个/admin/**/，前台则没有。
+3.前台只涉及查看。当用户访问某一个资源的时候，从权限表中先查用户对该资源的权限，如果有返回，没有再读取用户对文章所在所在栏目的权限。
+              拿到权限后跟view的二进制码做比较。判断可否访问。
+后台（or 前台发布信息界面）：
+列表显示-UndiDataFilter(resourceType="article")过滤数据：如果用户信息roleType是admin，不做检查。如果RoleType是normal，只能看自己发的文章。
+具体操作-通过UndiResourceResolver解析出具体的操作类型，如果用户确实进行了某项操作（如点击了修改按钮），再做判断。
+***对于栏目：执行CatalogVoter.
+1.先通过UndiPermissionResolver解析投票器是否支持该资源的访问控制。
+2.判断资源来自前/后台。后台的url中含有一个/admin/**/，前台则没有。
+3.前台全部放行。（？即便用户无权访问该栏目，但是栏目中的文章列表只有显示文章标题，所以看看无妨，访问不到正文即可？）
+  后台:
+  列表显示-UndiDataFilter(resourceType="catalog")过滤数据，根据roleType做判断-admin:能访问有权限的栏目
+  具体操作-从SecurityMetaSource中访问的栏目所需权限和用户拥有的权限做判断，通过UndiResourceResolver解析出具体的操作类型。然后判断
+***对于菜单：执行MenuVoter.
+前台压根不涉及，所以请求肯定是来自后台的。
+后台:
+列表显示-UndiDataFilter(resourceType="menu")过滤数据，根据roleType做判断-admin:能访问有权限的栏目
+具体操作-只有超管有权限做增删改操作。其他用户默认只能看到，即列表显示。
+
+
+6.service中涉及的权限管理：UndiSecurityMetaSource类
+对于栏目：考虑的栏目的继承，权限也存在继承。
+         新建栏目默认继承父栏目所有权限，然后将权限重写一份存入权限表。
+         父栏目修改的时候，弹出一个提示框，问是否级联。
+对于菜单：同栏目
+对于文章：无继承关系。权限的集合就是该文章的权限，如果没有就找所属栏目的关系。
+对于栏目：首页上的栏目，标题都能看到。但是具体到某一个栏目时，内容
+
+
