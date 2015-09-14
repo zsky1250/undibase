@@ -18,7 +18,7 @@
 		<mysql-connector-java-version>5.1.31</mysql-connector-java-version>
 		<slf4j-version>1.7.7</slf4j-version>
 		<logback-ext-spring-version>0.1.2</logback-ext-spring-version>
-		<spring-security-version>3.2.5.RELEASE</spring-security-version>
+		<spring-security-version>4.0.2.RELEASE</spring-security-version>
 		<spring-data-jpa-version>1.9.0.RELEASE</spring-data-jpa-version>
 		<hibernate-version>4.3.7.Final</hibernate-version>
 		<ehcache-version>2.6.9</ehcache-version>
@@ -225,6 +225,13 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
 			<version>${springframework-version}</version>
+		</dependency>
+
+		<!--============Spring Security ===========-->
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-web</artifactId>
+			<version>4.0.2.RELEASE</version>
 		</dependency>
 
 		<!--============== spring 版本统一 ==============-->
