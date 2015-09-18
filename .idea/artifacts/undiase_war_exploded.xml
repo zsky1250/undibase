@@ -33,6 +33,8 @@
           <element id="library" level="project" name="Maven: org.springframework:spring-context-support:4.2.1.RELEASE" />
           <element id="library" level="project" name="Maven: org.springframework:spring-web:4.2.1.RELEASE" />
           <element id="library" level="project" name="Maven: org.springframework:spring-webmvc:4.2.1.RELEASE" />
+          <element id="library" level="project" name="Maven: org.springframework.security:spring-security-web:4.0.2.RELEASE" />
+          <element id="library" level="project" name="Maven: org.springframework.security:spring-security-core:4.0.2.RELEASE" />
           <element id="library" level="project" name="Maven: org.freemarker:freemarker:2.3.20" />
           <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.4.2" />
           <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.4.0" />
@@ -64,7 +66,7 @@
         </element>
       </element>
       <element id="directory" name="META-INF">
-        <element id="file-copy" path="D:\ZWRWS\undibase\target/MANIFEST.MF" />
+        <element id="file-copy" path="$PROJECT_DIR$/target/undibase/META-INF/MANIFEST.MF" />
       </element>
       <element id="javaee-facet-resources" facet="undiase/web/Web" />
     </root>
