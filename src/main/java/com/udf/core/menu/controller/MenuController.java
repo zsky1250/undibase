@@ -16,7 +16,7 @@ public class MenuController {
     @Autowired
     private MenuService menuService;
 
-    @RequestMapping("/menu")
+    @RequestMapping(value = "/menu",produces = "application/json")
     public String getMenu(Model model) {
         model.addAttribute("menu",menuService.getMenu());
         return "menu";

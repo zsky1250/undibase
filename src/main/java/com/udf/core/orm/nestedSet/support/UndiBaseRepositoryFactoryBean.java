@@ -26,14 +26,14 @@ public class UndiBaseRepositoryFactoryBean<R extends JpaRepository<T, I>, T, I e
         extends JpaRepositoryFactoryBean<R, T, I> {
 
     protected RepositoryFactorySupport createRepositoryFactory(EntityManager em) {
-        return new UndiBseRepositoryFactory(em);
+        return new UndiBaseRepositoryFactory(em);
     }
 
-    private static class UndiBseRepositoryFactory<T, I extends Serializable> extends JpaRepositoryFactory {
+    private static class UndiBaseRepositoryFactory<T, I extends Serializable> extends JpaRepositoryFactory {
 
         private final EntityManager em;
 
-        public UndiBseRepositoryFactory(EntityManager em) {
+        public UndiBaseRepositoryFactory(EntityManager em) {
             super(em);
             this.em = em;
         }
