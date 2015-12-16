@@ -17,6 +17,8 @@ public class Role {
     //后期更改为Enum
     private String roleType;
 
+    private String roleDescription;
+
     @OneToMany(mappedBy = "role",fetch = FetchType.LAZY)
     private List<User> users;
 
@@ -50,5 +52,13 @@ public class Role {
 
     public void setUsers(List<User> users) {
         this.users = users;
+    }
+
+    public String getRoleDescription() {
+        return roleDescription;
+    }
+
+    public void setRoleDescription(String roleDescription) {
+        this.roleDescription = roleDescription;
     }
 }

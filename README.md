@@ -12,12 +12,12 @@ undibase
   对应这种结构，给出了NestedSet的JPA实现。用法见例子
 
   1.1 在SpringDataJPA中 有两种使用方式
-  a.针对单一接口需要使用：可以写一个接口集成中间接口 在给出中间接口的实现类
+  a.针对某几个类单独使用：可以写一个接口集成中间接口 在给出中间接口的实现类
      public interface ICatalogDao extends JpaRepository<Catalog,Long>,ISpringDataJpaNestedTreeDao<Catalog,Long>
      public class ICatalogDaoImpl extends AbstractNestedSetRepository<Catalog,Long> implements ISpringDataJpaNestedTreeDao<Catalog,Long>
      其中AbstractNestedSetRepository是一个抽象类，已经写好了针对NestedSet形式的树操作方法。子类继承他在实现getDomianClass，返回具体的entity类型即可
 
-  b.针对多个接口使用： b1.) 定义一个中间接口 制造供所有接口使用的baseRepository
+  b.针对所有几个使用使用： b1.) 定义一个中间接口 制造供所有接口使用的baseRepository
                      b2.) 写一个工厂类xxxFactory，制造供所有接口使用的baseRepositoryImpl。在配置中加入factory-class="xxxFactory"  (SDJ 1.9之前)
                           或直接写baseRepositoryImpl 配置中加入repository-base-class="baseRepositoryImpl" (SDJ 1.9之后)
 
