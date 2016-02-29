@@ -78,7 +78,7 @@ public class JPATreeListener {
         Long oriParentID = node.getParentIDBeforeUpdate();
         NestedSetEntity newParent = node.getParent();
         if(NestedSetUtil.isParentChanged(node)){
-            logger.debug("-->Start Listner for Move node={} from parentID={} to parentID={}",node.getId(),oriParentID,newParent.getId());
+            logger.debug("-->Start Listener for Move node={} from parentID={} to parentID={}",node.getId(),oriParentID,newParent.getId());
             //step1 计算span
             int span = node.getRgt()-node.getLft()+1;
 
@@ -120,7 +120,7 @@ public class JPATreeListener {
      */
     @PreRemove
     public void preRemove(NestedSetEntity node){
-        logger.debug("-->Start Listner for delete node={} from ID={}",node.getId());
+        logger.debug("-->Start Listener for delete node={} from ID={}",node.getId());
         int span = node.getRgt()-node.getLft()+1;
 
         if(span>1){
@@ -130,7 +130,7 @@ public class JPATreeListener {
         }
         logger.debug("--> remove the space of original position:");
         makeSpaceForNode(node, -span, node.getRgt());
-        logger.debug("-->finish Listner for delete node={} from ID={}",node.getId());
+        logger.debug("-->finish Listener for delete node={} from ID={}",node.getId());
     }
 
     /**

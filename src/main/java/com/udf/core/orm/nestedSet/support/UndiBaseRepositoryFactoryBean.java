@@ -21,7 +21,6 @@ import java.io.Serializable;
  * 需要在XML配置文件的JPA bean中 加上factory-class="com.udf.core.orm.nestedSet.support.UndiBaseRepositoryFactoryBean"
  * Deperated from Spring Data JPA 1.9 because its new base-class xml config attribute
  */
-@Deprecated
 public class UndiBaseRepositoryFactoryBean<R extends JpaRepository<T, I>, T, I extends Serializable>
         extends JpaRepositoryFactoryBean<R, T, I> {
 

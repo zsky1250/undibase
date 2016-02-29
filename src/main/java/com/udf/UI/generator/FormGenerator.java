@@ -8,7 +8,7 @@ import org.springframework.core.annotation.AnnotationUtils;
 public class FormGenerator {
 
     public static void generateForm(Class<?> baseClass,String filePath){
-        AnnotationUtils.findAnnotation(baseClass,formBuilder);
+//        AnnotationUtils.findAnnotation(baseClass,formBuilder);
     }
 
 }

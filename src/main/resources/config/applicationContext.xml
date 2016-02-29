@@ -229,7 +229,7 @@
 	</bean>
 	<bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
 		<property name="staticMethod"
-				  value="com.udf.common.orm.JPATreeListener.wiredEntityManagerFactory"/>
+				  value="com.udf.core.orm.nestedSet.support.JPATreeListener.wiredEntityManagerFactory"/>
 		<property name="arguments" ref="entityManagerFactory"/>
 	</bean>
 
