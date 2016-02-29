@@ -3,8 +3,9 @@ Nested Tree 开发小计：
               通过JPAListner做拦截器，增加额外的树结构调整操作。通过AOP Advice在记录节点变化前的父节点
 2015年6月 v2--由于工程使用SpringDataJPA 其中的更新操作使用的底层JPA的merge函数而不是update。所以需要AOP辅助记录之前的父节点
               打算干脆不适用拦截器机制，二是在SpringDataJPA的接口中屏蔽原始的操作，自己写树结构调整的函数 达到目的。
-2015年8月 v3--可以给Entity中设定一个parentID的重复属性，然后这是其updateable=false insertable=false.这样读取的时候他会读到parent值
-              但在更新的操作（包括merge操作的时候） 这个parentID是不会因为node.setParent修改的
+2015年8月 v3--可以给Entity中设定一个parentID的重复属性，然后这是其updateable=false insertable=false.
+              这样pareintID等于是parent在数据库里的一个替身，但在更新的操作（包括merge操作的时候）因为他是不可更改的，所以这个parentID是不会因为node.setParent操作而修改
+              等于说parentID永远是数据库中parent值。而此时的parent因为可能在程序中被修改多次，从而和数据库的值不一样。
               通过这个机制在监听器中：node.parent是修改后的parent值，node.parentID是原来的值，二者判断得出节点是否修改。
 2015年8月 v3.1 --性能调优，放弃使用代理模式，改为直接将EntityManager注入Listener中
                 在JPATreeListener中加入了一个静态的EM字段，然后通过SpringApplicationContext中配置MethodInvokingFactoryBean来注入EntityManager
